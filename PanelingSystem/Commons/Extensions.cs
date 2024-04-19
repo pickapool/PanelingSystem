@@ -1,7 +1,10 @@
 using System.ComponentModel;
 using System.Reflection;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using MudBlazor;
+using PanelingSystem.Models;
 
 namespace PanelingSystem.Commons
 {
@@ -59,6 +62,10 @@ namespace PanelingSystem.Commons
                 await file.OpenReadStream().CopyToAsync(memoryStream);
                 return memoryStream.ToArray();
             }
+        }
+        public static async Task Download(FileModel file, IJSRuntime JSRuntime)
+        {
+            await JSRuntime.InvokeVoidAsync("downloadFile", Convert.ToBase64String(file.File), file.FileName);
         }
     }
 }

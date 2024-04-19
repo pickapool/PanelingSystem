@@ -37,7 +37,7 @@
     {
         <div class="d-flex flex-row justify-content-between align-items-center">
         <MudChip Label="true" Color="Color.Default" OnClose="()=> Remove(file)">@file.FileName</MudChip>
-        <MudIconButton OnClick="()=> Download(file)" style="width: 40px;" Icon="@Icons.Material.Filled.Download"></MudIconButton>
+        <MudIconButton OnClick="()=> Extensions.Download(file, JSRuntime)" style="width: 40px;" Icon="@Icons.Material.Filled.Download"></MudIconButton>
         </div>
     }
 </MudStack>
@@ -95,10 +95,6 @@
     {
         await FileService.DeleteFileModel(file.FileId);
         await GetFiles();
-    }
-    private async Task Download(FileModel file)
-    {
-        await JSRuntime.InvokeVoidAsync("downloadFile", Convert.ToBase64String(file.File), file.FileName);
     }
 
     private void SetDragClass()
