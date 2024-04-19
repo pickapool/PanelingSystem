@@ -1,0 +1,155 @@
+﻿@page "/create/account"
+
+@inject IAccountService AccountService
+@inject IDialogService DialogService
+
+<div class="d-flex justify-content-center align-items-center">
+    <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<UserAccountModel>>>(ServerReload))"
+                Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
+            <ToolBarContent>
+                <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Accounts</MudText>
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                <MudSpacer />
+                <MudButton OnClick="()=> UserDialog(new UserAccountModel())" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
+            </ToolBarContent>
+            <ColGroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col style='width: 20px' />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortLabel="name" T="UserAccountModel">Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="email" T="UserAccountModel">Email</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="username" T="UserAccountModel">Username</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="password" T="UserAccountModel">Password</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="designation" T="UserAccountModel">Designation</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="role" T="UserAccountModel">Role</MudTableSortLabel></MudTh>
+                <MudTh Class='customheader-1 text-center pa-2'>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="name">@context.Name</MudTd>
+                <MudTd DataLabel="email">@context.Email</MudTd>
+                <MudTd DataLabel="designation">@context.UserName</MudTd>
+                <MudTd DataLabel="role">@Extensions.FormatPassword(context.Password)</MudTd>
+                <MudTd DataLabel="designation">@context.Designation</MudTd>
+                <MudTd DataLabel="role">
+                    <MudChip Size="Size.Small">@Extensions.GetEnumDescription(context.AccountType)</MudChip>
+                </MudTd>
+                <MudTd Class='text-center pa-2'>
+                 <MudMenu Icon='@Icons.Material.Filled.MoreVert' AnchorOrigin='Origin.TopLeft'
+                    TransformOrigin='Origin.TopRight' Dense='true' Size='Size.Small'>
+                         <MudMenuItem OnClick="()=> UserDialog(context)">
+                            <div class='d-flex align-center gap-2 '>
+                                <MudIcon Icon='@Icons.Material.Filled.Edit' Size='Size.Small' />
+                                <MudText Typo='Typo.body2'>Edit</MudText>
+                            </div>
+                        </MudMenuItem> 
+                        <MudMenuItem>
+                            <div class='d-flex align-center gap-2 '>
+                                <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
+                                <MudText Typo='Typo.body2'>Remove</MudText>
+                            </div>
+                        </MudMenuItem>
+                </MudMenu>
+            </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</div>
+
+@code {
+    private IEnumerable<UserAccountModel> pagedData;
+    private MudTable<UserAccountModel> table;
+
+    private int totalItems;
+    private string searchString = null;
+    private bool Loading = true;
+    private IEnumerable<UserAccountModel> ListUserAccount = null;
+    private async Task<TableData<UserAccountModel>> ServerReload(TableState state)
+    {
+        Task<IEnumerable<UserAccountModel>> data = AccountService.GetAccounts();
+        await data;
+        await Task.Delay(300);
+        ListUserAccount = data.Result.Where(UserAccountModel =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (UserAccountModel.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (UserAccountModel.Name.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (UserAccountModel.Email.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (UserAccountModel.Designation.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (UserAccountModel.AccountType.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = ListUserAccount.Count();
+        switch (state.SortLabel)
+        {
+            case "name":
+                ListUserAccount = data.Result.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+            case "email":
+                ListUserAccount = data.Result.OrderByDirection(state.SortDirection, o => o.Email);
+                break;
+            case "designation":
+                ListUserAccount = data.Result.OrderByDirection(state.SortDirection, o => o.Designation);
+                break;
+            case "username":
+                ListUserAccount = data.Result.OrderByDirection(state.SortDirection, o => o.UserName);
+                break;
+            case "role":
+                ListUserAccount = data.Result.OrderByDirection(state.SortDirection, o => o.AccountType);
+                break;
+        }
+
+        pagedData = ListUserAccount.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        Loading = false;
+        StateHasChanged();
+        return new TableData<UserAccountModel>() {TotalItems = totalItems, Items = pagedData};
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+    private async Task UserDialog(UserAccountModel account)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true,DisableBackdropClick = true };
+        var param = new DialogParameters();
+        param.Add("Account", account);
+        var dialog =  await DialogService.Show<CreateAccountDialog>(account.UserId == 0 ? "Add Account" : "Edit Account", param, options).Result;
+        if(!dialog.Cancelled)
+        {
+            await table.ReloadServerData();
+        }
+    }
+
+}
+<style>
+    .mud-toolbar.mud-table-toolbar
+    {
+        height: 40px;
+        display: flex;
+        align-items: end;
+    }
+</style>

@@ -1,0 +1,16 @@
+﻿@page "/"
+
+@inject NavigationManager Navigation
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+        {
+            Navigation.NavigateTo("u/dashboard");
+        } else {
+             Navigation.NavigateTo("a/dashboard");
+        }
+    }
+}

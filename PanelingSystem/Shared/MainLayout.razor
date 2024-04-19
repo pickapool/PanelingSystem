@@ -1,0 +1,65 @@
+﻿@inherits LayoutComponentBase
+
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject ILocalStorageService LocalStorageService
+@inject AppState AppState
+
+<PageTitle>Paneling System</PageTitle>
+
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<div class="page">
+    @if (GlobalClass.CurrentUserAccount != null)
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+
+        <main>
+            <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+    } else {
+        <Login/>
+    }
+</div>
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        AppState.OnChange += UpdateState;
+        await VerifyLogin();
+    }
+    private async Task VerifyLogin()
+    {
+        ValueTask<UserAccountModel> account = LocalStorageService.GetItemAsync<UserAccountModel>("Account");
+        await account;
+        if (account.IsCompletedSuccessfully)
+        {
+            GlobalClass.CurrentUserAccount = account.Result;
+            StateHasChanged();
+        }
+    }
+    private void UpdateState()
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}
+<style>
+    .page
+    {
+        overflow: hidden;
+    }
+</style>

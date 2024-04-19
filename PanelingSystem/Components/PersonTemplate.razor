@@ -1,0 +1,23 @@
+<div class="d-flex flex-row">
+    @if (Account.ProfilePicture.Count() == 0) {
+        <MudAvatar Class='mr-2' Image="img/blank_profile.png" Size='Size.Medium' />
+    } else {
+        <MudAvatar Class='mr-2' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+    }
+    <div class="d-flex flex-column">
+        <MudText Typo="Typo.body1">@Account.Name</MudText>
+        <MudText Typo="Typo.subtitle1">@Account.Designation</MudText>
+    </div>
+</div>
+
+@code
+{
+    [Parameter] public UserAccountModel Account { get; set; }
+
+}
+<style>
+    .mud-typography
+    {
+        font-size: 14px;
+    }
+</style>

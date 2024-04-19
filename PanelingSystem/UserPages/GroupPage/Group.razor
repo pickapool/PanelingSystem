@@ -1,0 +1,181 @@
+@page "/u/group"
+
+@inject IGroupService GroupServices
+@inject IDialogService DialogService
+@inject IMemberService MemberService
+@inject ISnackbar Snackbar
+
+<div class="d-flex justify-content-center align-items-center">
+    <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<GroupModel>>>(ServerReload))"
+                Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
+            <ToolBarContent>
+                <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Groups</MudText>
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                <MudSpacer />
+                <MudButton OnClick="()=> OpenGroupDialog(new GroupModel())" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
+            </ToolBarContent>
+            <ColGroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col style='width: 20px' />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortLabel="GroupThesisTitle" T="UserAccountModel">Title</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Groupname" T="UserAccountModel">Group Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Program" T="UserAccountModel">Program</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Year" T="UserAccountModel">Year</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Status" T="UserAccountModel">Status</MudTableSortLabel></MudTh>
+                <MudTh Class='customheader-1 text-center pa-2'>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="GroupThesisTitle">@context.GroupThesisTitle</MudTd>
+                <MudTd DataLabel="Groupname">@context.Groupname</MudTd>
+                <MudTd DataLabel="Program">@context.Program</MudTd>
+                <MudTd DataLabel="Year">@context.Year</MudTd>
+                <MudTd DataLabel="Status">
+                    <MudChip Size="Size.Small">@Extensions.GetEnumDescription(context.Status)</MudChip>
+                </MudTd>
+                <MudTd Class='text-center pa-2'>
+                 <MudMenu Icon='@Icons.Material.Filled.MoreVert' AnchorOrigin='Origin.TopLeft'
+                    TransformOrigin='Origin.TopRight' Dense='true' Size='Size.Small'>
+                         <MudMenuItem OnClick="()=> OpenGroupDialog(context)">
+                            <div class='d-flex align-center gap-2 '>
+                                <MudIcon Icon='@Icons.Material.Filled.Edit' Size='Size.Small' />
+                                <MudText Typo='Typo.body2'>Edit</MudText>
+                            </div>
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="()=> AddMembers(context)">
+                            <div class='d-flex align-center gap-2 '>
+                                <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
+                                <MudText Typo='Typo.body2'>Add Members</MudText>
+                            </div>
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="()=> RemoveGroup(context)">
+                            <div class='d-flex align-center gap-2 '>
+                                <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
+                                <MudText Typo='Typo.body2'>Remove</MudText>
+                            </div>
+                        </MudMenuItem>
+                </MudMenu>
+            </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</div>
+
+@code {
+    private IEnumerable<GroupModel> pagedData;
+    private MudTable<GroupModel> table;
+
+    private int totalItems;
+    private string searchString = null;
+    private bool Loading = true;
+    private IEnumerable<GroupModel> ListOfGroups = null;
+    private async Task<TableData<GroupModel>> ServerReload(TableState state)
+    {
+        Task<IEnumerable<GroupModel>> data = GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
+        await data;
+        await Task.Delay(300);
+        ListOfGroups = data.Result.Where(grp =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (grp.GroupThesisTitle.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (grp.Groupname.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (grp.Program.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (grp.Year.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (grp.Status.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = ListOfGroups.Count();
+        switch (state.SortLabel)
+        {
+            case "name":
+                ListOfGroups = data.Result.OrderByDirection(state.SortDirection, o => o.GroupThesisTitle);
+                break;
+            case "email":
+                ListOfGroups = data.Result.OrderByDirection(state.SortDirection, o => o.Groupname);
+                break;
+            case "designation":
+                ListOfGroups = data.Result.OrderByDirection(state.SortDirection, o => o.Program);
+                break;
+            case "username":
+                ListOfGroups = data.Result.OrderByDirection(state.SortDirection, o => o.Year);
+                break;
+            case "role":
+                ListOfGroups = data.Result.OrderByDirection(state.SortDirection, o => o.Status);
+                break;
+        }
+
+        pagedData = ListOfGroups.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        Loading = false;
+        StateHasChanged();
+        return new TableData<GroupModel>() {TotalItems = totalItems, Items = pagedData};
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+    private async Task OpenGroupDialog(GroupModel group)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var param = new DialogParameters();
+        param.Add("Group", group);
+        var dialog =  await DialogService.Show<GroupDialog>(group.GroupId == 0 ? "Add Group" : "Edit Group", param, options).Result;
+        if(!dialog.Cancelled)
+        {
+            await table.ReloadServerData();
+        }
+    }
+    private async Task RemoveGroup(GroupModel group)
+    {
+        Task t = GroupServices.DeleteGroupModel(group.GroupId);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            Extensions.ShowAlert("Group has been removed.", Variant.Filled, Snackbar, Severity.Info);
+        }
+    }
+    private async Task AddMembers(GroupModel group)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var param = new DialogParameters();
+        param.Add("Group", group);
+        var dialog =  await DialogService.Show<AddMembersDialog>("Add Members", param, options).Result;
+        if(!dialog.Cancelled)
+        {
+            await table.ReloadServerData();
+        }
+    }
+
+}
+<style>
+    .mud-toolbar.mud-table-toolbar
+    {
+        height: 40px;
+        display: flex;
+        align-items: end;
+    }
+</style>

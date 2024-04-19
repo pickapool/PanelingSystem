@@ -1,0 +1,89 @@
+﻿@inject ILocalStorageService LocalStorageService
+@inject ISnackbar Snackbar
+@inject IAccountService AccountService
+@inject AppState AppState
+
+<MudGrid Class="pa-4 overflow-hidden grid-1">
+    <MudItem xs="6"> 
+        <MudText Typo="Typo.h1">CCS</MudText>
+        <MudText Typo="Typo.h1">PANELING</MudText>
+        <MudText Typo="Typo.h1">PORTAL SYSTEM</MudText>
+    </MudItem>
+    <MudItem xs="6">
+        <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4" Height="70vh" Width="60%">
+                <div style="width: 100%" class="d-flex flex-column align-center">
+                    <MudText Typo="Typo.h4">LOGIN</MudText>
+                    <MudDivider style="width: 100%;"/>
+                </div>
+                
+                <div class="d-flex flex-column align-center gap-4 acc" style="width: 100%;">
+                    <MudTextField style="width: 100%;" @bind-Value="username" Label="Username" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentColor="Color.Warning" />
+                    <MudTextField @bind-Value="password" Label="Password" Variant="Variant.Outlined"  AdornmentColor="Color.Warning" 
+                    Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" InputType="PasswordInput" OnAdornmentClick="ShowPassword"/>
+                    <MudButton OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">LOGIN</MudButton>
+                </div>
+                
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+@code {
+    string username = string.Empty;
+    string password = string.Empty;
+    bool isShow = false;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+       }
+    }
+    private async Task Submit()
+    {
+        Task<UserAccountModel> account = AccountService.Authenticate(username, password);
+        await account;
+        if (account.Status == TaskStatus.RanToCompletion)
+        {
+            if (account.Result != null)
+            {
+                await LocalStorageService.SetItemAsync("Account", account.Result);
+                GlobalClass.CurrentUserAccount = account.Result;
+                await AppState.NotifyStateChangedAsync();
+            }
+            else
+            {
+                Extensions.ShowAlert("Sorry we cant find your account", Variant.Filled , Snackbar , Severity.Error);
+            }
+        }
+    }
+}
+<style>
+    .grid-1
+    {
+        height: 100vh;
+        overflow: hidden !important;
+        margin-top: 100px;
+    }
+    .mud-text
+    {
+        font-weight: 500;
+    }
+    .mud-input-control
+    {
+        width: 80%;
+    }
+    .acc
+    {
+        margin-top: 70px;
+    }
+</style>
+

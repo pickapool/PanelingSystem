@@ -1,0 +1,66 @@
+@page "/u/dashboard"
+
+@inject IGroupService GroupService
+
+@inject IFileService FileService
+
+<div class="d-flex justify-content-center align-items-center">
+    <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+        <MudGrid Spacing="2">
+            <MudItem xs="3">
+                <MudSelect Value="@Group" 
+                ValueChanged="(GroupModel g)=> GetFiles(g)"
+                Margin="Margin.Dense" Text=""
+                 Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                    @foreach (var g in ListGroups.ToList())
+                    {
+                        <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="5"></MudItem>
+            <MudItem xs="4"></MudItem>
+            @if(Group.GroupId > 0)
+            {
+                <MudItem xs="4">
+                    <FileUploadComponent GroupId="Group.GroupId" Position="@Enums.FilePosition.Title" FileModels="@fileModels"/>
+                </MudItem>
+                <MudItem xs="4">
+                    <FileUploadComponent GroupId="Group.GroupId" Position="@Enums.FilePosition.PreOral" FileModels="@fileModels"/>
+                </MudItem>
+                <MudItem xs="4">
+                    <FileUploadComponent GroupId="Group.GroupId" Position="@Enums.FilePosition.Finals" FileModels="@fileModels"/>
+            </MudItem>  
+            }
+        </MudGrid>
+    </MudPaper>
+</div>
+@code
+{
+    private List<GroupModel> ListGroups = new();
+    private GroupModel Group = new();
+    bool show,show1 = false;
+    List<FileModel> fileModels = new();
+    protected override async Task OnInitializedAsync()
+    {
+        Task<IEnumerable<GroupModel>> data = GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion)
+        {
+            ListGroups = data.Result.ToList();
+            Group = ListGroups.FirstOrDefault() ?? new();
+            await GetFiles(Group);
+        }
+    }
+    private async Task GetFiles(GroupModel groupModel)
+    {
+        Group = groupModel;
+        Task<IEnumerable<FileModel>> task = FileService.GetFiles();
+        await task;
+        if(task.Status == TaskStatus.RanToCompletion)
+        {
+            fileModels = task.Result.ToList()?? new();
+        }
+        StateHasChanged();
+    }
+}

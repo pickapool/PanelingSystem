@@ -1,0 +1,76 @@
+@inject IAccountService AccountService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid Spacing="3" Class="pa-3 mr-4">
+            <MudItem xs="6">
+                <MudTextField @bind-Value="@Account.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="@Account.Email" Label="Email" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="@Account.UserName" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="@Account.Password" Label="Password" InputType="PasswordInput" Variant="Variant.Outlined" Margin="Margin.Dense" 
+                HelperText="Required*" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPassword"/>
+            </MudItem>
+            <MudItem xs="6">
+                <MudSelect @bind-Value="Account.AccountType" Margin="Margin.Dense" Label="Role" HelperText="Required*" Placeholder="Role" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                    @foreach (Enums.AccountType item in Enum.GetValues(typeof(Enums.AccountType)))
+                    {
+                        <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="@Account.Designation" Label="Designation" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public UserAccountModel Account { get; set; }
+    bool isShow = false;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    protected override void OnParametersSet()
+    {
+        if(Account == null)
+            Account = new UserAccountModel();
+    }
+
+    void ShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+    private async Task Submit()
+    {
+        Task t = Account.UserId == 0 ? AccountService.PostUserAccountModel(Account) : AccountService.PutUserAccountModel(Account.UserId, Account);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+            Extensions.ShowAlert("Account successfully save", Variant.Filled, Snackbar, Severity.Success);
+        }
+    }
+    void Cancel() => MudDialog.Cancel();
+}

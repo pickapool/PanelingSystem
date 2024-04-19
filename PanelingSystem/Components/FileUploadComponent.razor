@@ -1,0 +1,125 @@
+@inject IFileService FileService
+@inject IJSRuntime JSRuntime
+
+<MudFileUpload T="IReadOnlyList<IBrowserFile>"
+               @bind-Value="FileModels"
+               AppendMultipleFiles
+               OnFilesChanged="OnInputFileChanged"
+               Hidden="@false"
+               InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20"
+               InputStyle="opacity:0"
+               @ondragenter="@SetDragClass"
+               @ondragleave="@ClearDragClass"
+               @ondragend="@ClearDragClass"
+               >
+    <ButtonTemplate>
+        <MudPaper Height="300px"
+                  Outlined="true"
+                  Class="@_dragClass">
+            <MudText Typo="Typo.h6">
+                Drag and drop files here or click
+            </MudText>
+        </MudPaper>
+        <MudToolBar DisableGutters="true"
+                    Class="relative d-flex justify-end gap-4 z-30">
+            <MudButton HtmlTag="label"
+                       Color="Color.Primary"
+                       for="@context.Id"
+                       Variant="Variant.Filled">
+                Browse
+            </MudButton>
+        </MudToolBar>
+    </ButtonTemplate>
+</MudFileUpload>
+<div class="stack-containter">
+<MudStack Width="100%" Class="overflow-auto" style="gap: 0px !important;">
+    @foreach(var file in FileModels)
+    {
+        <div class="d-flex flex-row justify-content-between align-items-center">
+        <MudChip Label="true" Color="Color.Default" OnClose="()=> Remove(file)">@file.FileName</MudChip>
+        <MudIconButton OnClick="()=> Download(file)" style="width: 40px;" Icon="@Icons.Material.Filled.Download"></MudIconButton>
+        </div>
+    }
+</MudStack>
+</div>
+@code
+{
+    [Parameter] public int GroupId { get; set; }
+    [Parameter] public Enums.FilePosition Position { get; set; }
+    [Parameter] public List<FileModel> FileModels { get; set; }
+    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
+    private string _dragClass = DefaultDragClass;
+    protected override async Task OnParametersSetAsync()
+    {
+       // await GetFiles();
+       FileModels = FileModels.Where( e => e.FilePosition == Position && e.GroupId == GroupId).ToList();
+    }
+    private async Task GetFiles()
+    {
+        Task<IEnumerable<FileModel>> task = FileService.GetFilesPerPosition(Position, GroupId);
+        await task;
+        if(task.Status == TaskStatus.RanToCompletion)
+        {
+            FileModels = task.Result.ToList()?? new();
+        }
+        StateHasChanged();
+    }
+    async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var fileModel = new FileModel
+            {
+                GroupId = GroupId,
+                FileName = file.Name,
+                Extension = Path.GetExtension(file.Name),
+                FilePosition = Position,
+                BrowserFile = file,
+                File = await Extensions.ToByteArrayAsync(file),
+            };
+            await FileService.PostFileModel(fileModel);
+        }
+        await GetFiles();
+    }
+    private async Task Clear()
+    {
+        FileModels.Clear();
+        ClearDragClass();
+        await Task.Delay(100);
+    }
+    private void Upload()
+    {
+        
+    }
+    private async Task Remove(FileModel file)
+    {
+        await FileService.DeleteFileModel(file.FileId);
+        await GetFiles();
+    }
+    private async Task Download(FileModel file)
+    {
+        await JSRuntime.InvokeVoidAsync("downloadFile", Convert.ToBase64String(file.File), file.FileName);
+    }
+
+    private void SetDragClass()
+        => _dragClass = $"{DefaultDragClass} mud-border-primary";
+
+    private void ClearDragClass()
+        => _dragClass = DefaultDragClass;
+}
+<style>
+    .mud-chip-content
+    {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .stack-containter
+    {
+        overflow: auto !important;
+    }
+    .mud-height-full
+    {
+        height: 150px !important;
+    }
+</style>
