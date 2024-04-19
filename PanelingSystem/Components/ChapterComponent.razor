@@ -1,0 +1,16 @@
+<MudPaper Class="capstone pa-2" Elevation="3" Height="100px">
+    <div class="d-flex flex-row align-items-center">
+        <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent" Size="Size.Large"/>
+        <MudText Typo="Typo.h3">@Title</MudText>
+        <MudSpacer/>
+        <MudText Typo="Typo.h6">@DateFile</MudText>
+    </div>
+</MudPaper>
+
+@code
+{
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string DateFile { get; set; }
+    [Parameter] public Enums.Chapter Chapter { get; set;}
+    private CapstoneFileModel CapstoneFile { get; set; }
+}

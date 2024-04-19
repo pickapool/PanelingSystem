@@ -1,6 +1,16 @@
 @inject IFileService FileService
 @inject IJSRuntime JSRuntime
-
+<MudText Typo="Typo.h5" Class="text-center">
+    @if(Position == Enums.FilePosition.Title)
+    {
+        <span>Title Defense</span>
+    } else if(Position == Enums.FilePosition.PreOral)
+    {
+         <span>Pre Oral Defense</span>
+    } else {
+         <span>Final Defense</span>
+    }
+</MudText>
 <MudFileUpload T="IReadOnlyList<IBrowserFile>"
                @bind-Value="FileModels"
                AppendMultipleFiles

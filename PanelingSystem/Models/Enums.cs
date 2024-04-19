@@ -24,5 +24,12 @@
             PreOral = 1,
             Finals = 2,
         }
+        public enum Chapter
+        {
+            Chapter1 = 0,
+            Chapter2 = 1,
+            Chapter3 = 2,
+            Chapter4 = 3,
+        }
     }
 }

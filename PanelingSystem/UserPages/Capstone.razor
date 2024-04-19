@@ -1,0 +1,66 @@
+@page "/u/capstone"
+
+@inject IGroupService GroupService
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <MudGrid Spacing="1">
+        <MudItem xs="9">
+            <MudPaper Elevation="3" Height="88vh" Width="100%">
+                <div class="d-flex flex-column pa-2">
+                    <MudItem xs="12">
+                        <MudSelect Value="@Group" style="width: 30%;"
+                        ValueChanged="(GroupModel g)=> GetFiles(g)"
+                        Margin="Margin.Dense" Text=""
+                            Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                            @foreach (var g in ListGroups.ToList())
+                            {
+                                <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <div class="pa-2 d-flex flex-column gap-10 justify-content-center caps">
+                        <ChapterComponent Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1"/>
+                        <ChapterComponent Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2"/>
+                        <ChapterComponent Title="CHAPTER 3" Chapter="Enums.Chapter.Chapter3"/>
+                        <ChapterComponent Title="CHAPTER 4" Chapter="Enums.Chapter.Chapter4"/>
+                    </div>
+                </div>
+                
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="3">
+            <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+                <div class="d-flex flex-column gap-2">
+                    <MudText Typo="Typo.caption">Comments</MudText>
+                    <MudDivider/>
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+    
+</div>
+@code
+{
+    private List<GroupModel> ListGroups = new();
+    private GroupModel Group = new();
+    protected override async Task OnInitializedAsync()
+    {
+        Task<IEnumerable<GroupModel>> data = GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion)
+        {
+            ListGroups = data.Result.ToList();
+            Group = ListGroups.FirstOrDefault() ?? new();
+        }
+    }
+    private async Task GetFiles(GroupModel groupModel)
+    {
+        
+    }
+}
+<style>
+    .capstone
+    {
+        cursor: pointer;
+    }
+</style>
