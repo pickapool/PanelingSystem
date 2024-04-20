@@ -1,14 +1,14 @@
 @page "/u/capstone"
 
 @inject IGroupService GroupService
+@inject ICapstoneFileService CapstoneFileService
 
 <div class="d-flex flex-column justify-content-center align-items-center">
     <MudGrid Spacing="1">
         <MudItem xs="9">
             <MudPaper Elevation="3" Height="88vh" Width="100%">
                 <div class="d-flex flex-column pa-2">
-                    <MudItem xs="12">
-                        <MudSelect Value="@Group" style="width: 30%;"
+                    <MudSelect Value="@Group" style="width: 30%;"
                         ValueChanged="(GroupModel g)=> GetFiles(g)"
                         Margin="Margin.Dense" Text=""
                             Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
@@ -16,13 +16,12 @@
                             {
                                 <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
                             }
-                        </MudSelect>
-                    </MudItem>
+                    </MudSelect>
                     <div class="pa-2 d-flex flex-column gap-10 justify-content-center caps">
-                        <ChapterComponent Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1"/>
-                        <ChapterComponent Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2"/>
-                        <ChapterComponent Title="CHAPTER 3" Chapter="Enums.Chapter.Chapter3"/>
-                        <ChapterComponent Title="CHAPTER 4" Chapter="Enums.Chapter.Chapter4"/>
+                        <ChapterComponent Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent Title="CHAPTER 3" Chapter="Enums.Chapter.Chapter3" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent Title="CHAPTER 4" Chapter="Enums.Chapter.Chapter4" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                     </div>
                 </div>
                 
@@ -43,6 +42,7 @@
 {
     private List<GroupModel> ListGroups = new();
     private GroupModel Group = new();
+    private List<CapstoneFileModel> ListChapters = new();
     protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
@@ -51,11 +51,18 @@
         {
             ListGroups = data.Result.ToList();
             Group = ListGroups.FirstOrDefault() ?? new();
+            await GetFiles(Group);
         }
     }
     private async Task GetFiles(GroupModel groupModel)
     {
-        
+        Group = groupModel;
+        Task<IEnumerable<CapstoneFileModel>> task = CapstoneFileService.GetCapstoneFiles();
+        await task;
+        if(task.Status == TaskStatus.RanToCompletion)
+        {
+            ListChapters = task.Result.ToList();
+        }
     }
 }
 <style>

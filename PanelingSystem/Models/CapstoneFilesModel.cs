@@ -9,7 +9,7 @@ namespace PanelingSystem.Models
     {
         public int CapstoneFileId { get; set; }
         public int GroupId { get; set; }
-        public DateTime DateAdded { get; set; }
+        public DateTime? DateAdded { get; set; }
         public byte[] File { get; set; }
         public string FileName { get; set; }
         public Enums.Chapter Chapter { get; set; }

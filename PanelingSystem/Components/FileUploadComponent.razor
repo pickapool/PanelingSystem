@@ -47,7 +47,7 @@
     {
         <div class="d-flex flex-row justify-content-between align-items-center">
         <MudChip Label="true" Color="Color.Default" OnClose="()=> Remove(file)">@file.FileName</MudChip>
-        <MudIconButton OnClick="()=> Extensions.Download(file, JSRuntime)" style="width: 40px;" Icon="@Icons.Material.Filled.Download"></MudIconButton>
+        <MudIconButton OnClick="()=> Extensions.Download(file.File, file.FileName, JSRuntime)" style="width: 40px;" Icon="@Icons.Material.Filled.Download"></MudIconButton>
         </div>
     }
 </MudStack>

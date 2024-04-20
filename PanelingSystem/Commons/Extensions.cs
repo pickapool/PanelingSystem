@@ -63,9 +63,9 @@ namespace PanelingSystem.Commons
                 return memoryStream.ToArray();
             }
         }
-        public static async Task Download(FileModel file, IJSRuntime JSRuntime)
+        public static async Task Download(byte[] file, string fileName, IJSRuntime JSRuntime)
         {
-            await JSRuntime.InvokeVoidAsync("downloadFile", Convert.ToBase64String(file.File), file.FileName);
+            await JSRuntime.InvokeVoidAsync("downloadFile", Convert.ToBase64String(file), fileName);
         }
     }
 }
