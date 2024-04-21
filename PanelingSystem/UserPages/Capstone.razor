@@ -8,15 +8,19 @@
         <MudItem xs="9">
             <MudPaper Elevation="3" Height="88vh" Width="100%">
                 <div class="d-flex flex-column pa-2">
-                    <MudSelect Value="@Group" style="width: 30%;"
-                        ValueChanged="(GroupModel g)=> GetFiles(g)"
-                        Margin="Margin.Dense" Text=""
-                            Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
-                            @foreach (var g in ListGroups.ToList())
-                            {
-                                <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
-                            }
-                    </MudSelect>
+                    <MudGrid>
+                        <MudItem xs="4">
+                            <MudSelect Value="@Group" style="width: 30%;"
+                                ValueChanged="(GroupModel g)=> GetFiles(g)"
+                                Margin="Margin.Dense" Text=""
+                                    Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                                    @foreach (var g in ListGroups.ToList())
+                                    {
+                                        <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
+                                    }
+                            </MudSelect>
+                        </MudItem>
+                    </MudGrid>
                     <div class="pa-2 d-flex flex-column gap-10 justify-content-center caps">
                         <ChapterComponent Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                         <ChapterComponent Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2" ListChapters="ListChapters" GroupId="Group.GroupId"/>

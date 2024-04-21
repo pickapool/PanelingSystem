@@ -1,0 +1,14 @@
+
+<MudPaper Class="d-flex flex-row align-items-center pa-2 ma-2">
+    @* @if (Member.Student.ProfilePicture.Count() == 0) {
+        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
+    } else {
+        <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Member.Student.ProfilePicture)}")' Size='Size.Large' />
+    } *@
+</MudPaper>
+
+@code
+{
+    [Parameter] public MembersModel Member { get; set; }
+
+}

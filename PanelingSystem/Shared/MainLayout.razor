@@ -20,10 +20,16 @@
         </div>
 
         <main>
-            <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <div class="top-row px-4">
+            <PersonTemplate Account="GlobalClass.CurrentUserAccount"/>
+            <MudIconButton OnClick="()=> ToggleOpen()" Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small"/>
+            <div class="profile-popup">
+                <MudPopover Open="@_isOpen" Fixed="true" Class="pa-1 mr-2" TransformOrigin="Origin.TopLeft" AnchorOrigin="Origin.BottomRight">
+                    <ProfileInformation OnCloseDialog="@ToggleOpen" Account="GlobalClass.CurrentUserAccount"/>
+                </MudPopover>
+            </div>
         </div>
-
+        
         <article class="content px-4">
             @Body
         </article>
@@ -34,6 +40,8 @@
 </div>
 @code
 {
+    public bool _isOpen;
+
     protected override async Task OnInitializedAsync()
     {
         AppState.OnChange += UpdateState;
@@ -56,10 +64,21 @@
             StateHasChanged();
         });
     }
+    public void ToggleOpen()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
 }
 <style>
     .page
     {
         overflow: hidden;
+    }
+    .profile-popup .mud-popover
+    {
+        left: 1300px !important;
     }
 </style>

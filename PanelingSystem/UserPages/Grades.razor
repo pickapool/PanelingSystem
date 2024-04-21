@@ -1,0 +1,84 @@
+@page "/u/grades"
+
+@inject IMemberService MemberService
+@inject IGroupService GroupService
+
+<div class="d-flex justify-content-center align-items-center">
+    <MudGrid Spacing="2">
+        <MudItem xs="8">
+            <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+                <MudGrid Spacing="2">
+                    <MudItem xs="4">
+                        <MudSelect Value="@Group" 
+                            ValueChanged="(GroupModel g)=> SetGroup(g)"
+                            Margin="Margin.Dense" Text=""
+                            Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                                @foreach (var g in ListGroups.ToList())
+                                {
+                                    <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
+                                }
+                            </MudSelect>
+                    </MudItem>
+                    <MudItem xs="4"></MudItem>
+                    <MudItem xs="4"></MudItem>
+                    <MudItem xs="12">
+                        @if(GroupMembers.Count > 0 )
+                        {
+                            @foreach(MembersModel member in GroupMembers)
+                            {
+                                <GradesComponents Member="member"/>
+                            }
+                        }
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="4">
+            <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+                <div class="d-flex flex-column align-items-center">
+                    <MudText Typo="Typo.h2">GPA</MudText>
+                    <MudChart ChartType="ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="Index" InputData="@data" InputLabels="@labels"></MudChart>
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code
+{
+    private GroupModel Group = new();
+    private List<MembersModel> GroupMembers = new();
+    private List<GroupModel> ListGroups = new();
+    private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
+    int dataSize = 2;
+    public double[] data = { 50,50 };
+    public string[] labels = { "TOTAL AVERAGE",""};
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run( async () => { 
+            Task<IEnumerable<GroupModel>> data = GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
+            await data;
+            if(data.Status == TaskStatus.RanToCompletion)
+            {
+                ListGroups = data.Result.ToList();
+                Group = ListGroups.FirstOrDefault() ?? new();
+                
+            } 
+        }).ContinueWith( async ( e ) => await SetGroup(Group));
+    }
+    private async Task SetGroup(GroupModel groupModel)
+    {
+        Group = groupModel;
+        await GetMembers();
+    }
+    private async Task GetMembers()
+    {
+        Task<IEnumerable<MembersModel>> t =  MemberService.GetMyGroupMembers(Group.GroupId);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            GroupMembers = t.Result.ToList();
+        }
+        StateHasChanged();
+    }
+}

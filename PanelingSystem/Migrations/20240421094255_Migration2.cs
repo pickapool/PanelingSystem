@@ -5,25 +5,25 @@
 namespace PanelingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration9 : Migration
+    public partial class Migration2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Chapter",
-                table: "CapstoneFiles",
-                type: "int",
+            migrationBuilder.AddColumn<byte[]>(
+                name: "ProfilePicture",
+                table: "Accounts",
+                type: "varbinary(max)",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: new byte[0]);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Chapter",
-                table: "CapstoneFiles");
+                name: "ProfilePicture",
+                table: "Accounts");
         }
     }
 }

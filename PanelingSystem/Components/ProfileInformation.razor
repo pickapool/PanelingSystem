@@ -1,0 +1,73 @@
+@inject ILocalStorageService LocalStorageService
+@inject AppState AppState
+@inject IAccountService AccountService
+
+<div class="d-flex flex-column gap-0 align-items-center" style="width: 240px;">
+    <div class="top-border">
+
+    </div>
+    <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+    <ButtonTemplate>
+        <MudButton HtmlTag="label"
+                Variant="Variant.Text"
+                Size="Size.Large"
+                Color="Color.Primary"
+                for="@context.Id">
+                @if (Account.ProfilePicture.Count() == 0) {
+                    <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Medium' />
+                } else {
+                    <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+                }
+        </MudButton>
+    </ButtonTemplate>
+</MudFileUpload>
+    <MudText Class="mt-2" Typo="Typo.button">@Account.Name</MudText>
+    <MudText Typo="Typo.caption" Color="Color.Default">@Account.Email</MudText>
+    <MudDivider/>
+    <MudButton OnClick="()=> Logout()" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Logout" IconColor="Color.Info" Size="Size.Small">Sign out</MudButton>
+    <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error" Size="Size.Small">Close</MudButton>
+    
+</div>
+@code
+{
+    [Parameter] public UserAccountModel Account { get; set; }
+    [Parameter] public EventCallback OnCloseDialog { get; set; }
+
+    private async Task ToggleOpen()
+    {
+        await OnCloseDialog.InvokeAsync();
+    }
+    private async Task Logout()
+    {
+        ValueTask t = LocalStorageService.RemoveItemAsync("Account");
+        await t;
+        if(t.IsCompletedSuccessfully)
+        {
+            GlobalClass.CurrentUserAccount = null;
+            await AppState.NotifyStateChangedAsync();
+        }
+    }
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        GlobalClass.CurrentUserAccount.ProfilePicture = await Extensions.ToByteArrayAsync(file);
+        Task t = AccountService.PutUserAccountModel(GlobalClass.CurrentUserAccount.UserId, GlobalClass.CurrentUserAccount);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            await LocalStorageService.RemoveItemAsync("Account");
+            await LocalStorageService.SetItemAsync<UserAccountModel>("Account", GlobalClass.CurrentUserAccount);
+            await AppState.NotifyStateChangedAsync();
+        }
+    }
+}
+<style>
+    .top-border
+    {
+        background-color: #05163D;
+        height: 5px;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        border-radius: 10px 10px 0px 0px;
+    }
+</style>

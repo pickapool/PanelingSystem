@@ -2,12 +2,12 @@
 @inject ISnackbar Snackbar
 @inject IJSRuntime JSRuntime
 
-<MudPaper Class="d-flex flex-column capstone pa-2" Elevation="3" Height="100px">
+<MudPaper Class="d-flex flex-column capstone pa-2" Elevation="3" style="height: 35% !important;">
     <div class="d-flex flex-row align-items-center">
         <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent" Size="Size.Large"/>
         <MudText Typo="Typo.h3">@Title</MudText>
         <MudSpacer/>
-        <MudIconButton OnClick="()=> Extensions.Download(CapstoneFile.File, CapstoneFile.FileName, JSRuntime)" Class="mt-2" Icon="@Icons.Material.Filled.FileDownload" Size="Size.Medium"/>
+        <MudIconButton OnClick="()=> Download()" Class="mt-2" Icon="@Icons.Material.Filled.FileDownload" Size="Size.Medium"/>
         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
         <ButtonTemplate>
             <MudButton HtmlTag="label"
@@ -50,5 +50,14 @@
             CapstoneFile = t.Result;
         }
         //TODO upload the files to the server
+    }
+    private async Task Download()
+    {
+        if(CapstoneFile.File == null)
+        {
+            Extensions.ShowAlert("No file has been found.", Variant.Filled, Snackbar, Severity.Error);
+            return;
+        }
+        await Extensions.Download(CapstoneFile.File, CapstoneFile.FileName, JSRuntime);
     }
 }
