@@ -44,6 +44,7 @@
         if(t.IsCompletedSuccessfully)
         {
             GlobalClass.CurrentUserAccount = null;
+            await OnCloseDialog.InvokeAsync();
             await AppState.NotifyStateChangedAsync();
         }
     }

@@ -58,7 +58,6 @@
             if(g.Status == TaskStatus.RanToCompletion)
             {
                 Extensions.ShowAlert("Grade has been publish.", Variant.Filled, SnackBar, Severity.Success);
-                //await AppState.NotifyStateChangedAsync();
                 await OnGradeChange.InvokeAsync();
                 StateHasChanged();
             }
