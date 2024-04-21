@@ -23,5 +23,6 @@ namespace PanelingSystem.DatabaseContext
             modelBuilder.Entity<FileModel>().ToTable("Files");
             modelBuilder.Entity<CapstoneFileModel>().ToTable("CapstoneFiles");
         }
+        public DbSet<PanelingSystem.Models.GradeModel> GradeModel { get; set; } = default!;
     }
 }

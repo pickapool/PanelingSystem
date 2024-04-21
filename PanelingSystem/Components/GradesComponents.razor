@@ -16,6 +16,7 @@
     } else {
         <MudTextField style="width: 100px;" Mask="@(new PatternMask("00"))" Label="Grade" 
                       @bind-Value="grade"  Variant="@Variant.Filled" ReadOnly Clearable />
+        <MudButton OnClick="UpdateGrade" Variant="Variant.Filled" Size="Size.Small" Color="Color.Info">Publish</MudButton>
     }
     </div>
 </MudPaper>
@@ -24,5 +25,10 @@
 {
     [Parameter] public MembersModel Member { get; set; }
     private string grade = string.Empty;
+
+    private async Task UpdateGrade()
+    {
+        
+    }
 
 }
