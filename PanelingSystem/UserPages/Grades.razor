@@ -22,13 +22,12 @@
                     <MudItem xs="4"></MudItem>
                     <MudItem xs="4"></MudItem>
                     <MudItem xs="12">
-                        @if(GroupMembers.Count > 0 )
-                        {
+                       
                             @foreach(MembersModel member in GroupMembers)
                             {
                                 <GradesComponents Member="member"/>
                             }
-                        }
+                        
                     </MudItem>
                 </MudGrid>
             </MudPaper>
