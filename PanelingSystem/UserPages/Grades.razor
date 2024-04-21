@@ -2,8 +2,12 @@
 
 @inject IMemberService MemberService
 @inject IGroupService GroupService
+@inject IGradeService GradeService
+@inject AppState AppState
 
 <div class="d-flex justify-content-center align-items-center">
+    @if(IsDataFetch)
+    {
     <MudGrid Spacing="2">
         <MudItem xs="8">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
@@ -22,12 +26,10 @@
                     <MudItem xs="4"></MudItem>
                     <MudItem xs="4"></MudItem>
                     <MudItem xs="12">
-                       
-                            @foreach(MembersModel member in GroupMembers)
-                            {
-                                <GradesComponents Member="member"/>
-                            }
-                        
+                        @foreach(MembersModel member in GroupMembers)
+                        {
+                            <GradesComponents Member="member" Grades="ListGrades" GroupId="Group.GroupId" OnGradeChange="()=> NotifyChanged()"/>
+                        }
                     </MudItem>
                 </MudGrid>
             </MudPaper>
@@ -35,12 +37,15 @@
         <MudItem xs="4">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
                 <div class="d-flex flex-column align-items-center">
-                    <MudText Typo="Typo.h2">GPA</MudText>
+                    <MudText Typo="Typo.h2">GPA @GPA.ToString("N2") %</MudText>
                     <MudChart ChartType="ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="Index" InputData="@data" InputLabels="@labels"></MudChart>
                 </div>
             </MudPaper>
         </MudItem>
     </MudGrid>
+    } else {
+        <MudSkeleton Height="100vh" Width="100%"></MudSkeleton>
+    }
 </div>
 
 @code
@@ -48,22 +53,29 @@
     private GroupModel Group = new();
     private List<MembersModel> GroupMembers = new();
     private List<GroupModel> ListGroups = new();
+    private List<GradeModel> ListGrades = new();
     private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
     int dataSize = 2;
-    public double[] data = { 50,50 };
+    public double[] data = { GPA, GPA - 100 };
     public string[] labels = { "TOTAL AVERAGE",""};
+    bool IsDataFetch = false;
+    private static double GPA = 0.00;
     protected override async Task OnInitializedAsync()
     {
-        await Task.Run( async () => { 
-            Task<IEnumerable<GroupModel>> data = GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
-            await data;
-            if(data.Status == TaskStatus.RanToCompletion)
-            {
-                ListGroups = data.Result.ToList();
-                Group = ListGroups.FirstOrDefault() ?? new();
-                
-            } 
-        }).ContinueWith( async ( e ) => await SetGroup(Group));
+        await GetGroups();   
+    }
+    private async Task GetGroups()
+    {
+        Task<IEnumerable<GroupModel>> data = 
+        GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? 
+        GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupService.GetGroups();
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion)
+        {
+            ListGroups = data.Result.ToList();
+            Group = ListGroups.FirstOrDefault() ?? new();
+            await SetGroup(Group);
+        } 
     }
     private async Task SetGroup(GroupModel groupModel)
     {
@@ -77,7 +89,21 @@
         if(t.Status == TaskStatus.RanToCompletion)
         {
             GroupMembers = t.Result.ToList();
+            Task<IEnumerable<GradeModel>> list = GradeService.GetGradeModel();
+            await list;
+            if(list.Status == TaskStatus.RanToCompletion)
+            {
+                ListGrades = list.Result.ToList();
+                GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ;
+                IsDataFetch = true;
+                await AppState.NotifyStateChangedAsync();
+            }
         }
         StateHasChanged();
+    }
+    private async Task NotifyChanged()
+    {
+        GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ;
+        await AppState.NotifyStateChangedAsync();
     }
 }

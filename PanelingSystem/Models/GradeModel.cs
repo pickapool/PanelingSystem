@@ -9,6 +9,7 @@ namespace PanelingSystem.Models
     {
         public int GradeId { get; set; }
         public int UserId { get; set; }
+        public int GroupId { get; set; }
         public double Grade { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel Student {  get; set; }

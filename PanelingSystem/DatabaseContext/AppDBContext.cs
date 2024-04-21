@@ -11,6 +11,7 @@ namespace PanelingSystem.DatabaseContext
         public DbSet<GroupModel> Groups { get; set; }
         public DbSet<FileModel> Files { get; set; }
         public DbSet<CapstoneFileModel> CapstoneFiles { get; set; }
+        public DbSet<GradeModel> Grades { get; set; }
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
 
@@ -22,7 +23,7 @@ namespace PanelingSystem.DatabaseContext
             modelBuilder.Entity<MembersModel>().ToTable("Members");
             modelBuilder.Entity<FileModel>().ToTable("Files");
             modelBuilder.Entity<CapstoneFileModel>().ToTable("CapstoneFiles");
+            modelBuilder.Entity<GradeModel>().ToTable("Grades");
         }
-        public DbSet<PanelingSystem.Models.GradeModel> GradeModel { get; set; } = default!;
     }
 }

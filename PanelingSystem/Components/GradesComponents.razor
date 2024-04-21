@@ -1,3 +1,6 @@
+@inject IGradeService GradeService
+@inject ISnackbar SnackBar
+@inject AppState AppState
 
 <MudPaper Class="d-flex justify-content-between flex-row align-items-center pa-2 ma-2" style="height: 40% !important;">
     <div class="d-flex flex-row align-items-center">
@@ -8,27 +11,57 @@
     }
     <MudText Typo="Typo.h6">@Member.Student.Name</MudText>
     </div>
-    <div>
-    @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
-    {
-        <MudTextField Label="Grade" 
-                      @bind-Value="grade"  Variant="@Variant.Text" Clearable />
-    } else {
-        <MudTextField style="width: 100px;" Mask="@(new PatternMask("00"))" Label="Grade" 
-                      @bind-Value="grade"  Variant="@Variant.Filled" ReadOnly Clearable />
-        <MudButton OnClick="UpdateGrade" Variant="Variant.Filled" Size="Size.Small" Color="Color.Info">Publish</MudButton>
-    }
+    <div class="d-flex flex-row align-items-center gap-2">
+        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
+        {
+            <span>@(Grade.Grade+"/100")</span>
+        } else {
+            <MudTextField style="width: 100px; height: 35px;" Mask="@(new PatternMask("00"))" Label="Grade" 
+                        @bind-Value="grade"  Variant="@Variant.Outlined" Clearable />
+            <MudButton style="height: 35px;" Class="mt-1" OnClick="UpdateGrade" Variant="Variant.Filled" Size="Size.Small" Color="Color.Info">Publish</MudButton>
+        }
     </div>
 </MudPaper>
 
 @code
 {
     [Parameter] public MembersModel Member { get; set; }
-    private string grade = string.Empty;
+    [Parameter] public List<GradeModel> Grades { get; set; }
+    [Parameter] public int GroupId { get; set; }
+    [Parameter] public EventCallback OnGradeChange { get; set; }
+    private GradeModel Grade = new();
+    private double grade = 0.00;
+    protected override void OnParametersSet()
+    {
+        if(Grades != null)
+        {
+            Grade = Grades.FirstOrDefault( e => e.UserId == Member.UserId && e.GroupId == GroupId) ?? new();
+            grade = Grade.Grade;
+        } else {
+            Grade = new();
+        }
+    }
 
     private async Task UpdateGrade()
     {
-        
+        Task<GradeModel> t = GradeService.GetStudentGrade(Member.UserId);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            GradeModel current = new();
+            current.UserId = Member.UserId;
+            current.Grade = grade;
+            current.GroupId = GroupId;
+            Grade.Grade = grade;
+            Task<GradeModel> g = Grade.GradeId == 0 ? GradeService.PostGradeModel(current) : GradeService.PutGradeModel(Grade.GradeId, Grade);
+            await g;
+            if(g.Status == TaskStatus.RanToCompletion)
+            {
+                Extensions.ShowAlert("Grade has been publish.", Variant.Filled, SnackBar, Severity.Success);
+                //await AppState.NotifyStateChangedAsync();
+                await OnGradeChange.InvokeAsync();
+                StateHasChanged();
+            }
+        }
     }
-
 }
