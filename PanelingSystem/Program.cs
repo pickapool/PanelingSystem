@@ -8,6 +8,7 @@ using PanelingSystem.Commons;
 using PanelingSystem.DatabaseContext;
 using PanelingSystem.Services.AccountServices;
 using PanelingSystem.Services.CapstoneFilesServices;
+using PanelingSystem.Services.CommentServices;
 using PanelingSystem.Services.FileServices;
 using PanelingSystem.Services.GradeServices;
 using PanelingSystem.Services.GroupServices;
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<ICapstoneFileService, CapstoneFileService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 builder.Services.AddDbContext<AppDBContext>(options =>
 {

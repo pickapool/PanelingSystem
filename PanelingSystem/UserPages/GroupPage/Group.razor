@@ -88,7 +88,8 @@
     private IEnumerable<GroupModel> ListOfGroups = null;
     private async Task<TableData<GroupModel>> ServerReload(TableState state)
     {
-        Task<IEnumerable<GroupModel>> data = GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
+        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
+            GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupServices.GetGroups();
         await data;
         await Task.Delay(300);
         ListOfGroups = data.Result.Where(grp =>

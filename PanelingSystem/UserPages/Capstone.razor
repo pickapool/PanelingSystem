@@ -33,9 +33,18 @@
         </MudItem>
         <MudItem xs="3">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
-                <div class="d-flex flex-column gap-2">
-                    <MudText Typo="Typo.caption">Comments</MudText>
-                    <MudDivider/>
+                <div class="d-flex flex-column justify-content-between gap-2" style="height: 100%;">
+                    <div class="d-flex flex-column">
+                        <MudText Typo="Typo.caption">Comments</MudText>
+                        <MudDivider/>
+                    </div>
+                    <div>
+                    @if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student)
+                    {
+                        <MudTextField @bind-Value="comment" HelperText="Comment" AdornmentIcon="@Icons.Material.Filled.Send" 
+                            Variant="Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="AddComment"/>
+                    }
+                    </div>
                 </div>
             </MudPaper>
         </MudItem>
@@ -47,9 +56,11 @@
     private List<GroupModel> ListGroups = new();
     private GroupModel Group = new();
     private List<CapstoneFileModel> ListChapters = new();
+    private string comment = string.Empty;
     protected override async Task OnInitializedAsync()
     {
-        Task<IEnumerable<GroupModel>> data = GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
+        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
+            GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupService.GetGroups();
         await data;
         if(data.Status == TaskStatus.RanToCompletion)
         {
@@ -67,6 +78,10 @@
         {
             ListChapters = task.Result.ToList();
         }
+    }
+    private async Task AddComment()
+    {
+
     }
 }
 <style>
