@@ -14,7 +14,7 @@
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 <MudSpacer />
-                <MudButton OnClick="()=> OpenGroupDialog(new GroupModel())" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
+                <MudButton OnClick="()=> OpenGroupDialog(new GroupModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
             </ToolBarContent>
             <ColGroup>
                 <col />
@@ -141,7 +141,7 @@
     }
     private async Task OpenGroupDialog(GroupModel group)
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
         var param = new DialogParameters();
         param.Add("Group", group);
         var dialog =  await DialogService.Show<GroupDialog>(group.GroupId == 0 ? "Add Group" : "Edit Group", param, options).Result;
@@ -156,12 +156,12 @@
         await t;
         if(t.Status == TaskStatus.RanToCompletion)
         {
-            Extensions.ShowAlert("Group has been removed.", Variant.Filled, Snackbar, Severity.Info);
+            Extensions.ShowAlert("Group has been removed.", MudBlazor.Variant.Filled, Snackbar, Severity.Info);
         }
     }
     private async Task AddMembers(GroupModel group)
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
         var param = new DialogParameters();
         param.Add("Group", group);
         var dialog =  await DialogService.Show<AddMembersDialog>("Add Members", param, options).Result;

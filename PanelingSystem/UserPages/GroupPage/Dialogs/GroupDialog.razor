@@ -6,22 +6,22 @@
     <DialogContent>
         <MudGrid Spacing="3" Class="pa-3 mr-4">
             <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.GroupThesisTitle" Label="Title" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Group.GroupThesisTitle" Label="Title" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
             <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.Groupname" Label="Group name" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Group.Groupname" Label="Group name" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
             <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.Program" Label="Program" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Group.Program" Label="Program" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
             <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.Year" Label="Year" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Group.Year" Label="Year" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
         </MudGrid>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Save</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="Submit">Save</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
@@ -49,7 +49,7 @@
                 await MemberService.PostMembersModel(member);
             }
             MudDialog.Close(DialogResult.Ok(true));
-            Extensions.ShowAlert("Group successfully save", Variant.Filled, Snackbar, Severity.Success);
+            Extensions.ShowAlert("Group successfully save", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
         }
     }
     void Cancel() => MudDialog.Cancel();

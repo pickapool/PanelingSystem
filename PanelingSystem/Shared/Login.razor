@@ -17,10 +17,10 @@
                 </div>
                 
                 <div class="d-flex flex-column align-center gap-4 acc" style="width: 100%;">
-                    <MudTextField style="width: 100%;" @bind-Value="username" Label="Username" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentColor="Color.Warning" />
-                    <MudTextField @bind-Value="password" Label="Password" Variant="Variant.Outlined"  AdornmentColor="Color.Warning" 
+                    <MudTextField style="width: 100%;" @bind-Value="username" Label="Username" Variant="MudBlazor.Variant.Outlined" Adornment="Adornment.Start" AdornmentColor="Color.Warning" />
+                    <MudTextField @bind-Value="password" Label="Password" Variant="MudBlazor.Variant.Outlined"  AdornmentColor="Color.Warning" 
                     Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" InputType="PasswordInput" OnAdornmentClick="ShowPassword"/>
-                    <MudButton OnClick="Submit" Variant="Variant.Filled" Color="Color.Primary">LOGIN</MudButton>
+                    <MudButton OnClick="Submit" Variant="MudBlazor.Variant.Filled" Color="Color.Primary">LOGIN</MudButton>
                 </div>
                 
         </MudPaper>
@@ -61,7 +61,7 @@
             }
             else
             {
-                Extensions.ShowAlert("Sorry we cant find your account", Variant.Filled , Snackbar , Severity.Error);
+                Extensions.ShowAlert("Sorry we cant find your account", MudBlazor.Variant.Filled , Snackbar , Severity.Error);
             }
         }
     }

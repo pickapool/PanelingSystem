@@ -9,7 +9,7 @@
     <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
     <ButtonTemplate>
         <MudButton HtmlTag="label"
-                Variant="Variant.Text"
+                Variant="MudBlazor.Variant.Text"
                 Size="Size.Large"
                 Color="Color.Primary"
                 for="@context.Id">
@@ -24,7 +24,7 @@
     <MudText Class="mt-2" Typo="Typo.button">@Account.Name</MudText>
     <MudText Typo="Typo.caption" Color="Color.Default">@Account.Email</MudText>
     <MudDivider/>
-    <MudButton OnClick="()=> Logout()" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Logout" IconColor="Color.Info" Size="Size.Small">Sign out</MudButton>
+    <MudButton OnClick="()=> Logout()" Variant="MudBlazor.Variant.Text" StartIcon="@Icons.Material.Filled.Logout" IconColor="Color.Info" Size="Size.Small">Sign out</MudButton>
     <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error" Size="Size.Small">Close</MudButton>
     
 </div>

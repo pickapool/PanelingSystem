@@ -12,7 +12,7 @@
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 <MudSpacer />
-                <MudButton OnClick="()=> UserDialog(new UserAccountModel())" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
+                <MudButton OnClick="()=> UserDialog(new UserAccountModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
             </ToolBarContent>
             <ColGroup>
                 <col />
@@ -134,7 +134,7 @@
     }
     private async Task UserDialog(UserAccountModel account)
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true,DisableBackdropClick = true };
         var param = new DialogParameters();
         param.Add("Account", account);
         var dialog =  await DialogService.Show<CreateAccountDialog>(account.UserId == 0 ? "Add Account" : "Edit Account", param, options).Result;

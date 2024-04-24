@@ -19,7 +19,7 @@
                     </BlazoredTypeahead>
             </MudItem>
             <MudItem xs="3" Class="d-flex justify-conten-center align-center mt-5">
-                <MudButton OnClick="()=> Add(UserAccount)" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small"  Color="Color.Primary">ADD</MudButton>
+                <MudButton OnClick="()=> Add(UserAccount)" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">ADD</MudButton>
             </MudItem>
             <MudItem xs="12">
                 <span>Members</span>
@@ -90,7 +90,7 @@
     {
         if(GroupMembers.Any(( e => e.UserId == user.UserId)))
         {
-            Extensions.ShowAlert("Member already exist.", Variant.Filled, Snackbar, Severity.Error);
+            Extensions.ShowAlert("Member already exist.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
             UserAccount = new();
             return;
         }
@@ -100,7 +100,7 @@
         await t;
         if(t.Status == TaskStatus.RanToCompletion)
         {
-            Extensions.ShowAlert("New member has been added", Variant.Filled, Snackbar , Severity.Success);
+            Extensions.ShowAlert("New member has been added", MudBlazor.Variant.Filled, Snackbar , Severity.Success);
             Member = new();
             UserAccount = new();
             await GetMembers();

@@ -47,7 +47,7 @@
                     @if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student)
                     {
                         <MudTextField @bind-Value="comment" HelperText="Comment" AdornmentIcon="@Icons.Material.Filled.Send" 
-                            Variant="Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="AddComment"/>
+                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="AddComment"/>
                     }
                     </div>
                 </div>
@@ -115,4 +115,4 @@
     {
         cursor: pointer;
     }
-</style>    using PanelingSystem.Services.CommentServices;
+</style>

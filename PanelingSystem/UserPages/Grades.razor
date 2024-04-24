@@ -96,6 +96,7 @@
                 ListGrades = list.Result.ToList();
                 GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ;
                 IsDataFetch = true;
+                data = new double[] { GPA, GPA - 100 };
                 await AppState.NotifyStateChangedAsync();
             }
         }
@@ -104,6 +105,7 @@
     private async Task NotifyChanged()
     {
         GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ;
+        data = new double[] { GPA, GPA - 100 };
         await AppState.NotifyStateChangedAsync();
     }
 }

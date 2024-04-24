@@ -2,7 +2,7 @@
 @inject ISnackbar SnackBar
 @inject AppState AppState
 
-<MudPaper Class="d-flex justify-content-between flex-row align-items-center pa-2 ma-2" style="height: 40% !important;">
+<MudPaper Class="d-flex justify-content-between flex-row align-items-center pa-2 ma-2" style="height: 100px !important;">
     <div class="d-flex flex-row align-items-center">
     @if (Member.Student.ProfilePicture.Count() == 0) {
         <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
@@ -17,8 +17,8 @@
             <span>@(Grade.Grade+"/100")</span>
         } else {
             <MudTextField style="width: 100px; height: 35px;" Mask="@(new PatternMask("00"))" Label="Grade" 
-                        @bind-Value="grade"  Variant="@Variant.Outlined" Clearable />
-            <MudButton style="height: 35px;" Class="mt-1" OnClick="UpdateGrade" Variant="Variant.Filled" Size="Size.Small" Color="Color.Info">Publish</MudButton>
+                        @bind-Value="grade"  Variant="@MudBlazor.Variant.Outlined" Clearable />
+            <MudButton style="height: 35px;" Class="mt-1" OnClick="UpdateGrade" Variant="MudBlazor.Variant.Filled" Size="Size.Small" Color="Color.Info">Publish</MudButton>
         }
     </div>
 </MudPaper>
@@ -57,7 +57,7 @@
             await g;
             if(g.Status == TaskStatus.RanToCompletion)
             {
-                Extensions.ShowAlert("Grade has been publish.", Variant.Filled, SnackBar, Severity.Success);
+                Extensions.ShowAlert("Grade has been publish.", MudBlazor.Variant.Filled, SnackBar, Severity.Success);
                 await OnGradeChange.InvokeAsync();
                 StateHasChanged();
             }

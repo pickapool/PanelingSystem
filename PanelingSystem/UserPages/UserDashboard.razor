@@ -42,7 +42,8 @@
     List<FileModel> fileModels = new();
     protected override async Task OnInitializedAsync()
     {
-        Task<IEnumerable<GroupModel>> data = GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId);
+        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? 
+        GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupService.GetGroups();
         await data;
         if(data.Status == TaskStatus.RanToCompletion)
         {

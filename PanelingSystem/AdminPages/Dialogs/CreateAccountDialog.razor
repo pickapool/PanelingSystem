@@ -5,16 +5,16 @@
     <DialogContent>
         <MudGrid Spacing="3" Class="pa-3 mr-4">
             <MudItem xs="6">
-                <MudTextField @bind-Value="@Account.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Account.Name" Label="Name" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
             <MudItem xs="6">
-                <MudTextField @bind-Value="@Account.Email" Label="Email" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Account.Email" Label="Email" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
             <MudItem xs="6">
-                <MudTextField @bind-Value="@Account.UserName" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Account.UserName" Label="Username" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
             <MudItem xs="6">
-                <MudTextField @bind-Value="@Account.Password" Label="Password" InputType="PasswordInput" Variant="Variant.Outlined" Margin="Margin.Dense" 
+                <MudTextField @bind-Value="@Account.Password" Label="Password" InputType="PasswordInput" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" 
                 HelperText="Required*" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPassword"/>
             </MudItem>
             <MudItem xs="6">
@@ -26,13 +26,13 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="6">
-                <MudTextField @bind-Value="@Account.Designation" Label="Designation" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                <MudTextField @bind-Value="@Account.Designation" Label="Designation" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
             </MudItem>
         </MudGrid>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Save</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="Submit">Save</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
@@ -69,7 +69,7 @@
         if(t.Status == TaskStatus.RanToCompletion)
         {
             MudDialog.Close(DialogResult.Ok(true));
-            Extensions.ShowAlert("Account successfully save", Variant.Filled, Snackbar, Severity.Success);
+            Extensions.ShowAlert("Account successfully save", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
         }
     }
     void Cancel() => MudDialog.Cancel();

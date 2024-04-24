@@ -11,7 +11,7 @@
         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
         <ButtonTemplate>
             <MudButton HtmlTag="label"
-                    Variant="Variant.Text"
+                    Variant="MudBlazor.Variant.Text"
                     Size="Size.Large"
                     Color="Color.Primary"
                     StartIcon="@Icons.Material.Filled.CloudUpload"
@@ -46,7 +46,7 @@
         await t;
         if(t.Status == TaskStatus.RanToCompletion)
         {
-            Extensions.ShowAlert("File has been uploaded.", Variant.Filled , Snackbar, Severity.Success);
+            Extensions.ShowAlert("File has been uploaded.", MudBlazor.Variant.Filled , Snackbar, Severity.Success);
             CapstoneFile = t.Result;
         }
         //TODO upload the files to the server
@@ -55,7 +55,7 @@
     {
         if(CapstoneFile.File == null)
         {
-            Extensions.ShowAlert("No file has been found.", Variant.Filled, Snackbar, Severity.Error);
+            Extensions.ShowAlert("No file has been found.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
             return;
         }
         await Extensions.Download(CapstoneFile.File, CapstoneFile.FileName, JSRuntime);
