@@ -2,6 +2,7 @@
 
 @inject IGroupService GroupService
 @inject ICapstoneFileService CapstoneFileService
+@inject ICommentService CommentService
 
 <div class="d-flex flex-column justify-content-center align-items-center">
     <MudGrid Spacing="1">
@@ -34,9 +35,13 @@
         <MudItem xs="3">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
                 <div class="d-flex flex-column justify-content-between gap-2" style="height: 100%;">
-                    <div class="d-flex flex-column">
+                    <div class="d-flex flex-column gap-2">
                         <MudText Typo="Typo.caption">Comments</MudText>
                         <MudDivider/>
+                        @foreach(CommentModel comment in ListComments)
+                        {
+                            <CommentComponent Comment="comment"/>
+                        }
                     </div>
                     <div>
                     @if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student)
@@ -56,6 +61,7 @@
     private List<GroupModel> ListGroups = new();
     private GroupModel Group = new();
     private List<CapstoneFileModel> ListChapters = new();
+    private List<CommentModel> ListComments = new();
     private string comment = string.Empty;
     protected override async Task OnInitializedAsync()
     {
@@ -77,11 +83,31 @@
         if(task.Status == TaskStatus.RanToCompletion)
         {
             ListChapters = task.Result.ToList();
+            await GetComments();
         }
     }
     private async Task AddComment()
     {
-
+        CommentModel comments = new();
+        comments.Comment = comment;
+        comments.UserId = GlobalClass.CurrentUserAccount.UserId;
+        comments.GrouId = Group.GroupId;
+        comments.CommentDate = DateTime.Now;
+        Task t = CommentService.PostCommentModel(comments);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            comment = string.Empty;
+            await GetComments();
+        }
+    }
+    private async Task GetComments()
+    {
+        Task<IEnumerable<CommentModel>> c = CommentService.GetComments();
+        await c;
+        if(c.Status == TaskStatus.RanToCompletion){
+            ListComments  = c.Result.Where( e => e.GrouId == Group.GroupId).ToList();
+        }
     }
 }
 <style>
@@ -89,4 +115,4 @@
     {
         cursor: pointer;
     }
-</style>
+</style>    using PanelingSystem.Services.CommentServices;

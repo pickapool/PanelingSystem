@@ -25,7 +25,8 @@ namespace PanelingSystem.Services.CommentServices
         [HttpGet]
         public async Task<IEnumerable<CommentModel>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments
+            .Include( e => e.Account).ToListAsync();
         }
 
         // GET: api/CommentService/5
