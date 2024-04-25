@@ -13,6 +13,8 @@ namespace PanelingSystem.DatabaseContext
         public DbSet<CapstoneFileModel> CapstoneFiles { get; set; }
         public DbSet<GradeModel> Grades { get; set; }
         public DbSet<CommentModel> Comments { get; set; }
+        public DbSet<ScheduleModel> Schedules { get; set; }
+
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
 
@@ -26,6 +28,7 @@ namespace PanelingSystem.DatabaseContext
             modelBuilder.Entity<CapstoneFileModel>().ToTable("CapstoneFiles");
             modelBuilder.Entity<GradeModel>().ToTable("Grades");
             modelBuilder.Entity<CommentModel>().ToTable("Comments");
+            modelBuilder.Entity<ScheduleModel>().ToTable("Schedules");
         }
     }
 }

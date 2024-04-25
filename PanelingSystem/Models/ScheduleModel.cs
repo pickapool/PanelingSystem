@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PanelingSystem.Models
 {
-    [Table("Grades")]
-    [PrimaryKey("GradeId")]
+    [Table("Schedules")]
+    [PrimaryKey("ScheduleId")]
     public class ScheduleModel
     {
         public int ScheduleId { get; set; }

@@ -13,6 +13,7 @@ using PanelingSystem.Services.FileServices;
 using PanelingSystem.Services.GradeServices;
 using PanelingSystem.Services.GroupServices;
 using PanelingSystem.Services.MemberServices;
+using PanelingSystem.Services.ScheduleServices;
 using Radzen;
 using Radzen.Blazor;
 using System;
@@ -39,6 +40,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<ICapstoneFileService, CapstoneFileService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 builder.Services.AddDbContext<AppDBContext>(options =>
 {
