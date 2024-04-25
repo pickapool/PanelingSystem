@@ -8,15 +8,14 @@
     <RadzenWeekView />
     <RadzenMonthView />
 </RadzenScheduler>
-<MudDrawer @bind-Open="@openRight" Fixed="false" Anchor="Anchor.Right" Elevation="0" Variant="@DrawerVariant.Persistent">
+<MudDrawer Class="pa-2" @bind-Open="@openRight" Fixed="false" Anchor="Anchor.Right" Width="25%" Elevation="1" Variant="@DrawerVariant.Temporary" DisableOverlay>
     <MudDrawerHeader>
-        <MudText Typo="Typo.h6">Settings</MudText>
+        <MudIconButton style="height: 20px;" OnClick="()=> ToggleRightDrawer()" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
     </MudDrawerHeader>
-    <MudNavMenu>
-        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.AccountBox">Profile</MudNavLink>
-        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.ShoppingCart">Orders</MudNavLink>
-        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.History">Order History</MudNavLink>
-    </MudNavMenu>
+    <div class="d-flex flex-column gap-2">
+
+    </div>
+    <MudFab Class="fab-btn" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"/>
 </MudDrawer>
 @code {
     RadzenScheduler<ScheduleModel> scheduler;
@@ -114,3 +113,17 @@
         }
     }
 }
+<style>
+    .fab-btn
+    {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin-bottom: 10px;
+        margin-left: 10px;
+    }
+    .mud-drawer-header
+    {
+        padding: unset !important;
+    }
+</style>
