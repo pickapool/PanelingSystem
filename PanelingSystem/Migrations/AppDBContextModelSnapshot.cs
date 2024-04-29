@@ -190,6 +190,32 @@ namespace PanelingSystem.Migrations
                     b.ToTable("Members", (string)null);
                 });
 
+            modelBuilder.Entity("PanelingSystem.Models.PanelistModel", b =>
+                {
+                    b.Property<int>("PanelistId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PanelistId"));
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ScheduleModelScheduleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PanelistId");
+
+                    b.HasIndex("ScheduleModelScheduleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Panels", (string)null);
+                });
+
             modelBuilder.Entity("PanelingSystem.Models.ScheduleModel", b =>
                 {
                     b.Property<int>("ScheduleId")
@@ -201,13 +227,13 @@ namespace PanelingSystem.Migrations
                     b.Property<int>("DefenseType")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("End")
+                    b.Property<DateTime?>("End")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Start")
+                    b.Property<DateTime?>("Start")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
@@ -221,7 +247,7 @@ namespace PanelingSystem.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("PanelingSystem.Models.UserAccountModel", b =>
@@ -303,6 +329,21 @@ namespace PanelingSystem.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("PanelingSystem.Models.PanelistModel", b =>
+                {
+                    b.HasOne("PanelingSystem.Models.ScheduleModel", null)
+                        .WithMany("Panels")
+                        .HasForeignKey("ScheduleModelScheduleId");
+
+                    b.HasOne("PanelingSystem.Models.UserAccountModel", "Panel")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Panel");
+                });
+
             modelBuilder.Entity("PanelingSystem.Models.ScheduleModel", b =>
                 {
                     b.HasOne("PanelingSystem.Models.GroupModel", "Group")
@@ -317,6 +358,11 @@ namespace PanelingSystem.Migrations
             modelBuilder.Entity("PanelingSystem.Models.GroupModel", b =>
                 {
                     b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("PanelingSystem.Models.ScheduleModel", b =>
+                {
+                    b.Navigation("Panels");
                 });
 #pragma warning restore 612, 618
         }

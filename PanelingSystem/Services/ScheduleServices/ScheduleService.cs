@@ -25,9 +25,21 @@ namespace PanelingSystem.Services.ScheduleServices
         [HttpGet]
         public async Task<IEnumerable<ScheduleModel>> GetSchedules()
         {
-            return await _context.Schedules.ToListAsync();
+            return await _context.Schedules
+            .Include( e => e.Panels)
+            .ThenInclude( e => e.Panel)
+            .ToListAsync();
         }
-
+        public async Task<ScheduleModel> GetPanelsInSchedule(int groupId)
+        {
+            return await 
+            _context
+            .Schedules
+            .Where(s => s.GroupId == groupId)
+            .Include( e => e.Panels)
+            .ThenInclude( e => e.Panel)
+            .FirstOrDefaultAsync() ?? new();
+        }
         // GET: api/ScheduleService/5
         [HttpGet("{id}")]
         public async Task<ScheduleModel> GetScheduleModel(int id)

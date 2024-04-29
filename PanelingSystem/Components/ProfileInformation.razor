@@ -55,8 +55,8 @@
         await t;
         if(t.Status == TaskStatus.RanToCompletion)
         {
-            await LocalStorageService.RemoveItemAsync("Account");
-            await LocalStorageService.SetItemAsync<UserAccountModel>("Account", GlobalClass.CurrentUserAccount);
+            //await LocalStorageService.RemoveItemAsync("Account");
+            //await LocalStorageService.SetItemAsync<UserAccountModel>("Account", GlobalClass.CurrentUserAccount);
             await AppState.NotifyStateChangedAsync();
         }
     }

@@ -30,7 +30,7 @@ namespace PanelingSystem.Services.PanelistServices
         [HttpGet]
         public async Task<IEnumerable<PanelistModel>> GetPanelGroup(int groupId)
         {
-            return await _context.Panels.Where( e => e.GroupId == groupId).Include( e => e.UserId).ToListAsync();
+            return await _context.Panels.Where( e => e.GroupId == groupId).Include( e => e.Panel).ToListAsync();
         }
 
         // GET: api/PanelistService/5

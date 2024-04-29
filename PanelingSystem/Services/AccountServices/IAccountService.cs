@@ -12,5 +12,6 @@ namespace PanelingSystem.Services.AccountServices
         Task<UserAccountModel> PostUserAccountModel(UserAccountModel userAccountModel);
         Task<UserAccountModel> Authenticate(string username, string password);
         Task<IEnumerable<UserAccountModel>> GetStudentsAccount();
+        Task<IEnumerable<UserAccountModel>> GetAccountsNoStudents();
     }
 }

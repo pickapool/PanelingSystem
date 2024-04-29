@@ -31,6 +31,10 @@ namespace PanelingSystem.Services.AccountServices
         {
             return await _context.Accounts.Where( e => e.AccountType == Enums.AccountType.Student).ToListAsync();
         }
+        public async Task<IEnumerable<UserAccountModel>> GetAccountsNoStudents()
+        {
+            return await _context.Accounts.Where( e => e.AccountType != Enums.AccountType.Student).ToListAsync();
+        }
 
         // GET: api/AccountService/5
         [HttpGet("{id}")]

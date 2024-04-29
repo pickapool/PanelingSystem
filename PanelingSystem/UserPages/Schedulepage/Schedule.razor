@@ -4,6 +4,7 @@
 @inject IDialogService DialogService
 @inject IScheduleService ScheduleService
 @inject IGroupService GroupService
+@inject IPanelistService PanelistService
 
 <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 88vh;" TItem="ScheduleModel" Data=@Schedules StartProperty="Start" EndProperty="End"
     TextProperty="Text" SelectedIndex="2"
@@ -23,7 +24,7 @@
         <hr>
         @foreach(ScheduleModel schedule in SelectedSchedules)
         {
-            <ScheduleComponent Schedule="schedule" ListGroups="Groups"/>
+            <ScheduleComponent Schedule="schedule" ListGroups="Groups" OnRemovePanel="GetSchedules"/>
         }
     </div>
     <MudFab OnClick="()=> OpenScheduleDialog(new())" Class="fab-btn" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"/>
@@ -66,6 +67,22 @@
                 if(aa.Status == TaskStatus.RanToCompletion){
                     Groups = aa.Result.ToList();
                    // Extensions.NewtonsoftLog<List<GroupModel>>(Groups);
+                }
+            }
+            Task<IEnumerable<PanelistModel>> panels = PanelistService.GetPanels();
+            await panels;
+            if(panels.Status == TaskStatus.RanToCompletion)
+            {
+                foreach(PanelistModel panel in panels.Result)
+                {
+                    foreach(ScheduleModel sched in Schedules)
+                    {
+                        if(sched.GroupId == panel.GroupId)
+                        {
+                            if(!sched.Panels.Any( e => e.Panel.UserId == panel.UserId))
+                                sched.Panels.Add(panel);
+                        }
+                    }
                 }
             }
         }

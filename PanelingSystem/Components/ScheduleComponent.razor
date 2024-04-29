@@ -1,4 +1,7 @@
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IScheduleService ScheduleService
+@inject IPanelistService PanelistService
 
 <div class="d-flex flex-column box pa-1 mr-4 mb-4 gap-0">
     <span<b>@Schedule.Text</b></span>
@@ -25,17 +28,21 @@
     <span>Panels</span>
     <div class="d-flex flex-row justify-content-between">
             <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
-                <MudBadge Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
-                    @* @if (Account.ProfilePicture.Count() == 0) {
-                        <MudAvatar Class='mt-4' Image="img/blank_profile.png" />
-                    } else {
-                        <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' />
-                    } *@
-                    <MudAvatar Image="images/toiletvisit.jpg" />
+                @foreach(PanelistModel panel in Schedule.Panels)
+                {
+                <MudBadge OnClick="() => Remove(panel)" Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
+                    <MudTooltip Text="@panel.Panel.Name">
+                        @if (panel.Panel.ProfilePicture.Count() == 0) {
+                            <MudAvatar Class='mt-4' Image="img/blank_profile.png" />
+                        } else {
+                            <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(panel.Panel.ProfilePicture)}")' />
+                        }
+                    </MudTooltip>
                 </MudBadge>
+                }
             </MudAvatarGroup>
         <MudTooltip Text="Add Panels">
-            <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
+            <MudIconButton OnClick="()=> AddPanels(Group.GroupId)" Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
         </MudTooltip>
     </div>
 </div>
@@ -43,16 +50,34 @@
 {
     [Parameter] public ScheduleModel Schedule { get; set; }
     [Parameter] public List<GroupModel> ListGroups { get; set; }
+    [Parameter] public EventCallback OnRemovePanel { get; set; }
+    private List<PanelistModel> Panels = new();
     private GroupModel Group { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
        Group = ListGroups.FirstOrDefault( e => e.GroupId == Schedule.GroupId) ?? new();
+      // Extensions.NewtonsoftLog(Schedule.Panels);
     }
-
-    private async Task Remove()
+    private async Task Remove(PanelistModel model)
     {
-        Extensions.ShowAlert("asdas" , MudBlazor.Variant.Filled, Snackbar, Severity.Normal);
+        Task t = PanelistService.DeletePanelistModel(model.PanelistId);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            await OnRemovePanel.InvokeAsync();
+        }
+    }
+    private async Task AddPanels(int groupId)
+    {
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var param = new DialogParameters();
+        param.Add("GroupId", groupId);
+        var dialog =  await DialogService.Show<AddPanelsDialogs>("Add Panels", param, options).Result;
+        if(!dialog.Cancelled)
+        {
+            
+        }
     }
 }
 <style>
@@ -65,8 +90,12 @@
     .mud-badge
     {
         z-index: 2;
-        margin-top: 2px;
-        margin-right: 2px;
+        margin-top: 20px;
+        margin-right: -2px;
         cursor: pointer;
+    }
+    .mud-badge.mud-badge-top.right.mud-badge-overlap
+    {
+        inset: auto auto calc(100% - 30px) calc(100% - 12px) !important;
     }
 </style>

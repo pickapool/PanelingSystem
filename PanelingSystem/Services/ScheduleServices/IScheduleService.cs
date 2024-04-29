@@ -9,5 +9,6 @@ namespace PanelingSystem.Services.ScheduleServices
         Task<ScheduleModel> PutScheduleModel(int id, ScheduleModel scheduleModel);
         Task<ScheduleModel> PostScheduleModel(ScheduleModel scheduleModel);
         Task<ScheduleModel> DeleteScheduleModel(int id);
+        Task<ScheduleModel> GetPanelsInSchedule(int groupId);
     }
 }

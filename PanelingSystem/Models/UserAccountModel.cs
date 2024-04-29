@@ -14,6 +14,6 @@ namespace PanelingSystem.Models
         public string Name { get; set; } = string.Empty;
         public string Designation { get; set; } = string.Empty;
         public Enums.AccountType AccountType { get; set; }
-        public byte[] ProfilePicture { get; set; } = Array.Empty<byte>();
+        public byte[]? ProfilePicture { get; set; } = Array.Empty<byte>();
     }
 }

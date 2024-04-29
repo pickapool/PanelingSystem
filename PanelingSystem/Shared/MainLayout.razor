@@ -59,11 +59,16 @@
             await account;
             if (account.Result != null)
             {
-                GlobalClass.CurrentUserAccount = account.Result;
-                await AppState.NotifyStateChangedAsync();
-                StateHasChanged();
+                Task<UserAccountModel> model = AccountService.GetUserAccountModel(account.Result.UserId);
+                await model;
+                if(model.Status == TaskStatus.RanToCompletion)
+                {
+                    GlobalClass.CurrentUserAccount = model.Result;
+                    await AppState.NotifyStateChangedAsync();
+                    StateHasChanged();
+                }
             } else {
-                Console.WriteLine("sadsad");
+                //Console.WriteLine("sadsad");
             }
         } catch(Exception ee)
         {
