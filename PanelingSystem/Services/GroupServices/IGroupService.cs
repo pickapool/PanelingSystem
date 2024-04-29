@@ -10,5 +10,6 @@ namespace PanelingSystem.Services.GroupServices
         Task<GroupModel> PostGroupModel(GroupModel groupModel);
         Task<GroupModel> DeleteGroupModel(int id);
         Task<IEnumerable<GroupModel>> GetMyGroups(int userId);
+        Task<IEnumerable<GroupModel>> GetGroupsWithUsers();
     }
 }

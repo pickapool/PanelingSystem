@@ -9,33 +9,46 @@
     </div>
     <span>Members</span>
     <div class="d-flex flex-row justify-content-between">
-        <MudAvatarGroup Max="6" Spacing="0" MaxColor="Color.Primary">
-            <MudTooltip Text="sadasd">
-                <MudBadge OnClick="()=> Remove()" Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
-                    <MudAvatar Image="images/jonny.jpg" />
-                </MudBadge>
+        <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
+            @foreach(MembersModel member in Group.Members)
+            {
+            <MudTooltip Text="@member.Student.Name">
+                @if (member.Student.ProfilePicture.Count() == 0) {
+                    <MudAvatar Image="img/blank_profile.png" />
+                } else {
+                    <MudAvatar Image='@($"data:image/png;base64, {Convert.ToBase64String(member.Student.ProfilePicture)}")' />
+                }
             </MudTooltip>
-            <MudTooltip Text="sadasd">
-                <MudBadge Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
-                    <MudAvatar Image="images/jonny.jpg" />
-                </MudBadge>
-            </MudTooltip>
+            }
         </MudAvatarGroup>
-        <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
     </div>
     <span>Panels</span>
     <div class="d-flex flex-row justify-content-between">
-        <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
-            <MudTooltip Text="sadasd">
-                <MudAvatar Image="images/jonny.jpg" />
-            </MudTooltip>
-        </MudAvatarGroup>
-        <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
+            <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
+                <MudBadge Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
+                    @* @if (Account.ProfilePicture.Count() == 0) {
+                        <MudAvatar Class='mt-4' Image="img/blank_profile.png" />
+                    } else {
+                        <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' />
+                    } *@
+                    <MudAvatar Image="images/toiletvisit.jpg" />
+                </MudBadge>
+            </MudAvatarGroup>
+        <MudTooltip Text="Add Panels">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
+        </MudTooltip>
     </div>
 </div>
 @code
 {
     [Parameter] public ScheduleModel Schedule { get; set; }
+    [Parameter] public List<GroupModel> ListGroups { get; set; }
+    private GroupModel Group { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+       Group = ListGroups.FirstOrDefault( e => e.GroupId == Schedule.GroupId) ?? new();
+    }
 
     private async Task Remove()
     {
@@ -54,5 +67,6 @@
         z-index: 2;
         margin-top: 2px;
         margin-right: 2px;
+        cursor: pointer;
     }
 </style>

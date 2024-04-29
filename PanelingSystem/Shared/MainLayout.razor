@@ -62,6 +62,8 @@
                 GlobalClass.CurrentUserAccount = account.Result;
                 await AppState.NotifyStateChangedAsync();
                 StateHasChanged();
+            } else {
+                Console.WriteLine("sadsad");
             }
         } catch(Exception ee)
         {

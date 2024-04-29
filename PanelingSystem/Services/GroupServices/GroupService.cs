@@ -28,6 +28,16 @@ namespace PanelingSystem.Services.GroupServices
             return await _context.Groups.ToListAsync();
         }
         [HttpGet]
+        public async Task<IEnumerable<GroupModel>> GetGroupsWithUsers()
+        {
+            return await 
+            _context
+            .Groups
+            .Include( e => e.Members)
+            .ThenInclude( e => e.Student)
+            .ToListAsync();;
+        }
+        [HttpGet]
         public async Task<IEnumerable<GroupModel>> GetMyGroups(int userId)
         {
             return await _context.Groups
@@ -40,7 +50,9 @@ namespace PanelingSystem.Services.GroupServices
         [HttpGet("{id}")]
         public async Task<GroupModel> GetGroupModel(int id)
         {
-            var groupModel = await _context.Groups.FindAsync(id);
+            var groupModel = await _context.Groups
+            .Include( e => e.Members)
+            .FirstOrDefaultAsync( e => e.GroupId == id);
 
             if (groupModel == null)
             {

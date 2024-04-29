@@ -23,7 +23,7 @@
         <hr>
         @foreach(ScheduleModel schedule in SelectedSchedules)
         {
-            <ScheduleComponent Schedule="schedule"/>
+            <ScheduleComponent Schedule="schedule" ListGroups="Groups"/>
         }
     </div>
     <MudFab OnClick="()=> OpenScheduleDialog(new())" Class="fab-btn" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"/>
@@ -36,6 +36,7 @@
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
     IList<ScheduleModel> Schedules;
     List<ScheduleModel> SelectedSchedules = new();
+    List<GroupModel> Groups = new();
     protected override async Task OnInitializedAsync()
     {
         await GetSchedules();
@@ -60,6 +61,12 @@
             if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student)
             {
                 Schedules = Schedules.Where( e => data.Result.Any( m => m.GroupId == m.GroupId)).ToList();
+                Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
+                await aa;
+                if(aa.Status == TaskStatus.RanToCompletion){
+                    Groups = aa.Result.ToList();
+                   // Extensions.NewtonsoftLog<List<GroupModel>>(Groups);
+                }
             }
         }
     }
@@ -169,5 +176,9 @@
     .mud-drawer-header
     {
         padding: unset !important;
+    }
+    .mud-tooltip-root:nth-child( n + 2)
+    {
+        margin-left : -10px;
     }
 </style>
