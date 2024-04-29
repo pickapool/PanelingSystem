@@ -1,0 +1,173 @@
+@page "/u/schedule"
+
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IScheduleService ScheduleService
+@inject IGroupService GroupService
+
+<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 88vh;" TItem="ScheduleModel" Data=@Schedules StartProperty="Start" EndProperty="End"
+    TextProperty="Text" SelectedIndex="2"
+    SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender
+    AppointmentMove=@OnAppointmentMove >
+    <RadzenDayView />
+    <RadzenWeekView />
+    <RadzenMonthView />
+</RadzenScheduler>
+<MudDrawer Class="pa-2" @bind-Open="@openRight" Fixed="false" Anchor="Anchor.Right" Width="25%" Elevation="1" Variant="@DrawerVariant.Temporary" DisableOverlay>
+    <MudDrawerHeader>
+        <MudIconButton style="height: 20px;" OnClick="()=> ToggleRightDrawer()" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
+    </MudDrawerHeader>
+    <div class="d-flex flex-column">
+        <span style="font-size:18px;"><b>SCHEDULES</b></span>
+        <span>@SelectedDateStart?.ToString("dddd, MMMM dd, yyyy")</span>
+        <hr>
+        @foreach(ScheduleModel schedule in SelectedSchedules)
+        {
+            <ScheduleComponent Schedule="schedule"/>
+        }
+    </div>
+    <MudFab OnClick="()=> OpenScheduleDialog(new())" Class="fab-btn" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"/>
+</MudDrawer>
+@code {
+    RadzenScheduler<ScheduleModel> scheduler;
+    private DateTime? SelectedDateStart = DateTime.Now;
+    private DateTime? SelectedDateEnd = DateTime.Now;
+    bool openRight = false;
+    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+    IList<ScheduleModel> Schedules;
+    List<ScheduleModel> SelectedSchedules = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSchedules();
+    }
+    private async Task GetSchedules()
+    {
+        Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules();
+        await task;
+        if(task.Status == TaskStatus.RanToCompletion)
+        {
+            Schedules = task.Result.ToList();
+            await GetMyGroups();
+        }
+    }
+    private async Task GetMyGroups()
+    {
+        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
+                                             GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupService.GetGroups();
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion)
+        {
+            if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student)
+            {
+                Schedules = Schedules.Where( e => data.Result.Any( m => m.GroupId == m.GroupId)).ToList();
+            }
+        }
+    }
+    void ToggleRightDrawer()
+    {
+        openRight = !openRight;
+    }
+
+    void OnSlotRender(Radzen.SchedulerSlotRenderEventArgs args)
+    {
+        // Highlight today in month view
+        if (args.View.Text == "Month" && args.Start.Date == DateTime.Today)
+        {
+            args.Attributes["style"] = "background: rgba(255,220,40,.2);";
+        }
+
+        // Highlight working hours (9-18)
+        if ((args.View.Text == "Week" || args.View.Text == "Day") && args.Start.Hour > 8 && args.Start.Hour < 19)
+        {
+            args.Attributes["style"] = "background: rgba(255,220,40,.2);";
+        }
+    }
+
+    async Task OnSlotSelect(Radzen.SchedulerSlotSelectEventArgs args)
+    {
+        ToggleRightDrawer();
+        SelectedDateStart = args.Start;
+        SelectedDateEnd = args.End.AddDays(-1);
+        SelectedSchedules = Schedules.Where( e => e.Start?.Date == args.Start.Date).ToList();
+        //await scheduler.Reload();
+    }
+
+    async Task OnAppointmentSelect(Radzen.SchedulerAppointmentSelectEventArgs<ScheduleModel> args)
+    {
+        var copy = new ScheduleModel
+        {
+            Start = args.Data.Start,
+            End = args.Data.End,
+        };
+
+        @* var data = await DialogService.OpenAsync<EditAppointmentPage>("Edit Appointment", new Dictionary<string, object> { { "Appointment", copy } });
+
+        if (data != null)
+        {
+            // Update the appointment
+            args.Data.Start = data.Start;
+            args.Data.End = data.End;
+            args.Data.Text = data.Text;
+        } *@
+
+        await scheduler.Reload();
+    }
+
+    void OnAppointmentRender(Radzen.SchedulerAppointmentRenderEventArgs<ScheduleModel> args)
+    {
+        // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
+
+        if (args.Data.DefenseType == Enums.FilePosition.Title)
+        {
+            args.Attributes["style"] = "background: #FDFFC2; color: black;";
+        } else if(args.Data.DefenseType == Enums.FilePosition.PreOral)
+        {
+            args.Attributes["style"] = "background: #BACD92; color: black;";
+        } else {
+            args.Attributes["style"] = "background: #10439F";
+        }
+    }
+
+    async Task OnAppointmentMove(Radzen.SchedulerAppointmentMoveEventArgs args)
+    {
+        @* var draggedAppointment = appointments.FirstOrDefault(x => x == args.Appointment.Data);
+
+        if (draggedAppointment != null)
+        {
+            draggedAppointment.Start = draggedAppointment.Start + args.TimeSpan;
+
+            draggedAppointment.End = draggedAppointment.End + args.TimeSpan;
+
+            await scheduler.Reload();
+        } *@
+    }
+    private async Task OpenScheduleDialog(ScheduleModel schedule)
+    {
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var param = new DialogParameters();
+        param.Add("Schedule", schedule);
+        param.Add("DateStart", SelectedDateStart);
+        param.Add("DateEnd", SelectedDateEnd);
+        var dialog =  await DialogService.Show<ScheduleDialog>(schedule.GroupId == 0 ? "Add Schedule" : "Edit Schedule", param, options).Result;
+        if(!dialog.Cancelled)
+        {
+            await GetSchedules();
+            ToggleRightDrawer();
+            Extensions.ShowAlert("Schedule has been saved." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
+        }
+    }
+}
+<style>
+    .fab-btn
+    {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin-bottom: 10px;
+        margin-left: 10px;
+    }
+    .mud-drawer-header
+    {
+        padding: unset !important;
+    }
+</style>

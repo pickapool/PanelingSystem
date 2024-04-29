@@ -1,0 +1,114 @@
+@inject IGroupService GroupService
+@inject ISnackbar Snackbar
+@inject IScheduleService ScheduleService
+<MudDialog>
+    <DialogContent>
+        <MudGrid Spacing="2">
+            <MudItem xs="12">
+                <MudSelect Value="@Group" 
+                ValueChanged="(GroupModel g)=> SetGroup(g)"
+                Margin="Margin.Dense" Text=""
+                Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                    @foreach (var g in ListGroups.ToList())
+                    {
+                        <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12">
+                <MudSelect @bind-Value="Schedule.Status" Margin="Margin.Dense" Label="Status" HelperText="Required*" Placeholder="Role" AdornmentIcon="@Icons.Material.Filled.Workspaces" AdornmentColor="Color.Primary">
+                    @foreach (Enums.Status item in Enum.GetValues(typeof(Enums.Status)))
+                    {
+                        <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12">
+                <MudSelect @bind-Value="Schedule.DefenseType" Margin="Margin.Dense" Label="Type" HelperText="Required*" Placeholder="Role" AdornmentIcon="@Icons.Material.Filled.Workspaces" AdornmentColor="Color.Primary">
+                    @foreach (Enums.FilePosition item in Enum.GetValues(typeof(Enums.FilePosition)))
+                    {
+                        <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTimePicker Label="Start" AmPm="true" @bind-Time="time1" AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.TopCenter"/>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTimePicker Label="End" AmPm="true" @bind-Time="time2" AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.TopCenter"/>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Size="Size.Small">Close</MudButton>
+        <MudButton OnClick="Save" Variant="MudBlazor.Variant.Filled" Color="Color.Info" Size="Size.Small">SAVE</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public ScheduleModel Schedule { get; set; }
+    [Parameter] public DateTime? DateStart { get; set; }
+    [Parameter] public DateTime? DateEnd { get; set; }
+    private List<GroupModel> ListGroups = new();
+    private GroupModel Group = new();
+    TimeSpan? time1 = new TimeSpan(00, 45, 00);
+    TimeSpan? time2 = new TimeSpan(00, 45, 00);
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        if(Schedule.ScheduleId == 0 )
+        {
+            Schedule.Start = DateStart;
+            Schedule.End = DateEnd;
+        }
+        await GetGroups();
+    }
+    private async Task GetGroups()
+    {
+        Task<IEnumerable<GroupModel>> data =  GroupService.GetGroups();
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion)
+        {
+            ListGroups = data.Result.ToList();
+            Group = ListGroups.FirstOrDefault() ?? new();
+            await SetGroup(Group);
+        } 
+    }
+    private async Task SetGroup(GroupModel groupModel)
+    {
+        Group = groupModel;
+        Schedule.Text = Group.Groupname;
+    }
+    private async Task Save()
+    {
+        Schedule.Start = Schedule.Start + time1;
+        Schedule.End = Schedule.End + time2;
+        Schedule.GroupId = Group.GroupId;
+        if(time1 >= time2)
+        {
+            Extensions.ShowAlert("Time start should not be greater than.", MudBlazor.Variant.Filled , Snackbar , Severity.Error);
+            return;
+        }
+        Task t = Schedule.ScheduleId == 0? ScheduleService.PostScheduleModel(Schedule) : ScheduleService.PutScheduleModel(Schedule.ScheduleId, Schedule);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            MudDialog.Close();
+        }
+    }
+    void Cancel() => MudDialog.Cancel();
+}
+<style>
+    .custom-datepicker .rz-datepicker-popup {
+        border-top: none;
+        border-left: none;
+        border-right: none;
+    }
+    .rz-slot:hover
+    {
+        background-color: #d3d3d3 !important;
+        cursor: pointer;
+    }
+</style>

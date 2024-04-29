@@ -1,0 +1,58 @@
+@inject ISnackbar Snackbar
+
+<div class="d-flex flex-column box pa-1 mr-4 mb-4 gap-0">
+    <span<b>@Schedule.Text</b></span>
+   <hr>
+    <div class="d-flex flex-row">
+        <MudChip Color="Color.Info" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.DefenseType)</MudChip>
+        <MudChip Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip>
+    </div>
+    <span>Members</span>
+    <div class="d-flex flex-row justify-content-between">
+        <MudAvatarGroup Max="6" Spacing="0" MaxColor="Color.Primary">
+            <MudTooltip Text="sadasd">
+                <MudBadge OnClick="()=> Remove()" Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
+                    <MudAvatar Image="images/jonny.jpg" />
+                </MudBadge>
+            </MudTooltip>
+            <MudTooltip Text="sadasd">
+                <MudBadge Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
+                    <MudAvatar Image="images/jonny.jpg" />
+                </MudBadge>
+            </MudTooltip>
+        </MudAvatarGroup>
+        <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
+    </div>
+    <span>Panels</span>
+    <div class="d-flex flex-row justify-content-between">
+        <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
+            <MudTooltip Text="sadasd">
+                <MudAvatar Image="images/jonny.jpg" />
+            </MudTooltip>
+        </MudAvatarGroup>
+        <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
+    </div>
+</div>
+@code
+{
+    [Parameter] public ScheduleModel Schedule { get; set; }
+
+    private async Task Remove()
+    {
+        Extensions.ShowAlert("asdas" , MudBlazor.Variant.Filled, Snackbar, Severity.Normal);
+    }
+}
+<style>
+    .box
+    {
+        @* height: 150px; *@
+        border-radius: 5px;
+        border-left: 8px solid #05173D;
+    }
+    .mud-badge
+    {
+        z-index: 2;
+        margin-top: 2px;
+        margin-right: 2px;
+    }
+</style>

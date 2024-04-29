@@ -43,19 +43,29 @@
 {
     public bool _isOpen;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AppState.OnChange += UpdateState;
-        await VerifyLogin();
+        if(firstRender)
+        {
+            await VerifyLogin();
+            AppState.OnChange += UpdateState;
+        }
     }
     private async Task VerifyLogin()
     {
-        ValueTask<UserAccountModel> account = LocalStorageService.GetItemAsync<UserAccountModel>("Account");
-        await account;
-        if (account.IsCompletedSuccessfully)
+        try
         {
-            GlobalClass.CurrentUserAccount = account.Result;
-            StateHasChanged();
+            ValueTask<UserAccountModel?> account = LocalStorageService.GetItemAsync<UserAccountModel>("Account");
+            await account;
+            if (account.Result != null)
+            {
+                GlobalClass.CurrentUserAccount = account.Result;
+                await AppState.NotifyStateChangedAsync();
+                StateHasChanged();
+            }
+        } catch(Exception ee)
+        {
+            Console.WriteLine(ee.Message);
         }
     }
     private void UpdateState()

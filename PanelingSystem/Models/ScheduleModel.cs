@@ -13,8 +13,8 @@ namespace PanelingSystem.Models
         public GroupModel Group { get; set; }
         public Enums.FilePosition DefenseType{ get; set; }
         public Enums.Status Status{ get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime? Start { get; set; }
+        public DateTime? End { get; set; }
         public string Text { get; set; }
     }
 }
