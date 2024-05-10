@@ -53,8 +53,8 @@
     [Parameter] public DateTime? DateEnd { get; set; }
     private List<GroupModel> ListGroups = new();
     private GroupModel Group = new();
-    TimeSpan? time1 = new TimeSpan(00, 45, 00);
-    TimeSpan? time2 = new TimeSpan(00, 45, 00);
+    TimeSpan? time1 = new TimeSpan(00, 01, 00);
+    TimeSpan? time2 = new TimeSpan(00, 02, 00);
     
     protected override async Task OnParametersSetAsync()
     {
@@ -62,6 +62,9 @@
         {
             Schedule.Start = DateStart;
             Schedule.End = DateEnd;
+        } else {
+            time1 = new TimeSpan(Schedule.Start.Value.Hour, Schedule.Start.Value.Minute, 0);
+            time2 = new TimeSpan(Schedule.End.Value.Hour, Schedule.End.Value.Minute, 0);
         }
         await GetGroups();
     }
@@ -82,9 +85,12 @@
         Schedule.Text = Group.Groupname;
     }
     private async Task Save()
-    {
-        Schedule.Start = Schedule.Start + time1;
-        Schedule.End = Schedule.End + time2;
+    {    
+        DateTime newStart = new DateTime(Schedule.Start.Value.Year, Schedule.Start.Value.Month, Schedule.Start.Value.Day, time1.Value.Hours,time1.Value.Minutes,0);
+        DateTime newEnd = new DateTime(Schedule.End.Value.Year, Schedule.End.Value.Month, Schedule.Start.Value.Day, time2.Value.Hours,time2.Value.Minutes,0);
+
+        Schedule.Start = newStart;
+        Schedule.End = newEnd;
         Schedule.GroupId = Group.GroupId;
         if(time1 >= time2)
         {

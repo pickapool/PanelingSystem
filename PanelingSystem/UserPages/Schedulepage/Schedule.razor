@@ -18,7 +18,7 @@
     <MudDrawerHeader>
         <MudIconButton style="height: 20px;" OnClick="()=> ToggleRightDrawer()" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
     </MudDrawerHeader>
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column overflow-auto mb-12">
         <span style="font-size:18px;"><b>SCHEDULES</b></span>
         <span>@SelectedDateStart?.ToString("dddd, MMMM dd, yyyy")</span>
         <hr>
@@ -59,32 +59,32 @@
         await data;
         if(data.Status == TaskStatus.RanToCompletion)
         {
-            if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student)
+            if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
             {
-                Schedules = Schedules.Where( e => data.Result.Any( m => m.GroupId == m.GroupId)).ToList();
-                Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
-                await aa;
-                if(aa.Status == TaskStatus.RanToCompletion){
-                    Groups = aa.Result.ToList();
-                   // Extensions.NewtonsoftLog<List<GroupModel>>(Groups);
-                }
+                Schedules = Schedules.Where( e => data.Result.Any( m => m.GroupId == e.GroupId)).ToList();
             }
-            Task<IEnumerable<PanelistModel>> panels = PanelistService.GetPanels();
-            await panels;
-            if(panels.Status == TaskStatus.RanToCompletion)
-            {
-                foreach(PanelistModel panel in panels.Result)
+            Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
+            await aa;
+            if(aa.Status == TaskStatus.RanToCompletion){
+                Groups = aa.Result.ToList();
+                Task<IEnumerable<PanelistModel>> panels = PanelistService.GetPanels();
+                await panels;
+                if(panels.Status == TaskStatus.RanToCompletion)
                 {
-                    foreach(ScheduleModel sched in Schedules)
+                    foreach(PanelistModel panel in panels.Result)
                     {
-                        if(sched.GroupId == panel.GroupId)
+                        foreach(ScheduleModel sched in Schedules)
                         {
-                            if(!sched.Panels.Any( e => e.Panel.UserId == panel.UserId))
-                                sched.Panels.Add(panel);
+                            if(sched.GroupId == panel.GroupId)
+                            {
+                                if(!sched.Panels.Any( e => e.Panel.UserId == panel.UserId))
+                                    sched.Panels.Add(panel);
+                            }
                         }
                     }
                 }
             }
+            
         }
     }
     void ToggleRightDrawer()
@@ -189,6 +189,7 @@
         bottom: 0;
         margin-bottom: 10px;
         margin-left: 10px;
+        z-index: 4;
     }
     .mud-drawer-header
     {

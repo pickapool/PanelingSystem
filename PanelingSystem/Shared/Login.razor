@@ -55,8 +55,9 @@
         {
             if (account.Result != null)
             {
-                await LocalStorageService.SetItemAsync("Account", account.Result);
                 GlobalClass.CurrentUserAccount = account.Result;
+                account.Result.ProfilePicture = new byte[]{};
+                await LocalStorageService.SetItemAsync("Account", account.Result);
                 await AppState.NotifyStateChangedAsync();
             }
             else

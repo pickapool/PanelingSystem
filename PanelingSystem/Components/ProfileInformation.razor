@@ -7,23 +7,23 @@
 
     </div>
     <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
-    <ButtonTemplate>
-        <MudButton HtmlTag="label"
-                Variant="MudBlazor.Variant.Text"
-                Size="Size.Large"
-                Color="Color.Primary"
-                for="@context.Id">
-                @if (Account.ProfilePicture.Count() == 0) {
-                    <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Medium' />
-                } else {
-                    <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
-                }
-        </MudButton>
-    </ButtonTemplate>
-</MudFileUpload>
+        <ButtonTemplate>
+            <MudButton HtmlTag="label"
+                    Variant="MudBlazor.Variant.Text"
+                    Size="Size.Large"
+                    Color="Color.Primary"
+                    for="@context.Id">
+                    @if (Account.ProfilePicture.Count() == 0) {
+                        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Medium' />
+                    } else {
+                        <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+                    }
+            </MudButton>
+        </ButtonTemplate>
+    </MudFileUpload>
     <MudText Class="mt-2" Typo="Typo.button">@Account.Name</MudText>
     <MudText Typo="Typo.caption" Color="Color.Default">@Account.Email</MudText>
-    <MudDivider/>
+    <div style="height: 1px;background:#9a9a9a; width: 100%;" class="ma-1"></div>
     <MudButton OnClick="()=> Logout()" Variant="MudBlazor.Variant.Text" StartIcon="@Icons.Material.Filled.Logout" IconColor="Color.Info" Size="Size.Small">Sign out</MudButton>
     <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error" Size="Size.Small">Close</MudButton>
     

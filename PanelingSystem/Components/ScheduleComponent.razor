@@ -3,15 +3,21 @@
 @inject IScheduleService ScheduleService
 @inject IPanelistService PanelistService
 
-<div class="d-flex flex-column box pa-1 mr-4 mb-4 gap-0">
+<div class="d-flex flex-column box pa-1 mr-4 mb-4 gap-0 shadow">
     <span<b>@Schedule.Text</b></span>
+    <span>@Schedule.Start?.ToString("hh:mm tt") - @Schedule.End?.ToString("hh:mm tt")</span>
    <hr>
-    <div class="d-flex flex-row">
-        <MudChip Color="Color.Info" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.DefenseType)</MudChip>
-        <MudChip Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip>
+    <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row">
+            <MudChip Color="Color.Info" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.DefenseType)</MudChip>
+            <MudChip Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip>
+        </div>
+        <div>
+            <MudButton OnClick="()=> OpenScheduleDialog(Schedule)" Size="Size.Small" Variant="MudBlazor.Variant.Filled">View</MudButton>
+        </div>
     </div>
     <span>Members</span>
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row justify-content-between align-items-center" style="height: 55px;">
         <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
             @foreach(MembersModel member in Group.Members)
             {
@@ -26,7 +32,9 @@
         </MudAvatarGroup>
     </div>
     <span>Panels</span>
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row justify-content-between align-items-center" style="height: 55px;">
+        @if(Schedule.Panels.Count > 0)
+        {
             <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
                 @foreach(PanelistModel panel in Schedule.Panels)
                 {
@@ -41,6 +49,9 @@
                 </MudBadge>
                 }
             </MudAvatarGroup>
+        } else {
+            <span><b>NO PANELS</b></span>
+        }
         <MudTooltip Text="Add Panels">
             <MudIconButton OnClick="()=> AddPanels(Group.GroupId)" Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
         </MudTooltip>
@@ -77,6 +88,20 @@
         if(!dialog.Cancelled)
         {
             
+        }
+    }
+    private async Task OpenScheduleDialog(ScheduleModel schedule)
+    {
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var param = new DialogParameters();
+        param.Add("Schedule", schedule);
+        param.Add("DateStart", schedule.Start);
+        param.Add("DateEnd", schedule.End);
+        var dialog =  await DialogService.Show<ScheduleDialog>(schedule.GroupId == 0 ? "Add Schedule" : "Edit Schedule", param, options).Result;
+        if(!dialog.Cancelled)
+        {   
+            await OnRemovePanel.InvokeAsync();
+            Extensions.ShowAlert("Schedule has been saved." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
         }
     }
 }
