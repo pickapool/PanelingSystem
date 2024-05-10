@@ -2,6 +2,8 @@
 
 @inject IGroupService GroupService
 @inject IFileService FileService
+@inject IScheduleService ScheduleService
+@inject AppState AppState
 
 <div class="d-flex justify-content-center align-items-center">
     <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
@@ -35,6 +37,7 @@
                 }
             </MudGrid>
         } else {
+            <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">DENFESE PROGRESS</MudText>
             <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="500px" Height="500px" />
         }
     </MudPaper>
@@ -46,11 +49,9 @@
     bool show,show1 = false;
     List<FileModel> fileModels = new();
     private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
-    int dataSize = 4;
-    double[] data = { 77, 25, 20, 5 };
-    string[] labels = { "Uranium", "Plutonium", "Thorium", "Caesium", "Technetium", "Promethium",
-                        "Polonium", "Astatine", "Radon", "Francium", "Radium", "Actinium", "Protactinium",
-                        "Neptunium", "Americium", "Curium", "Berkelium", "Californium", "Einsteinium", "Mudblaznium" };
+    int dataSize = 3;
+    double[] data = { 77, 25, 20};
+    string[] labels = { "Title" , "Pre Oral" , "Final" };
     protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? 
@@ -71,7 +72,23 @@
         if(task.Status == TaskStatus.RanToCompletion)
         {
             fileModels = task.Result.ToList()?? new();
+            await Task.Delay(1000);
+            await GetSchedules();
         }
         StateHasChanged();
+    }
+    private async Task GetSchedules()
+    {
+        Task<IEnumerable<ScheduleModel>> schedules = ScheduleService.GetSchedules();
+        await schedules;
+        if(schedules.Status == TaskStatus.RanToCompletion)
+        {
+            double t = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double p = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double d = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            data = new double[] { t, p , d};
+            Console.WriteLine(t);
+            await AppState.NotifyStateChangedAsync();
+        }
     }
 }
