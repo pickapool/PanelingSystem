@@ -15,5 +15,7 @@ namespace PanelingSystem.Models
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel Account { get; set; }
+        [NotMapped]
+        public bool IsEdit { get; set; } = false;
     }
 }

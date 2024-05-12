@@ -4,15 +4,15 @@
 @inject AppState AppState
 
 <MudGrid Class="pa-4 overflow-hidden grid-1">
-    <MudItem xs="6"> 
-        <MudText Typo="Typo.h2">CCS</MudText>
-        <MudText Typo="Typo.h2">PANELING</MudText>
+    <MudItem Class="" xs="6"> 
+        <MudText Typo="Typo.h2">CCS</MudText><br>
+        <MudText Typo="Typo.h2">PANELING</MudText><br>
         <MudText Typo="Typo.h2">PORTAL SYSTEM</MudText>
     </MudItem>
     <MudItem xs="6">
         <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4" Height="70vh" Width="60%">
                 <div style="width: 100%" class="d-flex flex-column align-center">
-                    <MudText Typo="Typo.h4">LOGIN</MudText>
+                    <span style="font-size: 30px;">LOGIN</span>
                     <MudDivider style="width: 100%;"/>
                 </div>
                 
@@ -70,12 +70,12 @@
 <style>
     .grid-1
     {
-        height: 100vh;
         overflow: hidden !important;
         margin-top: 100px;
     }
-    .mud-text
+    .mud-typography
     {
+        font-size: 100px;
         font-weight: 500;
     }
     .mud-input-control

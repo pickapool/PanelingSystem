@@ -9,6 +9,7 @@ namespace PanelingSystem.Models
     {
         public int PanelistId { get; set; }
         public int GroupId { get; set; }
+        public int ScheduleId { get; set; }
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel Panel { get; set; }

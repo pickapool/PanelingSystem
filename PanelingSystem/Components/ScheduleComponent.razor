@@ -13,6 +13,7 @@
             <MudChip Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip>
         </div>
         <div>
+            <MudIconButton OnClick="RemoveSchedule" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"/>
             <MudButton OnClick="()=> OpenScheduleDialog(Schedule)" Size="Size.Small" Variant="MudBlazor.Variant.Filled">View</MudButton>
         </div>
     </div>
@@ -38,22 +39,22 @@
             <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
                 @foreach(PanelistModel panel in Schedule.Panels)
                 {
-                <MudBadge OnClick="() => Remove(panel)" Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true">
-                    <MudTooltip Text="@panel.Panel.Name">
+                @* <MudBadge OnClick="() => Remove(panel)" Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true"> *@
+                     <MudTooltip Text="@panel.Panel.Name">
                         @if (panel.Panel.ProfilePicture.Count() == 0) {
-                            <MudAvatar Class='mt-4' Image="img/blank_profile.png" />
+                            <MudAvatar Image="img/blank_profile.png"/>
                         } else {
                             <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(panel.Panel.ProfilePicture)}")' />
                         }
-                    </MudTooltip>
-                </MudBadge>
+                     </MudTooltip>
+                @* </MudBadge> *@
                 }
             </MudAvatarGroup>
         } else {
             <span><b>NO PANELS</b></span>
         }
         <MudTooltip Text="Add Panels">
-            <MudIconButton OnClick="()=> AddPanels(Group.GroupId)" Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton>
+             <MudIconButton OnClick="()=> AddPanels(Group.GroupId)" Icon="@Icons.Material.Filled.Add" aria-label="add" Color="Color.Info" Size="Size.Small"></MudIconButton> 
         </MudTooltip>
     </div>
 </div>
@@ -62,6 +63,7 @@
     [Parameter] public ScheduleModel Schedule { get; set; }
     [Parameter] public List<GroupModel> ListGroups { get; set; }
     [Parameter] public EventCallback OnRemovePanel { get; set; }
+    [Parameter] public EventCallback<int> OnRemoveSchedule { get; set; }
     private List<PanelistModel> Panels = new();
     private GroupModel Group { get; set; }
 
@@ -81,17 +83,28 @@
     }
     private async Task AddPanels(int groupId)
     {
+        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
+        {
+            Extensions.ShowAlert("Your are not allowed to add a panel in a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
+            return;
+        }
         var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
         var param = new DialogParameters();
         param.Add("GroupId", groupId);
+        param.Add("Schedule", Schedule);
         var dialog =  await DialogService.Show<AddPanelsDialogs>("Add Panels", param, options).Result;
         if(!dialog.Cancelled)
         {
-            
+            await OnRemovePanel.InvokeAsync();
         }
     }
     private async Task OpenScheduleDialog(ScheduleModel schedule)
     {
+        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
+        {
+            Extensions.ShowAlert("Your are not allowed to view a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
+            return;
+        }
         var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
         var param = new DialogParameters();
         param.Add("Schedule", schedule);
@@ -104,6 +117,15 @@
             Extensions.ShowAlert("Schedule has been saved." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
         }
     }
+    private async Task RemoveSchedule()
+    {
+        Task t = ScheduleService.DeleteScheduleModel(Schedule.ScheduleId);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            await OnRemoveSchedule.InvokeAsync(Schedule.ScheduleId);
+        }
+    }
 }
 <style>
     .box
@@ -112,15 +134,15 @@
         border-radius: 5px;
         border-left: 8px solid #05173D;
     }
-    .mud-badge
+    @* .mud-badge
     {
         z-index: 2;
         margin-top: 20px;
         margin-right: -2px;
         cursor: pointer;
-    }
-    .mud-badge.mud-badge-top.right.mud-badge-overlap
+    } *@
+    @* .mud-badge.mud-badge-top.right.mud-badge-overlap
     {
         inset: auto auto calc(100% - 17px) calc(100% - 30px) !important;
-    }
+    } *@
 </style>

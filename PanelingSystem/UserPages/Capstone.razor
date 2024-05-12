@@ -40,7 +40,7 @@
                         <MudDivider/>
                         @foreach(CommentModel comment in ListComments)
                         {
-                            <CommentComponent Comment="comment"/>
+                            <CommentComponent Comment="comment" OnChanged="GetComments"/>
                         }
                     </div>
                     <div>
@@ -108,6 +108,7 @@
         if(c.Status == TaskStatus.RanToCompletion){
             ListComments  = c.Result.Where( e => e.GrouId == Group.GroupId).ToList();
         }
+        StateHasChanged();
     }
 }
 <style>

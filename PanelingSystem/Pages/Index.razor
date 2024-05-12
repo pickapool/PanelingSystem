@@ -6,11 +6,11 @@
 {
     protected override void OnInitialized()
     {
-        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
-        {
+        @* if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+        { *@
             Navigation.NavigateTo("u/dashboard");
-        } else {
+        @* } else {
              Navigation.NavigateTo("a/dashboard");
-        }
+        } *@
     }
 }

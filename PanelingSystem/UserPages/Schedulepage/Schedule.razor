@@ -22,9 +22,12 @@
         <span style="font-size:18px;"><b>SCHEDULES</b></span>
         <span>@SelectedDateStart?.ToString("dddd, MMMM dd, yyyy")</span>
         <hr>
-        @foreach(ScheduleModel schedule in SelectedSchedules)
+        @if(IsReload)
         {
-            <ScheduleComponent Schedule="schedule" ListGroups="Groups" OnRemovePanel="GetSchedules"/>
+            @foreach(ScheduleModel schedule in SelectedSchedules)
+            {
+                <ScheduleComponent Schedule="schedule" ListGroups="Groups" OnRemovePanel="GetSchedules" OnRemoveSchedule="RemoveSchedule"></ScheduleComponent>
+            }
         }
     </div>
     <MudFab OnClick="()=> OpenScheduleDialog(new())" Class="fab-btn" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"/>
@@ -33,13 +36,14 @@
     RadzenScheduler<ScheduleModel> scheduler;
     private DateTime? SelectedDateStart = DateTime.Now;
     private DateTime? SelectedDateEnd = DateTime.Now;
-    bool openRight = false;
+    bool openRight = false, IsReload = true;
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
     IList<ScheduleModel> Schedules;
     List<ScheduleModel> SelectedSchedules = new();
     List<GroupModel> Groups = new();
     protected override async Task OnInitializedAsync()
     {
+        IsReload = false;
         await GetSchedules();
     }
     private async Task GetSchedules()
@@ -67,25 +71,43 @@
             await aa;
             if(aa.Status == TaskStatus.RanToCompletion){
                 Groups = aa.Result.ToList();
+                foreach(ScheduleModel sched in Schedules)
+                {
+                    sched.Panels.Clear();
+                }
+                await Task.Delay(1000);
                 Task<IEnumerable<PanelistModel>> panels = PanelistService.GetPanels();
                 await panels;
                 if(panels.Status == TaskStatus.RanToCompletion)
                 {
-                    foreach(PanelistModel panel in panels.Result)
+                    foreach(ScheduleModel sched in Schedules)
                     {
-                        foreach(ScheduleModel sched in Schedules)
+                        foreach(PanelistModel panel in panels.Result)
                         {
-                            if(sched.GroupId == panel.GroupId)
+                            IsReload = false;
+                            if(sched.ScheduleId == panel.ScheduleId && sched.GroupId == panel.GroupId)
                             {
-                                if(!sched.Panels.Any( e => e.Panel.UserId == panel.UserId))
-                                    sched.Panels.Add(panel);
+                                sched.Panels.Add(panel);
                             }
+                            IsReload = true;
                         }
                     }
-                }
+                    @* foreach(ScheduleModel sched in Schedules)
+                    {
+                        foreach(PanelistModel panel in panels.Result)
+                        {
+                            if(sched.GroupId == panel.GroupId && sched.ScheduleId == panel.ScheduleId)
+                            {
+                                if(!sched.Panels.Any( e => e.Panel.UserId == panel.UserId))
+                                    sched.Panels.Remove(panel);
+                            }
+                        }
+                    } *@
+                } 
+
             }
-            
         }
+        StateHasChanged();
     }
     void ToggleRightDrawer()
     {
@@ -113,6 +135,7 @@
         SelectedDateStart = args.Start;
         SelectedDateEnd = args.End.AddDays(-1);
         SelectedSchedules = Schedules.Where( e => e.Start?.Date == args.Start.Date).ToList();
+        IsReload = true;
         //await scheduler.Reload();
     }
 
@@ -167,6 +190,11 @@
     }
     private async Task OpenScheduleDialog(ScheduleModel schedule)
     {
+        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
+        {
+            Extensions.ShowAlert("Your are not allowed to add a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
+            return;
+        }
         var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
         var param = new DialogParameters();
         param.Add("Schedule", schedule);
@@ -179,6 +207,12 @@
             ToggleRightDrawer();
             Extensions.ShowAlert("Schedule has been saved." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
         }
+    }
+    private async Task RemoveSchedule(int scheduleId)
+    {
+        IsReload = false;
+        SelectedSchedules.RemoveAll( e => e.ScheduleId == scheduleId);
+        IsReload = true;
     }
 }
 <style>

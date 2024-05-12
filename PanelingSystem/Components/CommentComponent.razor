@@ -1,8 +1,53 @@
-<div class="d-flex flex-column">
+@inject AppState AppState
+@inject ICommentService CommentService
+
+<div class="d-flex flex-column position-relative">
+    @if(Comment.UserId == GlobalClass.CurrentUserAccount.UserId)
+    {
+        if(Comment.IsEdit == false)
+        {
+            <div class="d-flex flex-row position-absolute" style="right: 0;">
+                <MudIconButton OnClick="Edit" Size="Size.Small" Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                <MudIconButton OnClick="Remove" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+            </div>
+        } else {
+            <div class="d-flex flex-row position-absolute" style="right: 0;">
+                <MudIconButton OnClick="CancelEdit" Size="Size.Small" Icon="@Icons.Material.Filled.Close"></MudIconButton>
+                <MudIconButton OnClick="Save" Size="Size.Small" Icon="@Icons.Material.Filled.Save"></MudIconButton>
+            </div>
+        }
+    }
     <PersonTemplate Account="Comment.Account"/>
-    <MudTextField @bind-Value="Comment.Comment" Label='@Comment.CommentDate.ToString("MMMM dd, yyyy hh:ss tt")' Variant="MudBlazor.Variant.Filled" Disabled="true" />
+    @if(Comment.IsEdit == false)
+    {
+        <MudTextField @bind-Value="Comment.Comment" Label='@Comment.CommentDate.ToString("MMMM dd, yyyy hh:ss tt")' Variant="MudBlazor.Variant.Filled" Disabled="true" />
+    } else {
+        <MudTextField @bind-Value="Comment.Comment" Label='@Comment.CommentDate.ToString("MMMM dd, yyyy hh:ss tt")' Variant="MudBlazor.Variant.Filled" />
+    }
 </div>
 @code
 {
     [Parameter] public CommentModel Comment { get; set; }
+    [Parameter] public EventCallback OnChanged { get; set; }
+    private async Task Edit()
+    {
+        Comment.IsEdit = true;
+        StateHasChanged();
+    }
+    private async Task CancelEdit()
+    {
+        Comment.IsEdit = false;
+        StateHasChanged();
+    }
+    private async Task Save()
+    {
+        await CommentService.PutCommentModel(Comment.CommentId, Comment);
+        Comment.IsEdit = false;
+        await OnChanged.InvokeAsync();
+    }
+    private async Task Remove()
+    {
+        await CommentService.DeleteCommentModel(Comment.CommentId);
+        await OnChanged.InvokeAsync();
+    }
 }

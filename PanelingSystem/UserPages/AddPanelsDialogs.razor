@@ -52,6 +52,7 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public int GroupId { get; set; }
+    [Parameter] public ScheduleModel Schedule { get; set; }
     private UserAccountModel UserAccount = new();
     private List<PanelistModel> Panels = new();
 
@@ -79,7 +80,7 @@
         await p;
         if(p.Status == TaskStatus.RanToCompletion)
         {
-            Panels = p.Result.ToList();
+            Panels = p.Result.ToList().Where( e => e.ScheduleId == Schedule.ScheduleId).ToList();
         }
     }
     private async Task Add(UserAccountModel user)
@@ -93,6 +94,8 @@
         PanelistModel panel = new();
         panel.GroupId = GroupId;
         panel.UserId = user.UserId;
+        panel.ScheduleId = Schedule.ScheduleId;
+        Extensions.NewtonsoftLog<PanelistModel>(panel);
         Task t = PanelistService.PostPanelistModel(panel);
         await t;
         if(t.Status == TaskStatus.RanToCompletion)

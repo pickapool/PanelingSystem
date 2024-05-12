@@ -6,9 +6,9 @@
 @inject AppState AppState
 
 <div class="d-flex justify-content-center align-items-center">
-    <MudPaper Class="pa-2 d-flex flex-column justify-content-center align-items-center" Elevation="3" Height="88vh" Width="100%">
         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
         {
+            <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
             <MudGrid Spacing="2">
                 <MudItem xs="3">
                     <MudSelect Value="@Group" 
@@ -36,11 +36,13 @@
                 </MudItem>  
                 }
             </MudGrid>
+            </MudPaper>
         } else {
-            <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">DENFESE PROGRESS</MudText>
+            <MudPaper Class="pa-2 d-flex flex-column justify-content-center align-items-center" Elevation="3" Height="88vh" Width="100%">
+            <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">DENFENSE PROGRESS</MudText>
             <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="500px" Height="500px" />
+            </MudPaper>
         }
-    </MudPaper>
 </div>
 @code
 {
@@ -93,7 +95,7 @@
             double dPercentage = (d / Total) * 100;
 
             labels = new string[]{ "Title Defense- " +tPercentage.ToString("N2") + " %" ,"Pre Oral Defense- " +pPercentage.ToString("N2") + " %", "Final Defense - " +dPercentage.ToString("N2") + " %" };
-            Console.WriteLine(t);
+            
             await AppState.NotifyStateChangedAsync();
         }
     }

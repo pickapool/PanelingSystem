@@ -12,7 +12,7 @@ using PanelingSystem.DatabaseContext;
 namespace PanelingSystem.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240429134651_Migration1")]
+    [Migration("20240512101138_Migration1")]
     partial class Migration1
     {
         /// <inheritdoc />
@@ -204,7 +204,7 @@ namespace PanelingSystem.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ScheduleModelScheduleId")
+                    b.Property<int>("ScheduleId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -212,7 +212,7 @@ namespace PanelingSystem.Migrations
 
                     b.HasKey("PanelistId");
 
-                    b.HasIndex("ScheduleModelScheduleId");
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("UserId");
 
@@ -281,7 +281,6 @@ namespace PanelingSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("ProfilePicture")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("UserName")
@@ -336,7 +335,9 @@ namespace PanelingSystem.Migrations
                 {
                     b.HasOne("PanelingSystem.Models.ScheduleModel", null)
                         .WithMany("Panels")
-                        .HasForeignKey("ScheduleModelScheduleId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PanelingSystem.Models.UserAccountModel", "Panel")
                         .WithMany()

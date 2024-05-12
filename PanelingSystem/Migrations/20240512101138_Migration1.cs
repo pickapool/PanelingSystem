@@ -181,8 +181,8 @@ namespace PanelingSystem.Migrations
                     PanelistId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GroupId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ScheduleModelScheduleId = table.Column<int>(type: "int", nullable: true)
+                    ScheduleId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,10 +194,11 @@ namespace PanelingSystem.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Panels_Schedules_ScheduleModelScheduleId",
-                        column: x => x.ScheduleModelScheduleId,
+                        name: "FK_Panels_Schedules_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Schedules",
-                        principalColumn: "ScheduleId");
+                        principalColumn: "ScheduleId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -221,9 +222,9 @@ namespace PanelingSystem.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Panels_ScheduleModelScheduleId",
+                name: "IX_Panels_GroupId",
                 table: "Panels",
-                column: "ScheduleModelScheduleId");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Panels_UserId",
