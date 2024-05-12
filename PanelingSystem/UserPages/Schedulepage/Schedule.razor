@@ -22,7 +22,7 @@
         <span style="font-size:18px;"><b>SCHEDULES</b></span>
         <span>@SelectedDateStart?.ToString("dddd, MMMM dd, yyyy")</span>
         <hr>
-        @if(IsReload)
+        @if(SelectedSchedules != null)
         {
             @foreach(ScheduleModel schedule in SelectedSchedules)
             {
@@ -71,16 +71,16 @@
             await aa;
             if(aa.Status == TaskStatus.RanToCompletion){
                 Groups = aa.Result.ToList();
-                foreach(ScheduleModel sched in Schedules)
+                @* foreach(ScheduleModel sched in Schedules)
                 {
                     sched.Panels.Clear();
-                }
-                await Task.Delay(1000);
+                } *@
+                //await Task.Delay(1000);
                 Task<IEnumerable<PanelistModel>> panels = PanelistService.GetPanels();
                 await panels;
                 if(panels.Status == TaskStatus.RanToCompletion)
                 {
-                    foreach(ScheduleModel sched in Schedules)
+                    @* foreach(ScheduleModel sched in Schedules)
                     {
                         foreach(PanelistModel panel in panels.Result)
                         {
@@ -91,22 +91,26 @@
                             }
                             IsReload = true;
                         }
-                    }
-                    @* foreach(ScheduleModel sched in Schedules)
+                    } *@
+                     foreach(ScheduleModel sched in Schedules)
                     {
+                        if(sched.Panels != null)
+                        {
                         foreach(PanelistModel panel in panels.Result)
                         {
                             if(sched.GroupId == panel.GroupId && sched.ScheduleId == panel.ScheduleId)
                             {
                                 if(!sched.Panels.Any( e => e.Panel.UserId == panel.UserId))
-                                    sched.Panels.Remove(panel);
+                                    sched.Panels.Add(panel);
                             }
                         }
-                    } *@
+                        }
+                    }
                 } 
 
             }
         }
+        //IsReload = true;
         StateHasChanged();
     }
     void ToggleRightDrawer()
@@ -135,7 +139,7 @@
         SelectedDateStart = args.Start;
         SelectedDateEnd = args.End.AddDays(-1);
         SelectedSchedules = Schedules.Where( e => e.Start?.Date == args.Start.Date).ToList();
-        IsReload = true;
+       //IsReload = true;
         //await scheduler.Reload();
     }
 

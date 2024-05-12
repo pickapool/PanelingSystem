@@ -16,7 +16,6 @@ namespace PanelingSystem.Models
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
         public string Text { get; set; }
-        [ForeignKey("GroupId")]
         public List<PanelistModel> Panels { get; set; }
     }
 }
