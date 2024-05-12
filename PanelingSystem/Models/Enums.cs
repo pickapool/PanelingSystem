@@ -9,6 +9,7 @@
             Success = 2,
             Pending = 3,
             Rejected = 4,
+            Completed = 5,
         }
         public enum AccountType
         {

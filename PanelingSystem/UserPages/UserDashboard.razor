@@ -6,7 +6,7 @@
 @inject AppState AppState
 
 <div class="d-flex justify-content-center align-items-center">
-    <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+    <MudPaper Class="pa-2 d-flex flex-column justify-content-center align-items-center" Elevation="3" Height="88vh" Width="100%">
         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
         {
             <MudGrid Spacing="2">
@@ -87,6 +87,12 @@
             double p = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double d = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             data = new double[] { t, p , d};
+            double Total = t + p + d;
+            double tPercentage = (t / Total) * 100;
+            double pPercentage = (p / Total) * 100;
+            double dPercentage = (d / Total) * 100;
+
+            labels = new string[]{ "Title Defense- " +tPercentage.ToString("N2") + " %" ,"Pre Oral Defense- " +pPercentage.ToString("N2") + " %", "Final Defense - " +dPercentage.ToString("N2") + " %" };
             Console.WriteLine(t);
             await AppState.NotifyStateChangedAsync();
         }
