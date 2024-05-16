@@ -1,0 +1,120 @@
+﻿@page "/u/list"
+
+@inject IScheduleService ScheduleService
+@inject IGroupService GroupService
+@inject IMemberService MemberService
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+        <div class="d-flex flex-row" style="width: 100%;">
+        <MudTextField  @bind-Value="Search"
+            OnAdornmentClick="SearchList" style="width: 400px;" Label="Search" Variant="MudBlazor.Variant.Outlined"
+            Margin="Margin.Dense" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" 
+            AdornmentColor="Color.Secondary" />
+            <div class="d-flex flex-1 justify-end">
+                <MudIconButton OnClick="Print" Icon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error"></MudIconButton>
+            </div>
+        </div>
+        <MudTable Items="@Schedules" FixedFooter FixedHeader Height="70vh">
+            <HeaderContent>
+                <MudTh>Title</MudTh>
+                <MudTh>Group name</MudTh>
+                <MudTh>Group Members</MudTh>
+                <MudTh>Program</MudTh>
+                <MudTh>Year</MudTh>
+                <MudTh>Type</MudTh>
+                <MudTh>Status</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Group.GroupThesisTitle</MudTd>
+                <MudTd>@context.Group.Groupname</MudTd>
+                <MudTd>
+                    <div class="d-flex flex-column">
+                        @foreach(MembersModel member in context.Members)
+                        {
+                            <MudText Typo="Typo.subtitle2">@member.Student.Name</MudText>
+                        }
+                    </div>
+                </MudTd>
+                <MudTd>@context.Group.Program</MudTd>
+                <MudTd>@context.Group.Year</MudTd>
+                <MudTd>@Extensions.GetEnumDescription(context.DefenseType)</MudTd>
+                <MudTd>@Extensions.GetEnumDescription(context.Group.Status)</MudTd>
+                
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</div>
+@code {
+    List<ScheduleModel> Schedules = new();
+    List<GroupModel> Groups = new();
+    List<MembersModel> GroupMembers = new();
+    public string Search { get; set;}
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSchedules();
+    }
+    private async Task GetSchedules()
+    {
+        Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules();
+        await task;
+        if (task.Status == TaskStatus.RanToCompletion)
+        {
+            Schedules = task.Result.ToList();
+          // Extensions.NewtonsoftLog(Schedules);
+            //await Task.Delay(2000);
+           // await GetMyGroups();
+        }
+    }
+    private async Task SearchList()
+    {
+        Task t = GetSchedules();
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            if(String.IsNullOrEmpty(Search))
+            {
+                return;
+            }
+            Schedules = Schedules.Where( e => 
+                e.Group.Groupname.Contains(Search, StringComparison.InvariantCultureIgnoreCase) ||
+                e.Group.GroupThesisTitle.Contains(Search, StringComparison.InvariantCultureIgnoreCase) ||
+                e.Group.Program.Contains(Search, StringComparison.InvariantCultureIgnoreCase) ||
+                e.Group.Year.Contains(Search, StringComparison.InvariantCultureIgnoreCase) ||
+                e.DefenseType.ToString().Contains(Search, StringComparison.InvariantCultureIgnoreCase) ||
+                e.Status.ToString().Contains(Search, StringComparison.InvariantCultureIgnoreCase) ||
+                Search.Contains(Extensions.GetEnumDescription(e.DefenseType), StringComparison.InvariantCultureIgnoreCase) ||
+                Search.Contains(Extensions.GetEnumDescription(e.Status), StringComparison.InvariantCultureIgnoreCase)
+            ).ToList();
+            StateHasChanged();
+        }
+    }
+    private async Task Print()
+    {
+
+    }
+    private async Task GetMyGroups()
+    {
+        Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
+        await aa;
+        if (aa.Status == TaskStatus.RanToCompletion)
+        {
+            Groups = aa.Result.ToList();
+            foreach(ScheduleModel sched in Schedules)
+            {
+                foreach(GroupModel group in Groups)
+                {
+                    if(sched.GroupId == group.GroupId)
+                    {
+                        sched.Members = group.Members;
+                    }
+                }
+            }
+          // 
+        }
+        StateHasChanged();
+    }
+}

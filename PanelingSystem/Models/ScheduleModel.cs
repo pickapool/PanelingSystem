@@ -16,6 +16,7 @@ namespace PanelingSystem.Models
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
         public string Text { get; set; }
-        public List<PanelistModel> Panels { get; set; }
+        public List<PanelistModel> Panels { get; set; } = new();
+         public List<MembersModel> Members { get; set; } = new();
     }
 }
