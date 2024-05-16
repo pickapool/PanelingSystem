@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PanelingSystem.Models
 {
@@ -17,6 +18,8 @@ namespace PanelingSystem.Models
         public DateTime? End { get; set; }
         public string Text { get; set; }
         public List<PanelistModel> Panels { get; set; } = new();
-         public List<MembersModel> Members { get; set; } = new();
+        [NotMapped]
+        [JsonIgnore]
+        public List<MembersModel> Members { get; set; } = new();
     }
 }
