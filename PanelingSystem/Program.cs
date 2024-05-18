@@ -14,6 +14,7 @@ using PanelingSystem.Services.GradeServices;
 using PanelingSystem.Services.GroupServices;
 using PanelingSystem.Services.MemberServices;
 using PanelingSystem.Services.PanelistServices;
+using PanelingSystem.Services.ReportServices;
 using PanelingSystem.Services.ScheduleServices;
 using Radzen;
 using Radzen.Blazor;
@@ -43,6 +44,7 @@ builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IPanelistService, PanelistService>();
+builder.Services.AddScoped<IReportService,  ReportService>();
 
 builder.Services.AddDbContext<AppDBContext>(options =>
 {
