@@ -107,7 +107,31 @@
     }
     private async Task Print()
     {
-        IActionResult report = ReportService.GetMasterListReport(new());
+        List<ReportModel> reports = new();
+        int count = 0;
+        foreach(ScheduleModel sched in Schedules)
+        {
+            foreach(MembersModel member in sched.Members)
+            {
+                ReportModel r = new();
+                r.ScheduleId = sched.ScheduleId;
+                r.GroupId = sched.GroupId;
+                r.StatusText = Extensions.GetEnumDescription(sched.Status);
+                r.DefenseTypeText = Extensions.GetEnumDescription(sched.DefenseType);
+                r.Start = sched.Start;
+                r.End = sched.End;
+                r.GroupThesisTitle = sched.Group.GroupThesisTitle;
+                r.Groupname = sched.Group.Groupname;
+                r.Program = sched.Group.Program;
+                r.Year = sched.Group.Year;
+                r.MemberId = member.MemberId;
+                r.UserId = member.UserId;
+                r.Name = member.Student.Name;
+                reports.Add(r);
+            }
+            // r.StatusText = Extensions.GetEnumsDescription(sched.Stat)
+        }
+        IActionResult report = ReportService.GetMasterListReport(reports);
         if (report is FileContentResult fileContentResult)
         {
             byte[] pdfBytes = fileContentResult.FileContents;

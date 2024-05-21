@@ -7,9 +7,8 @@ namespace PanelingSystem.Services.ReportServices
 {
     public class ReportService : ControllerBase, IReportService
     {
-        public IActionResult GetMasterListReport([FromBody] List<ReportModel> scheds)
+        public IActionResult GetMasterListReport(List<ReportModel> scheds)
         {
-            scheds.Add(new());
             using var rs = Assembly.GetExecutingAssembly().GetManifestResourceStream("PanelingSystem.Reports.Masterlistreport.rdlc");
             LocalReport report = new();
             report.LoadReportDefinition(rs);

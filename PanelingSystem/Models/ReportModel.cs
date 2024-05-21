@@ -6,7 +6,6 @@ namespace PanelingSystem.Models
     {
         public int ScheduleId { get; set; }
         public int GroupId { get; set; }
-        public GroupModel Group { get; set; }
         public Enums.FilePosition DefenseType { get; set; }
         public Enums.Status Status { get; set; }
         public string StatusText { get; set; }
