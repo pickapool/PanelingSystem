@@ -23,10 +23,15 @@
             @foreach(MembersModel member in Group.Members)
             {
             <MudTooltip Text="@member.Student.Name">
-                @if (member.Student.ProfilePicture.Count() == 0) {
-                    <MudAvatar Image="img/blank_profile.png" />
+                @if(member.Student.ProfilePicture != null)
+                {
+                    if (member.Student.ProfilePicture.Count() == 0) {
+                        <MudAvatar Image="img/blank_profile.png" />
+                    } else {
+                        <MudAvatar Image='@($"data:image/png;base64, {Convert.ToBase64String(member.Student.ProfilePicture)}")' />
+                    }
                 } else {
-                    <MudAvatar Image='@($"data:image/png;base64, {Convert.ToBase64String(member.Student.ProfilePicture)}")' />
+                    <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
                 }
             </MudTooltip>
             }

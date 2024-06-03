@@ -1,8 +1,13 @@
 <div class="d-flex flex-row">
-    @if (Account.ProfilePicture.Count() == 0) {
-        <MudAvatar Class='mr-2' Image="img/blank_profile.png" Size='Size.Medium' />
+    @if(Account.ProfilePicture != null)
+    {
+        if (Account.ProfilePicture.Count() == 0) {
+            <MudAvatar Class='mr-2' Image="img/blank_profile.png" Size='Size.Medium' />
+        } else {
+            <MudAvatar Class='mr-2' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+        }
     } else {
-        <MudAvatar Class='mr-2' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
     }
     <div class="d-flex flex-column">
         <MudText Typo="Typo.body1">@Account.Name</MudText>
