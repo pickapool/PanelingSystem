@@ -13,10 +13,15 @@
                     Size="Size.Large"
                     Color="Color.Primary"
                     for="@context.Id">
-                    @if (Account.ProfilePicture.Count() == 0) {
-                        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Medium' />
+                    @if(Account.ProfilePicture != null)
+                    {
+                        if (Account.ProfilePicture.Count() == 0) {
+                            <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Medium' />
+                        } else {
+                            <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+                        }
                     } else {
-                        <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+                        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
                     }
             </MudButton>
         </ButtonTemplate>
