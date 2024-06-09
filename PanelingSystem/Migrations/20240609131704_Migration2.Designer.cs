@@ -12,8 +12,8 @@ using PanelingSystem.DatabaseContext;
 namespace PanelingSystem.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240603035853_Migration3")]
-    partial class Migration3
+    [Migration("20240609131704_Migration2")]
+    partial class Migration2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

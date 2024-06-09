@@ -12,8 +12,8 @@ using PanelingSystem.DatabaseContext;
 namespace PanelingSystem.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240512113749_Migration2")]
-    partial class Migration2
+    [Migration("20240609131124_Migration1")]
+    partial class Migration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -204,6 +204,9 @@ namespace PanelingSystem.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PanelUserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
 
@@ -215,9 +218,9 @@ namespace PanelingSystem.Migrations
 
                     b.HasKey("PanelistId");
 
-                    b.HasIndex("ScheduleModelScheduleId");
+                    b.HasIndex("PanelUserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ScheduleModelScheduleId");
 
                     b.ToTable("Panels", (string)null);
                 });
@@ -336,15 +339,15 @@ namespace PanelingSystem.Migrations
 
             modelBuilder.Entity("PanelingSystem.Models.PanelistModel", b =>
                 {
+                    b.HasOne("PanelingSystem.Models.UserAccountModel", "Panel")
+                        .WithMany()
+                        .HasForeignKey("PanelUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PanelingSystem.Models.ScheduleModel", null)
                         .WithMany("Panels")
                         .HasForeignKey("ScheduleModelScheduleId");
-
-                    b.HasOne("PanelingSystem.Models.UserAccountModel", "Panel")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Panel");
                 });

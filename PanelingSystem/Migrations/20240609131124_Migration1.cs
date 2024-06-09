@@ -182,23 +182,24 @@ namespace PanelingSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GroupId = table.Column<int>(type: "int", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    PanelUserId = table.Column<int>(type: "int", nullable: false),
+                    ScheduleModelScheduleId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Panels", x => x.PanelistId);
                     table.ForeignKey(
-                        name: "FK_Panels_Accounts_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Panels_Accounts_PanelUserId",
+                        column: x => x.PanelUserId,
                         principalTable: "Accounts",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Panels_Schedules_GroupId",
-                        column: x => x.GroupId,
+                        name: "FK_Panels_Schedules_ScheduleModelScheduleId",
+                        column: x => x.ScheduleModelScheduleId,
                         principalTable: "Schedules",
-                        principalColumn: "ScheduleId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ScheduleId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -222,14 +223,14 @@ namespace PanelingSystem.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Panels_GroupId",
+                name: "IX_Panels_PanelUserId",
                 table: "Panels",
-                column: "GroupId");
+                column: "PanelUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Panels_UserId",
+                name: "IX_Panels_ScheduleModelScheduleId",
                 table: "Panels",
-                column: "UserId");
+                column: "ScheduleModelScheduleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_GroupId",

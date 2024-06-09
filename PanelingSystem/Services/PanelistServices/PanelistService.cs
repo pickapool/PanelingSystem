@@ -84,6 +84,7 @@ namespace PanelingSystem.Services.PanelistServices
         public async Task<PanelistModel> PostPanelistModel(PanelistModel panelistModel)
         {
             _context.Panels.Add(panelistModel);
+            _context.Entry(panelistModel).Reference(b => b.Panel).IsModified = false;
             await _context.SaveChangesAsync();
 
             return panelistModel;

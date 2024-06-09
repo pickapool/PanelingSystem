@@ -12,8 +12,8 @@ using PanelingSystem.DatabaseContext;
 namespace PanelingSystem.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240512101138_Migration1")]
-    partial class Migration1
+    [Migration("20240609131940_Migration3")]
+    partial class Migration3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -207,12 +207,15 @@ namespace PanelingSystem.Migrations
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ScheduleModelScheduleId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("PanelistId");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("ScheduleModelScheduleId");
 
                     b.HasIndex("UserId");
 
@@ -335,9 +338,7 @@ namespace PanelingSystem.Migrations
                 {
                     b.HasOne("PanelingSystem.Models.ScheduleModel", null)
                         .WithMany("Panels")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ScheduleModelScheduleId");
 
                     b.HasOne("PanelingSystem.Models.UserAccountModel", "Panel")
                         .WithMany()

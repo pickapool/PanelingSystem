@@ -12,6 +12,6 @@ namespace PanelingSystem.Models
         public int ScheduleId { get; set; }
         public int UserId { get; set; }
         [ForeignKey("UserId")]
-        public UserAccountModel Panel { get; set; } = new();
+        public UserAccountModel Panel { get; set; }
     }
 }
