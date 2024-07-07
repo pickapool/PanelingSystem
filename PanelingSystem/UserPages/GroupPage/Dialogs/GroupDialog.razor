@@ -1,23 +1,69 @@
 @inject IGroupService GroupService
 @inject ISnackbar Snackbar
 @inject IMemberService MemberService
+@inject IAccountService AccountService
 
 <MudDialog>
     <DialogContent>
-        <MudGrid Spacing="3" Class="pa-3 mr-4">
-            <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.GroupThesisTitle" Label="Title" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+        <MudGrid Spacing="3"  Class="pa-3 mr-4">
+            <MudItem xs="6">
+                 <MudGrid Spacing="3">
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="@Group.GroupThesisTitle" Label="Title" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="@Group.Groupname" Label="Group name" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="@Group.Program" Label="Program" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="@Group.Year" Label="Year" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+                    </MudItem>
+                </MudGrid>
             </MudItem>
-            <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.Groupname" Label="Group name" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
-            </MudItem>
-            <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.Program" Label="Program" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
-            </MudItem>
-            <MudItem xs="12">
-                <MudTextField @bind-Value="@Group.Year" Label="Year" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
+            <MudItem xs="6">
+                <MudGrid Spacing="3" Class="pa-3 mr-4">
+                    <MudItem xs="9">
+                        <MudText Typo="Typo.caption">Student</MudText>
+                            <BlazoredTypeahead Context="acc"  @bind-Value="@UserAccount" SearchMethod='LoadStudents' DisableClear placeholder='Student'
+                                Debounce="300">
+                                <SelectedTemplate>
+                                    @(String.IsNullOrEmpty(acc.Name) == true ? "-" : acc.Name)
+                                </SelectedTemplate>
+                                <ResultTemplate>
+                                <PersonTemplate Account="acc"/>
+                                </ResultTemplate>
+                            </BlazoredTypeahead>
+                    </MudItem>
+                    <MudItem xs="3" Class="d-flex justify-conten-center align-center mt-5">
+                        <MudButton OnClick="()=> Add(UserAccount)" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">ADD</MudButton>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <span>Members</span>
+                    </MudItem>
+                    <MudItem xs="12">
+                        @if(Group.Members.Count > 0)
+                        {
+                        <MudStack>
+                            @foreach(MembersModel member in Group.Members)
+                            {
+                                <MudPaper Class="pa-1 d-flex flex-row justify-content-between">
+                                    <PersonTemplate Account="member.Student"/>
+                                    <MudIconButton OnClick="()=> RemoveMember(member)" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                                </MudPaper>
+                            }
+                        </MudStack>
+                        } else {
+                            <MudPaper Class="pa-1 d-flex justify-content-center align-center">
+                                <span><b>NO MEMBERS</b></span>
+                            </MudPaper>
+                        }
+                    </MudItem>
+                </MudGrid>
             </MudItem>
         </MudGrid>
+       
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -27,11 +73,13 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public GroupModel Group { get; set; }
-
-    protected override void OnParametersSet()
+    private MembersModel Member = new();
+    private UserAccountModel UserAccount = new();
+    protected override async Task OnParametersSetAsync()
     {
         if(Group == null)
             Group = new GroupModel();
+        await GetMembers();
     }
 
     private async Task Submit()
@@ -53,4 +101,55 @@
         }
     }
     void Cancel() => MudDialog.Cancel();
+    private async Task<IEnumerable<UserAccountModel>> LoadStudents(string sanc)
+    {
+        var students = await AccountService.GetStudentsAccount();
+        return students.Where(e => e.Name.Contains(sanc, StringComparison.InvariantCultureIgnoreCase)).ToList();
+    }
+    private async Task RemoveMember(MembersModel member)
+    {
+        Group.Members.Remove(member);
+    }
+    private async Task GetMembers()
+    {
+        Task<IEnumerable<MembersModel>> t =  MemberService.GetMyGroupMembers(Group.GroupId);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            Group.Members = t.Result.ToList() ?? new();
+        }
+        StateHasChanged();
+    }
+    private async Task Add(UserAccountModel user)
+    {
+        @* if(Group.Members.Any(( e => e.UserId == user.UserId)))
+        {
+            Extensions.ShowAlert("Member already exist.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+            UserAccount = new();
+            return;
+        } *@
+        @if(Group.GroupId > 0)
+        {
+            Console.WriteLine("1");
+            Member.UserId = user.UserId;
+            Member.GroupId = Group.GroupId;
+            Task t = MemberService.PostMembersModel(Member);
+            await t;
+            if(t.Status == TaskStatus.RanToCompletion)
+            {
+                Extensions.ShowAlert("New member has been added", MudBlazor.Variant.Filled, Snackbar , Severity.Success);
+                Member = new();
+                UserAccount = new();
+                await GetMembers();
+            }
+        } else {
+            Console.WriteLine("2");
+            Member.UserId = user.UserId;
+            Member.GroupId = Group.GroupId;
+            Member.Student = user;
+            Group.Members ??= new();
+            Group.Members.Add(Member);
+            Member = new();
+        }
+    }
 }

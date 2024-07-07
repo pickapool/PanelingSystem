@@ -101,6 +101,20 @@
                 return true;
             return false;
         }).ToArray();
+         if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
+         {
+            ListUserAccount = ListUserAccount.Where( e => 
+            e.AccountType == Enums.AccountType.Adviser ||
+            e.AccountType == Enums.AccountType.Panelist ||
+            e.AccountType == Enums.AccountType.Instructor
+            ).ToList();
+         } else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+         {
+            ListUserAccount = ListUserAccount.Where( e =>
+            e.AccountType == Enums.AccountType.Student
+         ).ToList();
+
+         }
         totalItems = ListUserAccount.Count();
         switch (state.SortLabel)
         {

@@ -19,6 +19,17 @@
             Panelist = 3,
             Adviser = 4,
         }
+        public enum AccountTypeForAdmin
+        {
+            Admin = 0,
+            Instructor = 1,
+            Panelist = 3,
+            Adviser = 4,
+        }
+        public enum AccountTypeForInstructor
+        {
+            Student = 2,
+        }
         public enum FilePosition
         {
             Title = 0,

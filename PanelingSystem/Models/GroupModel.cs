@@ -14,6 +14,6 @@ namespace PanelingSystem.Models
         public string Year { get; set; } = string.Empty;
         public Enums.Status Status{ get; set; }
         [ForeignKey("GroupId")]
-        public List<MembersModel> Members { get; set; }
+        public List<MembersModel> Members { get; set; } = new();
     }
 }

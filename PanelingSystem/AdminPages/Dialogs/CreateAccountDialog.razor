@@ -19,10 +19,20 @@
             </MudItem>
             <MudItem xs="6">
                 <MudSelect @bind-Value="Account.AccountType" Margin="Margin.Dense" Label="Role" HelperText="Required*" Placeholder="Role" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
-                    @foreach (Enums.AccountType item in Enum.GetValues(typeof(Enums.AccountType)))
+                    @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
                     {
-                        <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                        @foreach (Enums.AccountType item in Enum.GetValues(typeof(Enums.AccountTypeForAdmin)))
+                        {
+                            <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                        }
+                    } else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+                    {
+                        @foreach (Enums.AccountType item in Enum.GetValues(typeof(Enums.AccountTypeForInstructor)))
+                        {
+                            <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                        }
                     }
+                    
                 </MudSelect>
             </MudItem>
             <MudItem xs="6">
