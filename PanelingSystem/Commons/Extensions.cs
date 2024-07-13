@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using MudBlazor;
+using Newtonsoft.Json;
 using PanelingSystem.Models;
 
 namespace PanelingSystem.Commons
@@ -44,6 +45,11 @@ namespace PanelingSystem.Commons
             
             // Convert the character array back to a string
             return new string(formattedPassword);
+        }
+        public static T Clone<T>(T source)
+        {
+            var serialized = JsonConvert.SerializeObject(source);
+            return JsonConvert.DeserializeObject<T>(serialized);
         }
 
         public static void NewtonsoftLog<T>(T t)
