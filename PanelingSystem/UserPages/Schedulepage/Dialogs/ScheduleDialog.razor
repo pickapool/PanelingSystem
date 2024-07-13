@@ -59,6 +59,7 @@
     TimeSpan? time1 = new TimeSpan(00, 01, 00);
     TimeSpan? time2 = new TimeSpan(00, 02, 00);
     IEnumerable<UserAccountModel> Accounts;
+    IEnumerable<GroupModel> GroupsWithMembers;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -85,7 +86,14 @@
     }
     private async Task GetAccounts()
     {
-        Accounts = await AccountService.GetAccounts();
+        Task<IEnumerable<UserAccountModel>> a = AccountService.GetAccounts();
+        await a;
+        if(a.Status == TaskStatus.RanToCompletion)
+        {
+            Accounts = a.Result;
+            await GetGroupWithMembers();
+        }
+
     }
     private async Task SetGroup(GroupModel groupModel)
     {
@@ -115,10 +123,44 @@
             {
                 UserAccountModel panel = Accounts.ToList().FirstOrDefault(e => e.Designation.Contains("dean", StringComparison.InvariantCultureIgnoreCase))?? new();
                 if(panel.UserId != 0)
+                {
                     await AddPanel(panel, t.Result);
+                    GroupModel g = GroupsWithMembers.ToList().FirstOrDefault(e => e.GroupId == Group.GroupId) ?? new();
+                    if (g.GroupId == 0)
+                        return;
+                    
+                    UserAccountModel panel2 = new();
+                    if (g.Members.Any( e => e.Student.Designation.Contains("it", StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        panel2 = Accounts.ToList().FirstOrDefault(e =>
+                        e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) &&
+                        e.Designation.Contains("it", StringComparison.InvariantCultureIgnoreCase)
+                        ) ?? new();
+                    }
+                    else if (g.Members.Any( e => e.Student.Designation.Contains("is", StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        panel2 = Accounts.ToList().FirstOrDefault(e =>
+                        e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) &&
+                        e.Designation.Contains("is", StringComparison.InvariantCultureIgnoreCase)
+                        ) ?? new();
+                    }
+                    else if (g.Members.Any( e => e.Student.Designation.Contains("cs", StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        panel2 = Accounts.ToList().FirstOrDefault(e =>
+                        e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) &&
+                        e.Designation.Contains("cs", StringComparison.InvariantCultureIgnoreCase)
+                        ) ?? new();
+                    }
+                    if (panel2.UserId != 0)
+                        await AddPanel(panel2, t.Result);
+                }
             }
             MudDialog.Close();
         }
+    }
+    private async Task GetGroupWithMembers()
+    {
+        GroupsWithMembers = await GroupService.GetGroupsWithUsers();
     }
     private async Task AddPanel(UserAccountModel user,ScheduleModel sched)
     {
