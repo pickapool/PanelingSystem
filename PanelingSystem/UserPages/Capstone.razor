@@ -22,11 +22,12 @@
                             </MudSelect>
                         </MudItem>
                     </MudGrid>
-                    <div class="pa-2 d-flex flex-column gap-10 justify-content-center caps">
+                    <div class="pa-2 d-flex flex-column gap-3 justify-content-center caps">
                         <ChapterComponent Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                         <ChapterComponent Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                         <ChapterComponent Title="CHAPTER 3" Chapter="Enums.Chapter.Chapter3" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                         <ChapterComponent Title="CHAPTER 4" Chapter="Enums.Chapter.Chapter4" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent Title="CHAPTER 5" Chapter="Enums.Chapter.Chapter5" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                     </div>
                 </div>
                 
@@ -83,7 +84,7 @@
         if(task.Status == TaskStatus.RanToCompletion)
         {
             ListChapters = task.Result.ToList();
-            await GetComments();
+            //await GetComments();
         }
     }
     private async Task AddComment()
