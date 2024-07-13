@@ -1,6 +1,9 @@
 @inject IGroupService GroupService
 @inject ISnackbar Snackbar
 @inject IScheduleService ScheduleService
+@inject IAccountService AccountService
+@inject IPanelistService PanelistService
+
 <MudDialog>
     <DialogContent>
         <MudGrid Spacing="2">
@@ -55,7 +58,8 @@
     private GroupModel Group = new();
     TimeSpan? time1 = new TimeSpan(00, 01, 00);
     TimeSpan? time2 = new TimeSpan(00, 02, 00);
-    
+    IEnumerable<UserAccountModel> Accounts;
+
     protected override async Task OnParametersSetAsync()
     {
         if(Schedule.ScheduleId == 0 )
@@ -79,10 +83,15 @@
             await SetGroup(Group);
         } 
     }
+    private async Task GetAccounts()
+    {
+        Accounts = await AccountService.GetAccounts();
+    }
     private async Task SetGroup(GroupModel groupModel)
     {
         Group = groupModel;
         Schedule.Text = Group.Groupname;
+        await GetAccounts();
     }
     private async Task Save()
     {    
@@ -97,12 +106,32 @@
             Extensions.ShowAlert("Time start should not be greater than.", MudBlazor.Variant.Filled , Snackbar , Severity.Error);
             return;
         }
-        Task t = Schedule.ScheduleId == 0? ScheduleService.PostScheduleModel(Schedule) : ScheduleService.PutScheduleModel(Schedule.ScheduleId, Schedule);
+        ScheduleModel clone = Extensions.Clone(Schedule);
+        Task<ScheduleModel> t = Schedule.ScheduleId == 0? ScheduleService.PostScheduleModel(Schedule) : ScheduleService.PutScheduleModel(Schedule.ScheduleId, Schedule);
         await t;
         if(t.Status == TaskStatus.RanToCompletion)
         {
+            if(clone.ScheduleId == 0)
+            {
+                UserAccountModel panel = Accounts.ToList().FirstOrDefault(e => e.Designation.Contains("dean", StringComparison.InvariantCultureIgnoreCase))?? new();
+                if(panel.UserId != 0)
+                    await AddPanel(panel, t.Result);
+            }
             MudDialog.Close();
         }
+    }
+    private async Task AddPanel(UserAccountModel user,ScheduleModel sched)
+    {
+        PanelistModel panel = new();
+        panel.GroupId = Group.GroupId;
+        panel.UserId = user.UserId;
+        panel.ScheduleId = sched.ScheduleId;
+        Task t = PanelistService.PostPanelistModel(panel);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            
+        } 
     }
     void Cancel() => MudDialog.Cancel();
 }
