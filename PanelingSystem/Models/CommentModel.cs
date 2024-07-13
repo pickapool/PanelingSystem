@@ -13,6 +13,7 @@ namespace PanelingSystem.Models
         public string Comment { get; set; }
         public DateTime CommentDate { get; set; }
         public int UserId { get; set; }
+        public Enums.Chapter Chapter { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel Account { get; set; }
         [NotMapped]

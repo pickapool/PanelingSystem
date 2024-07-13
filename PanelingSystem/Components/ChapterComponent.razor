@@ -2,7 +2,7 @@
 @inject ISnackbar Snackbar
 @inject IJSRuntime JSRuntime
 
-<MudPaper Class="d-flex flex-column capstone pa-2" Elevation="3" >
+<MudPaper Class="d-flex flex-column capstone pa-2" Elevation="3" @onclick="()=> Click()">
     <div class="d-flex flex-row align-items-center">
         <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent" Size="Size.Large"/>
         <MudText Typo="Typo.h3">@Title</MudText>
@@ -30,11 +30,15 @@
     [Parameter] public Enums.Chapter Chapter { get; set;}
     [Parameter] public int GroupId { get; set; }
     [Parameter] public List<CapstoneFileModel> ListChapters { get; set; }
-    [Parameter] publci EventCallback OnClick { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
     private CapstoneFileModel CapstoneFile = new();
     protected override void OnParametersSet()
     {
         CapstoneFile = ListChapters.Where( e => e.Chapter == Chapter && e.GroupId == GroupId).FirstOrDefault()?? new();
+    }
+    private async Task Click()
+    {
+        await OnClick.InvokeAsync();
     }
     private async Task UploadFiles(IBrowserFile file)
     {

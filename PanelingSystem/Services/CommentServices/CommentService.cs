@@ -23,9 +23,9 @@ namespace PanelingSystem.Services.CommentServices
 
         // GET: api/CommentService
         [HttpGet]
-        public async Task<IEnumerable<CommentModel>> GetComments()
+        public async Task<IEnumerable<CommentModel>> GetComments(Enums.Chapter chap)
         {
-            return await _context.Comments
+            return await _context.Comments.Where( e => e.Chapter == chap)
             .Include( e => e.Account).ToListAsync();
         }
 

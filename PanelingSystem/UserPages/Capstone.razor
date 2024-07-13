@@ -23,11 +23,11 @@
                         </MudItem>
                     </MudGrid>
                     <div class="pa-2 d-flex flex-column gap-3 justify-content-center caps">
-                        <ChapterComponent Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1" ListChapters="ListChapters" GroupId="Group.GroupId"/>
-                        <ChapterComponent Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2" ListChapters="ListChapters" GroupId="Group.GroupId"/>
-                        <ChapterComponent Title="CHAPTER 3" Chapter="Enums.Chapter.Chapter3" ListChapters="ListChapters" GroupId="Group.GroupId"/>
-                        <ChapterComponent Title="CHAPTER 4" Chapter="Enums.Chapter.Chapter4" ListChapters="ListChapters" GroupId="Group.GroupId"/>
-                        <ChapterComponent Title="CHAPTER 5" Chapter="Enums.Chapter.Chapter5" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter1)" Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter2)" Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter3)" Title="CHAPTER 3" Chapter="Enums.Chapter.Chapter3" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter4)" Title="CHAPTER 4" Chapter="Enums.Chapter.Chapter4" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter5)" Title="CHAPTER 5" Chapter="Enums.Chapter.Chapter5" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                     </div>
                 </div>
                 
@@ -41,7 +41,7 @@
                         <MudDivider/>
                         @foreach(CommentModel comment in ListComments)
                         {
-                            <CommentComponent Comment="comment" OnChanged="GetComments"/>
+                            <CommentComponent Comment="comment" OnChanged="()=> GetComments(chapter)"/>
                         }
                     </div>
                     <div>
@@ -64,6 +64,7 @@
     private List<CapstoneFileModel> ListChapters = new();
     private List<CommentModel> ListComments = new();
     private string comment = string.Empty;
+    private Enums.Chapter chapter;
     protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
@@ -84,13 +85,14 @@
         if(task.Status == TaskStatus.RanToCompletion)
         {
             ListChapters = task.Result.ToList();
-            //await GetComments();
+            await GetComments(Enums.Chapter.Chapter1);
         }
     }
     private async Task AddComment()
     {
         CommentModel comments = new();
         comments.Comment = comment;
+        comments.Chapter = chapter;
         comments.UserId = GlobalClass.CurrentUserAccount.UserId;
         comments.GrouId = Group.GroupId;
         comments.CommentDate = DateTime.Now;
@@ -99,12 +101,14 @@
         if(t.Status == TaskStatus.RanToCompletion)
         {
             comment = string.Empty;
-            await GetComments();
+            await GetComments(chapter);
         }
     }
-    private async Task GetComments()
+    private async Task GetComments(Enums.Chapter chap)
     {
-        Task<IEnumerable<CommentModel>> c = CommentService.GetComments();
+        Console.WriteLine("asd");
+        chapter = chap;
+        Task<IEnumerable<CommentModel>> c = CommentService.GetComments(chap);
         await c;
         if(c.Status == TaskStatus.RanToCompletion){
             ListComments  = c.Result.Where( e => e.GrouId == Group.GroupId).ToList();
