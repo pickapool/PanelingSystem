@@ -133,22 +133,22 @@
                     if (g.Members.Any( e => e.Student.Designation.Contains("it", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         panel2 = Accounts.ToList().FirstOrDefault(e =>
-                        e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) &&
-                        e.Designation.Contains("it", StringComparison.InvariantCultureIgnoreCase)
+                        (e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) &&  e.Designation.Contains("it", StringComparison.InvariantCultureIgnoreCase)) ||
+                        (e.Designation.Contains("chairman", StringComparison.InvariantCultureIgnoreCase) && e.Designation.Contains("it", StringComparison.InvariantCultureIgnoreCase))
                         ) ?? new();
                     }
                     else if (g.Members.Any( e => e.Student.Designation.Contains("is", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         panel2 = Accounts.ToList().FirstOrDefault(e =>
-                        e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) &&
-                        e.Designation.Contains("is", StringComparison.InvariantCultureIgnoreCase)
+                        (e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) && e.Designation.Contains("is", StringComparison.InvariantCultureIgnoreCase)) ||
+                        (e.Designation.Contains("chairman", StringComparison.InvariantCultureIgnoreCase) && e.Designation.Contains("is", StringComparison.InvariantCultureIgnoreCase))
                         ) ?? new();
                     }
                     else if (g.Members.Any( e => e.Student.Designation.Contains("cs", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         panel2 = Accounts.ToList().FirstOrDefault(e =>
-                        e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) &&
-                        e.Designation.Contains("cs", StringComparison.InvariantCultureIgnoreCase)
+                        (e.Designation.Contains("head", StringComparison.InvariantCultureIgnoreCase) && e.Designation.Contains("cs", StringComparison.InvariantCultureIgnoreCase)) ||
+                        (e.Designation.Contains("chairman", StringComparison.InvariantCultureIgnoreCase) && e.Designation.Contains("cs", StringComparison.InvariantCultureIgnoreCase))
                         ) ?? new();
                     }
                     if (panel2.UserId != 0)
