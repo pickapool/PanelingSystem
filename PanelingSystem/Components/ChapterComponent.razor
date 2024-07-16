@@ -2,11 +2,12 @@
 @inject ISnackbar Snackbar
 @inject IJSRuntime JSRuntime
 
-<MudPaper Class="d-flex flex-column capstone pa-2" Elevation="3" @onclick="()=> Click()">
+<MudPaper Class="d-flex flex-column capstone pa-2" Elevation="3">
     <div class="d-flex flex-row align-items-center">
         <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent" Size="Size.Large"/>
         <MudText Typo="Typo.h3">@Title</MudText>
         <MudSpacer/>
+        <MudIconButton OnClick="()=> Click()" Class="mt-2" Icon="@Icons.Material.Filled.Comment" Size="Size.Medium"/>
         <MudIconButton OnClick="()=> Download()" Class="mt-2" Icon="@Icons.Material.Filled.FileDownload" Size="Size.Medium"/>
         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
         <ButtonTemplate>
