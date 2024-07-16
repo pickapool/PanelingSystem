@@ -50,7 +50,7 @@
                                 <MudText Typo='Typo.body2'>Edit</MudText>
                             </div>
                         </MudMenuItem> 
-                        <MudMenuItem>
+                        <MudMenuItem OnClick="()=> RemoveAccount(context)">
                             <div class='d-flex align-center gap-2 '>
                                 <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
                                 <MudText Typo='Typo.body2'>Remove</MudText>
@@ -72,7 +72,7 @@
     </MudPaper>
 </div>
 
-@code {
+    @code {
     private IEnumerable<UserAccountModel> pagedData;
     private MudTable<UserAccountModel> table;
 
@@ -101,20 +101,20 @@
                 return true;
             return false;
         }).ToArray();
-         if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
-         {
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
+        {
             ListUserAccount = ListUserAccount.Where( e => 
             e.AccountType == Enums.AccountType.Adviser ||
             e.AccountType == Enums.AccountType.Panelist ||
             e.AccountType == Enums.AccountType.Instructor
             ).ToList();
-         } else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
-         {
+        } else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+        {
             ListUserAccount = ListUserAccount.Where( e =>
             e.AccountType == Enums.AccountType.Student
          ).ToList();
 
-         }
+        }
         totalItems = ListUserAccount.Count();
         switch (state.SortLabel)
         {
@@ -153,6 +153,15 @@
         param.Add("Account", account);
         var dialog =  await DialogService.Show<CreateAccountDialog>(account.UserId == 0 ? "Add Account" : "Edit Account", param, options).Result;
         if(!dialog.Cancelled)
+        {
+            await table.ReloadServerData();
+        }
+    }
+    private async Task RemoveAccount(UserAccountModel user)
+    {
+        Task t = AccountService.DeleteUserAccountModel(user.UserId);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
         {
             await table.ReloadServerData();
         }

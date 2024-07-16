@@ -46,7 +46,9 @@
                 {
                     @foreach(PanelistModel panel in Schedule.Panels)
                     {
-                    @* <MudBadge OnClick="() => Remove(panel)" Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Overlap="true" Bordered="true"> *@
+                        if(panel != null)
+                        {
+                    
                             <MudTooltip Text="@panel.Panel.Name">
                             @if (panel.Panel.ProfilePicture.Count() == 0) {
                                 <MudAvatar Image="img/blank_profile.png"/>
@@ -54,7 +56,8 @@
                                 <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(panel.Panel.ProfilePicture)}")' />
                             }
                             </MudTooltip>
-                    @* </MudBadge> *@
+                   
+                        }
                     }
                 }
             </MudAvatarGroup>
