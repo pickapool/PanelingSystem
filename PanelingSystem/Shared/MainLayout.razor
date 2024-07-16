@@ -14,34 +14,42 @@
 <RadzenComponents/>
 <RadzenDialog /> 
 <div class="page">
-    @if (GlobalClass.CurrentUserAccount != null)
+    @if (dataFetch)
     {
-        <div class="sidebar">
-            <NavMenu />
-        </div>
+        @if (GlobalClass.CurrentUserAccount != null)
+        {
 
-        <main>
-        <div class="top-row px-4">
-            <PersonTemplate Account="GlobalClass.CurrentUserAccount"/>
-            <MudIconButton OnClick="()=> ToggleOpen()" Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small"/>
-            <div class="profile-popup">
-                <MudPopover Open="@_isOpen" Fixed="true" Class="pa-1 mr-2" TransformOrigin="Origin.TopLeft" AnchorOrigin="Origin.BottomRight">
-                    <ProfileInformation OnCloseDialog="@ToggleOpen" Account="GlobalClass.CurrentUserAccount"/>
-                </MudPopover>
+            <div class="sidebar">
+                <NavMenu />
             </div>
-        </div>
-        
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+
+            <main>
+                <div class="top-row px-4">
+                    <PersonTemplate Account="GlobalClass.CurrentUserAccount"/>
+                    <MudIconButton OnClick="()=> ToggleOpen()" Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small"/>
+                    <div class="profile-popup">
+                        <MudPopover Open="@_isOpen" Fixed="true" Class="pa-1 mr-2" TransformOrigin="Origin.TopLeft" AnchorOrigin="Origin.BottomRight">
+                            <ProfileInformation OnCloseDialog="@ToggleOpen" Account="GlobalClass.CurrentUserAccount"/>
+                        </MudPopover>
+                    </div>
+                </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+            } else {
+                <Login/>
+            }
     } else {
-        <Login/>
-    }
+           <div class="d-flex justify-content-center align-items-center">
+                <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+            </div>
+        }
 </div>
 @code
 {
-    public bool _isOpen;
+    public bool _isOpen, dataFetch  = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -55,6 +63,7 @@
     {
         try
         {
+            dataFetch = false;
             ValueTask<UserAccountModel?> account = LocalStorageService.GetItemAsync<UserAccountModel>("Account");
             await account;
             if (account.Result != null)
@@ -64,6 +73,7 @@
                 if(model.Status == TaskStatus.RanToCompletion)
                 {
                     GlobalClass.CurrentUserAccount = model.Result;
+                    dataFetch = true;
                     await AppState.NotifyStateChangedAsync();
                     StateHasChanged();
                 }
