@@ -6,7 +6,9 @@
 @inject IGroupService GroupService
 @inject IPanelistService PanelistService
 
-<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 88vh;" TItem="ScheduleModel" Data=@Schedules StartProperty="Start" EndProperty="End"
+@if (isDataFetch)
+{
+    <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 88vh;" TItem="ScheduleModel" Data=@Schedules StartProperty="Start" EndProperty="End"
     TextProperty="Text" SelectedIndex="2"
     SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender
     AppointmentMove=@OnAppointmentMove >
@@ -14,6 +16,47 @@
     <RadzenWeekView />
     <RadzenMonthView />
 </RadzenScheduler>
+} else {
+    <div class="d-flex flex-column gap-4">
+         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="50px" Width="100%"/>
+         <div class="d-flex flex-between gap-1">
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+         </div>
+         <div class="d-flex flex-between gap-1">
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+         </div>
+         <div class="d-flex flex-between gap-1">
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+         </div>
+         <div class="d-flex flex-between gap-1">
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+         </div>
+         <div class="d-flex flex-between gap-1">
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100px" Width="20%"/>
+         </div>
+    </div>
+   
+}
 <MudDrawer Class="pa-2" @bind-Open="@openRight" Fixed="false" Anchor="Anchor.Right" Width="25%" Elevation="1" Variant="@DrawerVariant.Temporary" DisableOverlay>
     <MudDrawerHeader>
         <MudIconButton style="height: 20px;" OnClick="()=> ToggleRightDrawer()" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
@@ -41,6 +84,7 @@
     IList<ScheduleModel> Schedules;
     List<ScheduleModel> SelectedSchedules = new();
     List<GroupModel> Groups = new();
+    private bool isDataFetch = false;
     protected override async Task OnInitializedAsync()
     {
         IsReload = false;
@@ -69,48 +113,32 @@
             }
             Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
             await aa;
-            if(aa.Status == TaskStatus.RanToCompletion){
+            if(aa.Status == TaskStatus.RanToCompletion)
+            {
                 Groups = aa.Result.ToList();
-                @* foreach(ScheduleModel sched in Schedules)
-                {
-                    sched.Panels.Clear();
-                } *@
-                //await Task.Delay(1000);
                 Task<IEnumerable<PanelistModel>> panels = PanelistService.GetPanels();
                 await panels;
-                if(panels.Status == TaskStatus.RanToCompletion)
+                if (panels.Status == TaskStatus.RanToCompletion)
                 {
-                    @* foreach(ScheduleModel sched in Schedules)
+                    foreach (ScheduleModel sched in Schedules)
                     {
-                        foreach(PanelistModel panel in panels.Result)
+                        if (sched.Panels != null)
                         {
-                            IsReload = false;
-                            if(sched.ScheduleId == panel.ScheduleId && sched.GroupId == panel.GroupId)
+                            foreach (PanelistModel panel in panels.Result)
                             {
-                                sched.Panels.Add(panel);
+                                if (sched.GroupId == panel.GroupId && sched.ScheduleId == panel.ScheduleId)
+                                {
+                                    if (!sched.Panels.Any(e => e.Panel.UserId == panel.UserId))
+                                        sched.Panels.Add(panel);
+                                }
                             }
-                            IsReload = true;
-                        }
-                    } *@
-                     foreach(ScheduleModel sched in Schedules)
-                    {
-                        if(sched.Panels != null)
-                        {
-                        foreach(PanelistModel panel in panels.Result)
-                        {
-                            if(sched.GroupId == panel.GroupId && sched.ScheduleId == panel.ScheduleId)
-                            {
-                                if(!sched.Panels.Any( e => e.Panel.UserId == panel.UserId))
-                                    sched.Panels.Add(panel);
-                            }
-                        }
                         }
                     }
-                } 
-
+                    isDataFetch = true;
+                    StateHasChanged();
+                }
             }
         }
-        //IsReload = true;
         StateHasChanged();
     }
     void ToggleRightDrawer()
