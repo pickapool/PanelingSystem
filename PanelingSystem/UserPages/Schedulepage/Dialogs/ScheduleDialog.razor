@@ -122,9 +122,11 @@
             if(clone.ScheduleId == 0)
             {
                 UserAccountModel panel = Accounts.ToList().FirstOrDefault(e => e.Designation.Contains("dean", StringComparison.InvariantCultureIgnoreCase))?? new();
-                if(panel.UserId != 0)
+                UserAccountModel panelchairman = Accounts.ToList().FirstOrDefault(e => e.Designation.Contains("chairman", StringComparison.InvariantCultureIgnoreCase)) ?? new();
+                if(panel.UserId != 0 || panelchairman.userId != 0)
                 {
                     await AddPanel(panel, t.Result);
+                    await AddPanel(panelchairman, t.Result);
                     GroupModel g = GroupsWithMembers.ToList().FirstOrDefault(e => e.GroupId == Group.GroupId) ?? new();
                     if (g.GroupId == 0)
                         return;
