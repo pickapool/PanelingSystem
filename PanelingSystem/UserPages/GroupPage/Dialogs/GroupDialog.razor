@@ -8,6 +8,19 @@
         <MudGrid Spacing="3"  Class="pa-3 mr-4">
             <MudItem xs="6">
                  <MudGrid Spacing="3">
+                    <MudItem xs="12" Class="mb-2">
+                    <MudText>Adviser</MudText>
+                    <BlazoredTypeahead Context="acc" @bind-Value="@Adviser" SearchMethod='LoadAccounts' DisableClear placeholder='Adviser'
+                            Label="Adviser"
+                            Debounce="300">
+                            <SelectedTemplate>
+                                @(String.IsNullOrEmpty(acc.Name) == true ? "-" : acc.Name)
+                            </SelectedTemplate>
+                            <ResultTemplate>
+                                <PersonTemplate Account="acc"/>
+                            </ResultTemplate>
+                        </BlazoredTypeahead>
+                    </MudItem>
                     <MudItem xs="12">
                         <MudTextField @bind-Value="@Group.GroupThesisTitle" Label="Title" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
                     </MudItem>
@@ -20,6 +33,7 @@
                     <MudItem xs="12">
                         <MudTextField @bind-Value="@Group.Year" Label="Year" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
                     </MudItem>
+                   
                 </MudGrid>
             </MudItem>
             <MudItem xs="6">
@@ -75,16 +89,23 @@
     [Parameter] public GroupModel Group { get; set; }
     private MembersModel Member = new();
     private UserAccountModel UserAccount = new();
+    private UserAccountModel Adviser = new();
     protected override async Task OnParametersSetAsync()
     {
         if(Group == null)
             Group = new GroupModel();
+        if(Group.GroupId != 0)
+        {
+            var accounts = await AccountService.GetAccounts();
+            Adviser = accounts.FirstOrDefault(e => e.UserId == Group.UserId) ?? new();
+        }
         await GetMembers();
     }
 
     private async Task Submit()
     {
         bool isAdd = Group.GroupId == 0? true : false;
+        Group.UserId = Adviser.UserId;
         Task<GroupModel> t = Group.GroupId == 0 ? GroupService.PostGroupModel(Group) : GroupService.PutGroupModel(Group.GroupId, Group);
         await t;
         if(t.Status == TaskStatus.RanToCompletion)
@@ -104,6 +125,11 @@
     private async Task<IEnumerable<UserAccountModel>> LoadStudents(string sanc)
     {
         var students = await AccountService.GetStudentsAccount();
+        return students.Where(e => e.Name.Contains(sanc, StringComparison.InvariantCultureIgnoreCase)).ToList();
+    }
+    private async Task<IEnumerable<UserAccountModel>> LoadAccounts(string sanc)
+    {
+        var students = await AccountService.GetAccounts();
         return students.Where(e => e.Name.Contains(sanc, StringComparison.InvariantCultureIgnoreCase)).ToList();
     }
     private async Task RemoveMember(MembersModel member)
