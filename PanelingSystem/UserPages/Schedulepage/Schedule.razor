@@ -92,6 +92,7 @@
     }
     private async Task GetSchedules()
     {
+        isDataFetch = false;
         Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules();
         await task;
         if(task.Status == TaskStatus.RanToCompletion)
@@ -243,8 +244,13 @@
     private async Task RemoveSchedule(int scheduleId)
     {
         IsReload = false;
+        //isDatafetch = false;
         SelectedSchedules.RemoveAll( e => e.ScheduleId == scheduleId);
+        Schedules = Schedules.ToList().Where(e => e.ScheduleId != scheduleId).ToArray();
+        //await Task.Delay(1000);
+        //isDatafetch = true;
         IsReload = true;
+        StateHasChanged();
     }
 }
 <style>
