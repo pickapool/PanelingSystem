@@ -112,6 +112,10 @@
             {
                 Schedules = Schedules.Where( e => data.Result.Any( m => m.GroupId == e.GroupId)).ToList();
             }
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            {
+                Schedules = Schedules.Where(e => e.Group.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+            }
             Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
             await aa;
             if(aa.Status == TaskStatus.RanToCompletion)
@@ -139,6 +143,7 @@
                     StateHasChanged();
                 }
             }
+            
         }
         StateHasChanged();
     }

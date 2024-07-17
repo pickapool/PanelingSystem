@@ -73,6 +73,10 @@
         if(data.Status == TaskStatus.RanToCompletion)
         {
             ListGroups = data.Result.ToList();
+            if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            {
+                ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+            }
             Group = ListGroups.FirstOrDefault() ?? new();
             await GetFiles(Group);
         }

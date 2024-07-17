@@ -108,6 +108,10 @@
                 return true;
             return false;
         }).ToArray();
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+        {
+            ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+        }
         totalItems = ListOfGroups.Count();
         switch (state.SortLabel)
         {
