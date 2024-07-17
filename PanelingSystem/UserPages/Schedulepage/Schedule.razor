@@ -228,7 +228,7 @@
     }
     private async Task OpenScheduleDialog(ScheduleModel schedule)
     {
-        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist)
         {
             Extensions.ShowAlert("Your are not allowed to add a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
             return;
@@ -248,6 +248,11 @@
     }
     private async Task RemoveSchedule(int scheduleId)
     {
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist)
+        {
+            Extensions.ShowAlert("Your are not allowed to remove a schedule.", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
+            return;
+        }
         IsReload = false;
         //isDatafetch = false;
         SelectedSchedules.RemoveAll( e => e.ScheduleId == scheduleId);
