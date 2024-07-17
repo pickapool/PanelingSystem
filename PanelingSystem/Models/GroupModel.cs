@@ -13,6 +13,7 @@ namespace PanelingSystem.Models
         public string Program { get; set; } = string.Empty;
         public string Year { get; set; } = string.Empty;
         public Enums.Status Status{ get; set; }
+        public int UserId { get; set; }
         [ForeignKey("GroupId")]
         public List<MembersModel> Members { get; set; } = new();
     }
