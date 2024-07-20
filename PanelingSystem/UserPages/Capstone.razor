@@ -45,7 +45,8 @@
                         }
                     </div>
                     <div>
-                    @if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student)
+                    @if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student &&
+                        GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Admin)
                     {
                         <MudTextField @bind-Value="comment" HelperText="Comment" AdornmentIcon="@Icons.Material.Filled.Send" 
                             Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="AddComment"/>
