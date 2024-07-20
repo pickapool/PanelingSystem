@@ -11,6 +11,7 @@
                     <MudItem xs="12" Class="mb-2">
                     <MudText>Adviser</MudText>
                     <BlazoredTypeahead Context="acc" @bind-Value="@Adviser" SearchMethod='LoadAccounts' DisableClear placeholder='Adviser'
+                            Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor? false : true)"
                             Label="Adviser"
                             Debounce="300">
                             <SelectedTemplate>
