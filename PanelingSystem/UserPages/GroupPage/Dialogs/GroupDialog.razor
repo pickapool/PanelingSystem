@@ -154,6 +154,11 @@
             UserAccount = new();
             return;
         } *@
+        if(user.UserId == 0)
+        {
+            Extensions.ShowAlert("Please select a student.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+            return;
+        }
         @if(Group.GroupId > 0)
         {
             Console.WriteLine("1");

@@ -28,7 +28,7 @@
                     <MudItem xs="12">
                         @foreach(MembersModel member in GroupMembers)
                         {
-                            <GradesComponents Member="member" Grades="ListGrades" GroupId="Group.GroupId" OnGradeChange="()=> NotifyChanged()"/>
+                            <GradesComponents @bind-Average="@member.Average" Member="member" Grades="ListGrades" GroupId="Group.GroupId" OnGradeChange="()=> NotifyChanged()"/>
                         }
                     </MudItem>
                 </MudGrid>
@@ -99,7 +99,8 @@
             if(list.Status == TaskStatus.RanToCompletion)
             {
                 ListGrades = list.Result.ToList();
-                GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ;
+                await NotifyChanged();
+                GPA = GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Sum(e => e.Average) / GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Count;
                 IsDataFetch = true;
                 data = new double[] { GPA, GPA - 100 };
                 await AppState.NotifyStateChangedAsync();
@@ -109,8 +110,19 @@
     }
     private async Task NotifyChanged()
     {
-        await OnInitializedAsync();
-        GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ;
+        //await OnInitializedAsync();
+        foreach(var member in GroupMembers.Where( e => e.GroupId == Group.GroupId))
+        {
+            member.Average = ListGrades.Where(e => e.UserId == member.UserId && e.GroupId == Group.GroupId)
+                    .GroupBy(g => g.GradedById)
+                    .Select(g => g.OrderByDescending(g => g.GradeId).FirstOrDefault())
+                    .ToList().Sum(s => s.Grade) / ListGrades.Where(e => e.UserId == member.UserId && e.GroupId == Group.GroupId)
+                    .GroupBy(g => g.GradedById)
+                    .Select(g => g.OrderByDescending(g => g.GradeId).FirstOrDefault())
+                    .ToList().Count;
+        }
+        GPA = GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Sum(e => e.Average) / GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Count;
+        @* GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ; *@
         data = new double[] { GPA, GPA - 100 };
         await AppState.NotifyStateChangedAsync();
     }

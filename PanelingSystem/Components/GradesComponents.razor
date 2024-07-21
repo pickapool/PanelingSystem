@@ -19,19 +19,34 @@
     <div class="d-flex flex-row align-items-center gap-2">
         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
         {
-            <span>@(Grade.Grade+"/100")</span>
+            <span>@(Average.ToString("N2")) Average</span>
+            <MudIconButton OnClick="()=> ShowGrade()" Icon="@Icons.Material.Filled.Checklist" Size="Size.Medium"/>
+            <MudPopover Open="@_open" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+		        <div class="d-flex flex-column pa-1 pverflow-auto" style="width: 400px; min-height: 200px;">
+			        <span>Grades</span>
+                    <hr>
+                    @foreach (var grade in MyGrades)
+                    {
+                        <div class="d-flex flex-row">
+                            <div class="flex-1">@grade.GradedBy</div>
+                            <div>@grade.Grade.ToString("N2")</div>
+                        </div>
+                    }
+		        </div>
+                
+	        </MudPopover>
         } else {
             <MudTextField style="width: 100px; height: 35px;" Mask="@(new PatternMask("00"))" Label="Grade" 
                         @bind-Value="grade"  Variant="@MudBlazor.Variant.Outlined" Clearable />
             <MudButton style="height: 35px;" Class="mt-1" OnClick="UpdateGrade" Variant="MudBlazor.Variant.Filled" Size="Size.Small" Color="Color.Info">Publish</MudButton>
         }
-    </div>
+    </div>@* 
     <div class="graded">
         <div class="d-flex flex-row">
         <span>Graded By:</span>
         <div class="name">@Grade.GradedBy</div>
         </div>
-    </div>
+    </div> *@
 </MudPaper>
 
 @code
@@ -40,17 +55,35 @@
     [Parameter] public List<GradeModel> Grades { get; set; }
     [Parameter] public int GroupId { get; set; }
     [Parameter] public EventCallback OnGradeChange { get; set; }
+    [Parameter] public double Average { get; set; } =  0.00;
+    [Parameter] public EventCallback<double> AverageChanged { get; set; }
     private GradeModel Grade = new();
     private double grade = 0.00;
+    private bool _open;
+    private List<GradeModel> MyGrades { get; set; }
+
     protected override void OnParametersSet()
     {
-        if(Grades != null)
+        if (Grades != null)
         {
-            Grade = Grades.FirstOrDefault( e => e.UserId == Member.UserId && e.GroupId == GroupId) ?? new();
+            Grade = Grades.LastOrDefault(e => e.UserId == Member.UserId && e.GroupId == GroupId && e.GradedById == GlobalClass.CurrentUserAccount.UserId) ?? new();
+            Member.Average = Average = Grades.Where(e => e.UserId == Member.UserId && e.GroupId == GroupId)
+                    .GroupBy(g => g.GradedById)
+                    .Select(g => g.OrderByDescending(g => g.GradeId).FirstOrDefault())
+                    .ToList().Sum(s => s.Grade) / Grades.Where(e => e.UserId == Member.UserId && e.GroupId == GroupId)
+                    .GroupBy(g => g.GradedById)
+                    .Select(g => g.OrderByDescending(g => g.GradeId).FirstOrDefault())
+                    .ToList().Count;
+            MyGrades = Grades
+                    .Where(e => e.UserId == Member.UserId && e.GroupId == GroupId)
+                    .GroupBy(g => g.GradedById)
+                    .Select(g => g.OrderByDescending(g => g.GradeId).FirstOrDefault())
+                    .ToList();
             grade = Grade.Grade;
         } else {
             Grade = new();
         }
+        base.OnParametersSet();
     }
 
     private async Task UpdateGrade()
@@ -64,17 +97,26 @@
             current.Grade = grade;
             current.GroupId = GroupId;
             current.GradedBy = GlobalClass.CurrentUserAccount.Name;
+            current.GradedById = GlobalClass.CurrentUserAccount.UserId;
             Grade.Grade = grade;
-            Task<GradeModel> g = Grade.GradeId == 0 ? GradeService.PostGradeModel(current) : GradeService.PutGradeModel(Grade.GradeId, Grade);
+            Task<GradeModel> g = GradeService.PostGradeModel(current);
             await g;
             if(g.Status == TaskStatus.RanToCompletion)
             {
                 Extensions.ShowAlert("Grade has been publish.", MudBlazor.Variant.Filled, SnackBar, Severity.Success);
-                Grade = g.Result;
+                //Grade = g.Result;
                 await OnGradeChange.InvokeAsync();
                 StateHasChanged();
             }
         }
+    }
+    private void ShowGrade()
+    {
+        if (_open)
+            _open = false;
+        else
+            _open = true;
+        StateHasChanged();
     }
 }
 <style>

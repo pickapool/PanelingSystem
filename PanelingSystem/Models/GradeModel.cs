@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PanelingSystem.Models
 {
@@ -14,5 +15,6 @@ namespace PanelingSystem.Models
         [ForeignKey("UserId")]
         public UserAccountModel Student {  get; set; }
         public string GradedBy { get; set; } = string.Empty;
+        public int GradedById { get; set; }
     }
 }

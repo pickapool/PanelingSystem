@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PanelingSystem.Models
@@ -13,5 +14,8 @@ namespace PanelingSystem.Models
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel Student { get; set; }
+        [NotMapped]
+        [JsonIgnore]
+        public double Average { get; set; }
     }
 }
