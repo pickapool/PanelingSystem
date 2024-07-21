@@ -13,6 +13,6 @@ namespace PanelingSystem.Models
         public double Grade { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel Student {  get; set; }
-
+        public string GradedBy { get; set; } = string.Empty;
     }
 }

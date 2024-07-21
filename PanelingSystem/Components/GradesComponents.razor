@@ -2,7 +2,7 @@
 @inject ISnackbar SnackBar
 @inject AppState AppState
 
-<MudPaper Class="d-flex justify-content-between flex-row align-items-center pa-2 ma-2" style="height: 100px !important;">
+<MudPaper Class="d-flex justify-content-between flex-row align-items-center pa-2 ma-2" style="height: 100px !important; position: relative;">
     <div class="d-flex flex-row align-items-center">
     @if(Member.Student.ProfilePicture != null)
     {
@@ -25,6 +25,12 @@
                         @bind-Value="grade"  Variant="@MudBlazor.Variant.Outlined" Clearable />
             <MudButton style="height: 35px;" Class="mt-1" OnClick="UpdateGrade" Variant="MudBlazor.Variant.Filled" Size="Size.Small" Color="Color.Info">Publish</MudButton>
         }
+    </div>
+    <div class="graded">
+        <div class="d-flex flex-row">
+        <span>Graded By:</span>
+        <div class="name">@Grade.GradedBy</div>
+        </div>
     </div>
 </MudPaper>
 
@@ -57,15 +63,30 @@
             current.UserId = Member.UserId;
             current.Grade = grade;
             current.GroupId = GroupId;
+            current.GradedBy = GlobalClass.CurrentUserAccount.Name;
             Grade.Grade = grade;
             Task<GradeModel> g = Grade.GradeId == 0 ? GradeService.PostGradeModel(current) : GradeService.PutGradeModel(Grade.GradeId, Grade);
             await g;
             if(g.Status == TaskStatus.RanToCompletion)
             {
                 Extensions.ShowAlert("Grade has been publish.", MudBlazor.Variant.Filled, SnackBar, Severity.Success);
+                Grade = g.Result;
                 await OnGradeChange.InvokeAsync();
                 StateHasChanged();
             }
         }
     }
 }
+<style>
+    .graded
+    {
+        position : absolute;
+        bottom: 0;
+        right :0 ;
+        padding-right: 10px;
+    }
+    .graded .name
+    {
+        min-width: 150px;
+    }
+</style>
