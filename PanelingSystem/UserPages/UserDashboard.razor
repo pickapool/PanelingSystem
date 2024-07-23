@@ -38,9 +38,19 @@
             </MudGrid>
             </MudPaper>
         } else {
-            <MudPaper Class="pa-2 d-flex flex-column justify-content-center align-items-center" Elevation="3" Height="88vh" Width="100%">
-            <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">DEFENSE PROGRESS</MudText>
-            <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="500px" Height="500px" />
+            <MudPaper Class="pa-2 d-flex flex-row justify-content-center align-items-center" Elevation="3" Height="88vh" Width="100%">
+                <div>
+                    <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">TITLE DEFENSE</MudText>
+                    <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="300px" Height="300px"/>
+                </div>
+                <div>
+                    <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">PRE ORAL DEFENSE</MudText>
+                    <MudChart ChartType="ChartType.Pie" InputData="@data1" @bind-SelectedIndex="Index" InputLabels="@labels1" Width="300px" Height="300px" />
+                </div>
+                <div>
+                    <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">FINAL DEFENSE</MudText>
+                    <MudChart ChartType="ChartType.Pie" InputData="@data2" @bind-SelectedIndex="Index" InputLabels="@labels2" Width="300px" Height="300px" />
+                </div>
             </MudPaper>
         }
 </div>
@@ -54,6 +64,11 @@
     int dataSize = 3;
     double[] data = { 77, 25, 20};
     string[] labels = { "Title" , "Pre Oral" , "Final" };
+    double[] data1 = { 77, 25, 20};
+    string[] labels1 = { "Title" , "Pre Oral" , "Final" };
+    double[] data2 = { 77, 25, 20};
+    string[] labels2 = { "Title" , "Pre Oral" , "Final" };
+
     protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? 
@@ -85,16 +100,42 @@
         await schedules;
         if(schedules.Status == TaskStatus.RanToCompletion)
         {
-            double t = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
-            double p = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
-            double d = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
-            data = new double[] { t, p , d};
-            double Total = t + p + d;
-            double tPercentage = (t / Total) * 100;
-            double pPercentage = (p / Total) * 100;
-            double dPercentage = (d / Total) * 100;
+            double t1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double t2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double t3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double t4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double t5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double t6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double t7= schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
 
-            labels = new string[]{ "Title Defense- " +tPercentage.ToString("N2") + " %" ,"Pre Oral Defense- " +pPercentage.ToString("N2") + " %", "Final Defense - " +dPercentage.ToString("N2") + " %" };
+            double p1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p7 = schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+
+            double d1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d7 = schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+
+            data = new double[] { t1, t2, t3, t4, t5, t6, t7 };
+            data1 = new double[] { p1, p2, p3, p4, p5, p6, p7 };
+            data2 = new double[] { d1, d2, d3, d4, d5, d6, d7 };
+            //double Total = t1+t2+t3+t4+t5+t6+t7;
+
+            //double tPercentage = (t / Total) * 100;
+            //double pPercentage = (p / Total) * 100;
+            //double dPercentage = (d / Total) * 100;
+
+            labels = new string[]{ "In Progress- " + t1 ,"Failed- " +t2 , "Success- " +t3, "Pending- " + t4, "Rejected- " +t5, "Completed- " + t6, "Redefend- " + t7};
+            labels1 = new string[]{ "In Progress- " + p1 ,"Failed- " +p2 , "Success- " +p3, "Pending- " + p4, "Rejecped- " +p5, "Compleped- " + p6, "Redefend- " + p7};
+            labels2 = new string[]{ "In Progress- " + d1 ,"Failed- " +d2 , "Success- " +d3, "Pending- " + d4, "Rejecded- " +d5, "Compleded- " + d6, "Redefend- " + d7};
             
             await AppState.NotifyStateChangedAsync();
         }

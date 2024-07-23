@@ -10,6 +10,7 @@
             Pending = 3,
             Rejected = 4,
             Completed = 5,
+            Redefend = 6,
         }
         public enum AccountType
         {
