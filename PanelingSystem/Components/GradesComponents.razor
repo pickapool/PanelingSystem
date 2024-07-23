@@ -19,7 +19,7 @@
     <div class="d-flex flex-row align-items-center gap-2">
         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
         {
-            <span>@(Average.ToString("N2")) Average</span>
+            <span>@((double.IsNaN(Average) == true ? 0 : Average).ToString("N2")) Average</span>
             <MudIconButton OnClick="()=> ShowGrade()" Icon="@Icons.Material.Filled.Checklist" Size="Size.Medium"/>
             <MudPopover Open="@_open" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
 		        <div class="d-flex flex-column pa-1 pverflow-auto" style="width: 400px; min-height: 200px;">

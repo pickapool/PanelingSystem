@@ -37,7 +37,7 @@
         <MudItem xs="4">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
                 <div class="d-flex flex-column align-items-center">
-                    <MudText Typo="Typo.h2">GPA @GPA.ToString("N2") %</MudText>
+                    <MudText Typo="Typo.h2">GPA @((double.IsNaN(GPA) == true ? 0 : GPA).ToString("N2")) %</MudText>
                     <MudChart ChartType="ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="Index" InputData="@data" InputLabels="@labels"></MudChart>
                 </div>
             </MudPaper>
