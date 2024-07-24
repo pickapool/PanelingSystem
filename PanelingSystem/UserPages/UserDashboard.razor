@@ -134,8 +134,8 @@
             //double dPercentage = (d / Total) * 100;
 
             labels = new string[]{ "In Progress- " + t1 ,"Failed- " +t2 , "Success- " +t3, "Pending- " + t4, "Rejected- " +t5, "Completed- " + t6, "Redefend- " + t7};
-            labels1 = new string[]{ "In Progress- " + p1 ,"Failed- " +p2 , "Success- " +p3, "Pending- " + p4, "Rejecped- " +p5, "Compleped- " + p6, "Redefend- " + p7};
-            labels2 = new string[]{ "In Progress- " + d1 ,"Failed- " +d2 , "Success- " +d3, "Pending- " + d4, "Rejecded- " +d5, "Compleded- " + d6, "Redefend- " + d7};
+            labels1 = new string[] { "In Progress- " + p1, "Failed- " + p2, "Success- " + p3, "Pending- " + p4, "Rejected- " + p5, "Completed- " + p6, "Redefend- " + p7 };
+            labels2 = new string[] { "In Progress- " + d1, "Failed- " + d2, "Success- " + d3, "Pending- " + d4, "Rejected- " + d5, "Completed- " + d6, "Redefend- " + d7 };
             
             await AppState.NotifyStateChangedAsync();
         }
