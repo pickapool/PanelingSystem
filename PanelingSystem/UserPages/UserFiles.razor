@@ -1,4 +1,4 @@
-@page "/u/dashboard"
+@page "/u/userfiles"
 
 @inject IGroupService GroupService
 @inject IFileService FileService
@@ -6,53 +6,35 @@
 @inject AppState AppState
 
 <div class="d-flex justify-content-center align-items-center">
-        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
-        {
-            <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
-            <MudGrid Spacing="2">
-                <MudItem xs="3">
-                    <MudSelect Value="@Group" 
-                    ValueChanged="(GroupModel g)=> GetFiles(g)"
-                    Margin="Margin.Dense" Text=""
-                    Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
-                        @foreach (var g in ListGroups.ToList())
-                        {
-                            <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-                <MudItem xs="5"></MudItem>
-                <MudItem xs="4"></MudItem>
-                @if(Group.GroupId > 0)
+    <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+    <MudGrid Spacing="2">
+        <MudItem xs="3">
+            <MudSelect Value="@Group" 
+            ValueChanged="(GroupModel g)=> GetFiles(g)"
+            Margin="Margin.Dense" Text=""
+            Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                @foreach (var g in ListGroups.ToList())
                 {
-                    <MudItem xs="4">
-                        <FileUploadComponent IsShowUpload="true" GroupId="Group.GroupId" Position="@Enums.FilePosition.Title" FileModels="@fileModels"/>
-                    </MudItem>
-                    <MudItem xs="4">
-                        <FileUploadComponent IsShowUpload="true" GroupId="Group.GroupId" Position="@Enums.FilePosition.PreOral" FileModels="@fileModels"/>
-                    </MudItem>
-                    <MudItem xs="4">
-                        <FileUploadComponent IsShowUpload="true" GroupId="Group.GroupId" Position="@Enums.FilePosition.Finals" FileModels="@fileModels"/>
-                </MudItem>  
+                    <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
                 }
-            </MudGrid>
-            </MudPaper>
-        } else {
-            <MudPaper Class="pa-2 d-flex flex-row justify-content-center align-items-center" Elevation="3" Height="88vh" Width="100%">
-                <div>
-                    <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">TITLE DEFENSE</MudText>
-                    <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="300px" Height="300px"/>
-                </div>
-                <div>
-                    <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">PRE ORAL DEFENSE</MudText>
-                    <MudChart ChartType="ChartType.Pie" InputData="@data1" @bind-SelectedIndex="Index" InputLabels="@labels1" Width="300px" Height="300px" />
-                </div>
-                <div>
-                    <MudText Class="text-center" Typo="Typo.h2" style="font-size: 30px;">FINAL DEFENSE</MudText>
-                    <MudChart ChartType="ChartType.Pie" InputData="@data2" @bind-SelectedIndex="Index" InputLabels="@labels2" Width="300px" Height="300px" />
-                </div>
-            </MudPaper>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="5"></MudItem>
+        <MudItem xs="4"></MudItem>
+        @if(Group.GroupId > 0)
+        {
+            <MudItem xs="4">
+                <FileUploadComponent IsShowUpload="false" GroupId="Group.GroupId" Position="@Enums.FilePosition.Title" FileModels="@fileModels"/>
+            </MudItem>
+            <MudItem xs="4">
+                <FileUploadComponent IsShowUpload="false" GroupId="Group.GroupId" Position="@Enums.FilePosition.PreOral" FileModels="@fileModels"/>
+            </MudItem>
+            <MudItem xs="4">
+                <FileUploadComponent IsShowUpload="false" GroupId="Group.GroupId" Position="@Enums.FilePosition.Finals" FileModels="@fileModels"/>
+        </MudItem>  
         }
+    </MudGrid>
+    </MudPaper>
 </div>
 @code
 {
