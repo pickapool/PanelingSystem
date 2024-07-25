@@ -17,6 +17,11 @@
                 </NavLink>
             </div>
             <div class="nav-item px-3">
+                <NavLink class="nav-link" href="u/userfiles" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent"></MudIcon> User Files
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
                 <NavLink class="nav-link" href="u/list" Match="NavLinkMatch.All">
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.List"></MudIcon> List
                 </NavLink>
@@ -52,6 +57,16 @@
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Dashboard"></MudIcon> Dashboard
                 </NavLink>
             </div>
+            @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser ||
+            GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor ||
+            GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist)
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="u/userfiles" Match="NavLinkMatch.All">
+                        <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent"></MudIcon> User Files
+                    </NavLink>
+                </div>
+            }
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="u/capstone" Match="NavLinkMatch.All">
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DriveFileMove"></MudIcon> Capstone

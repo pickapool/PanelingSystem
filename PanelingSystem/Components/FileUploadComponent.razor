@@ -11,6 +11,8 @@
          <span>Final Defense</span>
     }
 </MudText>
+@if(IsShowUpload)
+{
 <MudFileUpload T="IReadOnlyList<IBrowserFile>"
                @bind-Value="FileModels"
                AppendMultipleFiles
@@ -41,6 +43,7 @@
         </MudToolBar>
     </ButtonTemplate>
 </MudFileUpload>
+}
 <div class="stack-containter">
 <MudStack Width="100%" Class="overflow-auto" style="gap: 0px !important;">
     @foreach(var file in FileModels)
@@ -57,6 +60,7 @@
     [Parameter] public int GroupId { get; set; }
     [Parameter] public Enums.FilePosition Position { get; set; }
     [Parameter] public List<FileModel> FileModels { get; set; }
+    [Parameter] public bool IsShowUpload { get; set; }
     private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
     private string _dragClass = DefaultDragClass;
     protected override async Task OnParametersSetAsync()
