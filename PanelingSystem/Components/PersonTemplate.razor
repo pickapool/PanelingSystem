@@ -1,7 +1,7 @@
 <div class="d-flex flex-row">
     @if (Account == null)
     {
-        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
+        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Medium' />
     } else {
         if(Account.ProfilePicture != null)
         {
@@ -11,7 +11,7 @@
                 <MudAvatar Class='mr-2' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
             }
         } else {
-            <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
+            <MudAvatar Class='' Image="img/blank_profile.png" Size='Size.Medium' />
         }
     }
     <div class="d-flex flex-column">
