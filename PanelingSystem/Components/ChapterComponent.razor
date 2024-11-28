@@ -5,7 +5,19 @@
 <MudPaper Class="d-flex flex-column capstone pa-2" Elevation="3">
     <div class="d-flex flex-row align-items-center">
         <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent" Size="Size.Large"/>
-        <MudText Typo="Typo.h3">@Title</MudText>
+        <MudText Typo="Typo.h6">
+            @if(Chapter == Enums.Chapter.Title1 || Chapter == Enums.Chapter.Title2 || Chapter == Enums.Chapter.Title3) {
+                <span style="margin-right: 20px;">@Title - </span>
+            } else {
+                <span>@Title</span>
+            }
+        </MudText>
+        @if(Chapter == Enums.Chapter.Title1 || Chapter == Enums.Chapter.Title2 || Chapter == Enums.Chapter.Title3) {
+            <MudTextField Typo="Typo.Subtitle" style="margin-bottom: 20px;" @bind-Value="@CapstoneFile.Title" Margin="Margin.Dense"
+            AdornmentColor="Color.Primary"
+            Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Save" OnAdornmentClick="Save"
+            ></MudTextField>
+        }
         <MudSpacer/>
         <MudIconButton OnClick="()=> Click()" Class="mt-2" Icon="@Icons.Material.Filled.Comment" Size="Size.Medium"/>
         <MudIconButton OnClick="()=> Download()" Class="mt-2" Icon="@Icons.Material.Filled.FileDownload" Size="Size.Medium"/>
@@ -21,7 +33,7 @@
     </ButtonTemplate>
 </MudFileUpload>
     </div>
-     <MudText Typo="Typo.body1">@(CapstoneFile.DateAdded == null ? "No File" : CapstoneFile.DateAdded?.ToString("MMMM dd, yyyy hh:mm tt"))</MudText>
+     <MudText Typo="Typo.body1">@(CapstoneFile.DateAdded == null || CapstoneFile.File.Length <= 0 ? "No File" : CapstoneFile.DateAdded?.ToString("MMMM dd, yyyy hh:mm tt"))</MudText>
 </MudPaper>
 
 @code
@@ -57,9 +69,26 @@
         }
         //TODO upload the files to the server
     }
+    private async Task Save() {
+        CapstoneFile.Chapter = Chapter;
+        CapstoneFile.GroupId = GroupId;
+        CapstoneFile.DateAdded = DateTime.Now;
+        Task<CapstoneFileModel> t = CapstoneFile.CapstoneFileId == 0 ? CapstoneFileService.PostCapstoneFileModel(CapstoneFile) : CapstoneFileService.PutCapstoneFileModel(CapstoneFile.CapstoneFileId, CapstoneFile);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            Extensions.ShowAlert("Title has been uploaded.", MudBlazor.Variant.Filled , Snackbar, Severity.Success);
+            CapstoneFile = t.Result;
+        }
+    }
     private async Task Download()
     {
         if(CapstoneFile.File == null)
+        {
+            Extensions.ShowAlert("No file has been found.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+            return;
+        }
+        if(CapstoneFile.File.Length <= 0)
         {
             Extensions.ShowAlert("No file has been found.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
             return;

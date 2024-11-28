@@ -1,4 +1,5 @@
 ﻿using PanelingSystem.Models;
+using System.Collections.Generic;
 
 namespace PanelingSystem.Services.CommentServices
 {
@@ -9,5 +10,6 @@ namespace PanelingSystem.Services.CommentServices
         Task<CommentModel> PutCommentModel(int id, CommentModel commentModel);
         Task<CommentModel> PostCommentModel(CommentModel commentModel);
         Task<CommentModel> DeleteCommentModel(int id);
+         Task<IEnumerable<CommentModel>> GetCommentsByGroupAndChapter(GroupModel group, Enums.Chapter chapter);
     }
 }

@@ -7,8 +7,8 @@
 <div class="d-flex flex-column justify-content-center align-items-center">
     <MudGrid Spacing="1">
         <MudItem xs="9">
-            <MudPaper Elevation="3" Height="88vh" Width="100%">
-                <div class="d-flex flex-column pa-2">
+            <MudPaper class="overflow-y-auto" Elevation="3" Height="88vh" Width="100%">
+                <div class="d-flex flex-column pa-3">
                     <MudGrid>
                         <MudItem xs="4">
                             <MudSelect Value="@Group" style="width: 30%;"
@@ -22,7 +22,10 @@
                             </MudSelect>
                         </MudItem>
                     </MudGrid>
-                    <div class="pa-2 d-flex flex-column gap-3 justify-content-center caps">
+                    <div class="pa-2 d-flex flex-column gap-3 justify-content-center caps overflow-y-auto">
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Title1)" Title="Title 1" Chapter="Enums.Chapter.Title1" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Title2)" Title="Title 2" Chapter="Enums.Chapter.Title2" ListChapters="ListChapters" GroupId="Group.GroupId"/>
+                        <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Title3)" Title="Title 3" Chapter="Enums.Chapter.Title3" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                         <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter1)" Title="CHAPTER 1" Chapter="Enums.Chapter.Chapter1" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                         <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter2)" Title="CHAPTER 2" Chapter="Enums.Chapter.Chapter2" ListChapters="ListChapters" GroupId="Group.GroupId"/>
                         <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter3)" Title="CHAPTER 3" Chapter="Enums.Chapter.Chapter3" ListChapters="ListChapters" GroupId="Group.GroupId"/>
@@ -99,7 +102,7 @@
         comments.Comment = comment;
         comments.Chapter = chapter;
         comments.UserId = GlobalClass.CurrentUserAccount.UserId;
-        comments.GrouId = Group.GroupId;
+        comments.GroupId = Group.GroupId;
         comments.CommentDate = DateTime.Now;
         Task t = CommentService.PostCommentModel(comments);
         await t;
@@ -116,7 +119,7 @@
         Task<IEnumerable<CommentModel>> c = CommentService.GetComments(chap);
         await c;
         if(c.Status == TaskStatus.RanToCompletion){
-            ListComments  = c.Result.Where( e => e.GrouId == Group.GroupId).ToList();
+            ListComments  = c.Result.Where( e => e.GroupId == Group.GroupId).ToList();
         }
         StateHasChanged();
     }

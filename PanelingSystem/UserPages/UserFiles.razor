@@ -86,42 +86,42 @@
         await schedules;
         if(schedules.Status == TaskStatus.RanToCompletion)
         {
-            double t1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            @* double t1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
-            double t4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
+            double t4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Title).ToList().Count; *@
             double t5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t7= schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
 
-            double p1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            @* double p1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
-            double p4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count; *@
             double p5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p7 = schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
 
-            double d1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            @* double d1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
-            double d4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Finals).ToList().Count; *@
             double d5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d7 = schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
 
-            data = new double[] { t1, t2, t3, t4, t5, t6, t7 };
-            data1 = new double[] { p1, p2, p3, p4, p5, p6, p7 };
-            data2 = new double[] { d1, d2, d3, d4, d5, d6, d7 };
+            data = new double[] {t5, t6, t7 };
+            data1 = new double[] {p5, p6, p7 };
+            data2 = new double[] {d5, d6, d7 };
             //double Total = t1+t2+t3+t4+t5+t6+t7;
 
             //double tPercentage = (t / Total) * 100;
             //double pPercentage = (p / Total) * 100;
             //double dPercentage = (d / Total) * 100;
 
-            labels = new string[]{ "In Progress- " + t1 ,"Failed- " +t2 , "Success- " +t3, "Pending- " + t4, "Rejected- " +t5, "Completed- " + t6, "Redefend- " + t7};
-            labels1 = new string[]{ "In Progress- " + p1 ,"Failed- " +p2 , "Success- " +p3, "Pending- " + p4, "Rejecped- " +p5, "Compleped- " + p6, "Redefend- " + p7};
-            labels2 = new string[]{ "In Progress- " + d1 ,"Failed- " +d2 , "Success- " +d3, "Pending- " + d4, "Rejecded- " +d5, "Compleded- " + d6, "Redefend- " + d7};
+            labels = new string[]{ "Rejected- " +t5, "Completed- " + t6, "Redefend- " + t7};
+            labels1 = new string[]{ "Rejecped- " +p5, "Compleped- " + p6, "Redefend- " + p7};
+            labels2 = new string[]{ "Rejecdet- " +d5, "Compleded- " + d6, "Redefend- " + d7};
             
             await AppState.NotifyStateChangedAsync();
         }

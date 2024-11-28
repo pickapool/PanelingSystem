@@ -27,6 +27,11 @@ namespace PanelingSystem.Services.CapstoneFilesServices
         {
             return await _context.CapstoneFiles.ToListAsync();
         }
+        [HttpGet]
+        public async Task<IEnumerable<CapstoneFileModel>> GetCapstoneFilesWithGroup(int GroupId)
+        {
+            return await _context.CapstoneFiles.Where( e => e.GroupId == GroupId).ToListAsync();
+        }
 
         // GET: api/CapstoneFileService/5
         [HttpGet("{id}")]

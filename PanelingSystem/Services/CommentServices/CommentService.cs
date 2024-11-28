@@ -28,6 +28,11 @@ namespace PanelingSystem.Services.CommentServices
             return await _context.Comments.Where( e => e.Chapter == chap)
             .Include( e => e.Account).ToListAsync();
         }
+        [HttpGet]
+        public async Task<IEnumerable<CommentModel>> GetCommentsByGroupAndChapter(GroupModel group, Enums.Chapter chapter)
+        {
+            return await _context.Comments.Where( e => e.Chapter == chapter && e.GroupId == group.GroupId).Include( e => e.Account).ToListAsync();
+        }
 
         // GET: api/CommentService/5
         [HttpGet("{id}")]

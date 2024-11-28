@@ -30,6 +30,12 @@ namespace PanelingSystem.Services.ScheduleServices
             .ThenInclude( e => e.Panel)
             .ToListAsync();
         }
+        [HttpGet]
+        public async Task<List<ScheduleModel>> GetSchedulesByGroup(int groupId)
+        {
+            return await _context.Schedules.Where( e => e.GroupId == groupId)
+            .ToListAsync();
+        }
         public async Task<ScheduleModel> GetPanelsInSchedule(int groupId)
         {
             return await 

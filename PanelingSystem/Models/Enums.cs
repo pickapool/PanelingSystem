@@ -4,13 +4,15 @@
     {
         public enum Status
         {
-            InProgress = 0,
-            Failed = 1,
-            Success = 2,
-            Pending = 3,
+            // InProgress = 0,
+            // Failed = 1,
+            // Success = 2,
+            // Pending = 3,
             Rejected = 4,
             Completed = 5,
             Redefend = 6,
+            Approved = 7,
+            AcceptedWithRevisions = 8,
         }
         public enum AccountType
         {
@@ -43,7 +45,10 @@
             Chapter2 = 1,
             Chapter3 = 2,
             Chapter4 = 3,
-            Chapter5 = 4
+            Chapter5 = 4,
+            Title1 = 5,
+            Title2 = 6,
+            Title3 = 7
         }
 
     }

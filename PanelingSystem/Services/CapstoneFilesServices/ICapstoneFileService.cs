@@ -1,4 +1,5 @@
 ﻿using PanelingSystem.Models;
+using System.Collections.Generic;
 
 namespace PanelingSystem.Services.CapstoneFilesServices
 {
@@ -10,5 +11,6 @@ namespace PanelingSystem.Services.CapstoneFilesServices
         Task<CapstoneFileModel> PostCapstoneFileModel(CapstoneFileModel capstoneFileModel);
         Task<CapstoneFileModel> DeleteCapstoneFileModel(int id);
         bool CapstoneFileModelExists(int id);
+        Task<IEnumerable<CapstoneFileModel>> GetCapstoneFilesWithGroup(int GroupId);
     }
 }

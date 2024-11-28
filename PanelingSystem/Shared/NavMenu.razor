@@ -17,6 +17,11 @@
                 </NavLink>
             </div>
             <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/thecaps" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FolderCopy"></MudIcon> The CAPS
+                </NavLink>
+            </div>
+            @* <div class="nav-item px-3">
                 <NavLink class="nav-link" href="u/userfiles" Match="NavLinkMatch.All">
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent"></MudIcon> User Files
                 </NavLink>
@@ -41,11 +46,13 @@
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Groups"></MudIcon> Groups
                 </NavLink>
             </div>
+             *@
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="u/schedule" Match="NavLinkMatch.All">
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DateRange"></MudIcon> Schedule
                 </NavLink>
             </div>
+
         }
         else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ||
             GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor ||
