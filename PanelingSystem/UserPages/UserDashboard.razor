@@ -41,7 +41,38 @@
             </MudGrid>
             </MudPaper>
         } else {
-            <MudPaper Class="pa-2 d-flex flex-row justify-content-center align-items-center" Elevation="3" Height="88vh" Width="100%">
+            @if(!isDataFetch) {
+                <MudProgressCircular Class="centered-element" Color="Color.Primary" Indeterminate="true"/>
+            } else {
+            <MudPaper Class="pa-2 d-flex flex-row justify-content-center align-items-center position-relative overflow-y-auto" Elevation="3" Height="88vh" Width="100%">
+                <MudButton style="position: absolute; top: 0;right:0;" OnClick="Toggle" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.FilterList">FILTER</MudButton>
+                <MudPopover Open="@_isOpen" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft" Fixed="true" Class="px-4 pt-4" style="width: 400px;">
+                    <MudGrid Spacing="1" Class="mb-4">
+                        <MudItem Class="d-flex" xs="12">
+                            <MudText Typo="Typo.button">FILTER</MudText>
+                        </MudItem>
+                        <MudItem Class="mb-2" xs="12">
+                            <MudDivider/>
+                        </MudItem>
+                        <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsProgram"></MudCheckBox></MudItem>
+                        <MudItem xs=10>
+                            <MudTextField @bind-Value="parameter.ProgramName" Label="Program" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsProgram"/>
+                        </MudItem>
+                        <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsSection"></MudCheckBox></MudItem>
+                        <MudItem xs=10>
+                            <MudTextField @bind-Value="parameter.SectionName" Label="Section" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsSection"/>
+                        </MudItem>
+                        <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsYear"></MudCheckBox></MudItem>
+                        <MudItem xs=10>
+                            <MudTextField @bind-Value="parameter.Year" Label="Year" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsYear"/>
+                        </MudItem>
+                        <MudItem xs="7"></MudItem>
+                        <MudItem xs="5">
+                            <MudButton OnClick="@Toggle" Class="ml-auto mr-1 mb-3" Color="MudBlazor.Color.Default">Close</MudButton>
+                            <MudButton OnClick="@Filter" Class="ml-auto mr-n3 mb-3" Variant="MudBlazor.Variant.Filled" Color="Color.Info">Filter</MudButton> 
+                        </MudItem>
+                    </MudGrid>
+                </MudPopover>
                 <div class="d-flex flex-column" style="width: 100%;">
                     <div class="d-flex flex-row justify-content-center align-items-center" style="height: calc(100vh - 300px);">
                         <div>
@@ -116,6 +147,7 @@
                 </div>
                 
             </MudPaper>
+            }
             
         }
 </div>
@@ -128,6 +160,8 @@
     private GroupModel Group = new();
     bool show,show1 = false;
     List<FileModel> fileModels = new();
+    public bool _isOpen, IsLoading;
+    FilterParameter parameter = new();
     private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
     int dataSize = 3;
     double[] data = { 77, 25, 20};
@@ -140,7 +174,7 @@
     protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? 
-        GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupService.GetGroups();
+        GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, new()) : GroupService.GetGroups(new());
         await data;
         if(data.Status == TaskStatus.RanToCompletion)
         {
@@ -151,6 +185,31 @@
             }
             Group = ListGroups.FirstOrDefault() ?? new();
             await GetFiles(Group);
+        }
+    }
+    public void Toggle()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+    private async Task Filter()
+    {
+        isDataFetch = false;
+        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? 
+        GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, parameter) : GroupService.GetGroups(parameter);
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion)
+        {
+            ListGroups = data.Result.ToList();
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            {
+                ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+            }
+            Group = ListGroups.FirstOrDefault() ?? new();
+            await GetFiles(Group);
+            Toggle();
         }
     }
     private async Task GetFiles(GroupModel groupModel)
@@ -168,7 +227,7 @@
     }
     private async Task GetSchedules()
     {
-        Task<IEnumerable<ScheduleModel>> schedules = ScheduleService.GetSchedules();
+        Task<IEnumerable<ScheduleModel>> schedules = ScheduleService.GetSchedules(parameter);
         await schedules;
         if(schedules.Status == TaskStatus.RanToCompletion)
         {
@@ -218,7 +277,7 @@
     private async Task GetScheduless()
     {
         isDataFetch = false;
-        Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules();
+        Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules(parameter);
         await task;
         if (task.Status == TaskStatus.RanToCompletion)
         {
@@ -229,7 +288,7 @@
     private async Task GetMyGroups()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ?
-        GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupService.GetGroups();
+        GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, parameter) : GroupService.GetGroups(parameter);
         await data;
         if (data.Status == TaskStatus.RanToCompletion)
         {
@@ -271,5 +330,13 @@
 
         }
         StateHasChanged();
+        
     }
 }
+<style>
+    .centered-element {
+        position: absolute;
+        top: 50%;
+        left: 55%;
+    }
+</style>

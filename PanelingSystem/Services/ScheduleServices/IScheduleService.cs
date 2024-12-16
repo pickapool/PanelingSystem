@@ -11,5 +11,6 @@ namespace PanelingSystem.Services.ScheduleServices
         Task<ScheduleModel> DeleteScheduleModel(int id);
         Task<ScheduleModel> GetPanelsInSchedule(int groupId);
         Task<List<ScheduleModel>> GetSchedulesByGroup(int groupId);
+        Task<IEnumerable<ScheduleModel>> GetSchedules(FilterParameter param);
     }
 }

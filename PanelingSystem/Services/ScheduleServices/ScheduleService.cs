@@ -36,6 +36,34 @@ namespace PanelingSystem.Services.ScheduleServices
             return await _context.Schedules.Where( e => e.GroupId == groupId)
             .ToListAsync();
         }
+        [HttpGet]
+        public async Task<IEnumerable<ScheduleModel>> GetSchedules(FilterParameter param)
+        {
+            var query = _context.Schedules
+            .Include( e => e.Group)
+            .Include( e => e.Panels)
+            .ThenInclude( e => e.Panel).AsQueryable();
+
+            // Apply filters based on the FilterParameter values
+
+            if (param.IsProgram && !string.IsNullOrEmpty(param.ProgramName))
+            {
+                query = query.Where(e => e.Group.Program == param.ProgramName);
+            }
+
+            if (param.IsSection && !string.IsNullOrEmpty(param.SectionName))
+            {
+                query = query.Where(e => e.Group.Section == param.SectionName);
+            }
+
+            if (param.IsYear && !string.IsNullOrEmpty(param.Year))
+            {
+                query = query.Where(e => e.Group.Year == param.Year);
+            }
+
+            // Execute and return the filtered list of schedules
+            return await query.ToListAsync();
+        }
         public async Task<ScheduleModel> GetPanelsInSchedule(int groupId)
         {
             return await 

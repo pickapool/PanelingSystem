@@ -13,5 +13,6 @@ namespace PanelingSystem.Services.GroupServices
         Task<IEnumerable<GroupModel>> GetGroupsWithUsers();
         Task<IEnumerable<GroupModel>> GetMyGroups(int userId, FilterParameter param);
         Task<IEnumerable<GroupModel>> GetGroupsWithUsers(FilterParameter param);
+        Task<IEnumerable<GroupModel>> GetGroups(FilterParameter param);
     }
 }

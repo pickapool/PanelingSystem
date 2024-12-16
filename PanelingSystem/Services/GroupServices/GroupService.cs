@@ -28,6 +28,30 @@ namespace PanelingSystem.Services.GroupServices
             return await _context.Groups.ToListAsync();
         }
         [HttpGet]
+        public async Task<IEnumerable<GroupModel>> GetGroups(FilterParameter param)
+        {
+            var query = _context.Groups.AsQueryable();
+
+            // Apply filter only if the corresponding condition is true and the value is not empty
+            if (param.IsProgram && !string.IsNullOrEmpty(param.ProgramName))
+            {
+                query = query.Where(g => g.Program == param.ProgramName);
+            }
+
+            if (param.IsSection && !string.IsNullOrEmpty(param.SectionName))
+            {
+                query = query.Where(g => g.Section == param.SectionName);
+            }
+
+            if (param.IsYear && !string.IsNullOrEmpty(param.Year))
+            {
+                query = query.Where(g => g.Year == param.Year);
+            }
+
+            // Execute the query and return the filtered list of groups
+            return await query.ToListAsync();
+        }
+        [HttpGet]
         public async Task<IEnumerable<GroupModel>> GetGroupsWithUsers()
         {
             return await 
