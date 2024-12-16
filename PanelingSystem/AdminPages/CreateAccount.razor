@@ -104,8 +104,8 @@
         if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
         {
             ListUserAccount = ListUserAccount.Where( e => 
-            e.AccountType == Enums.AccountType.Adviser ||
-            e.AccountType == Enums.AccountType.Panelist ||
+            e.AccountType == Enums.AccountType.Panelist_Adviser ||
+            e.AccountType == Enums.AccountType.Panelist_Adviser ||
             e.AccountType == Enums.AccountType.Instructor
             ).ToList();
         } else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)

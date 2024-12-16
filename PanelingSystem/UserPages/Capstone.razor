@@ -77,7 +77,7 @@
         if(data.Status == TaskStatus.RanToCompletion)
         {
             ListGroups = data.Result.ToList();
-            if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
             {
                 ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
             }

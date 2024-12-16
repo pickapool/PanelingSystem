@@ -112,7 +112,7 @@
             {
                 Schedules = Schedules.Where( e => data.Result.Any( m => m.GroupId == e.GroupId)).ToList();
             }
-            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
             {
                 Schedules = Schedules.Where(e => e.Group.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
             }
@@ -228,7 +228,7 @@
     }
     private async Task OpenScheduleDialog(ScheduleModel schedule)
     {
-        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist)
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
         {
             Extensions.ShowAlert("Your are not allowed to add a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
             return;
@@ -248,7 +248,7 @@
     }
     private async Task RemoveSchedule(int scheduleId)
     {
-        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist)
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
         {
             Extensions.ShowAlert("Your are not allowed to remove a schedule.", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
             return;

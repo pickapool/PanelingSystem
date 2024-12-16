@@ -179,7 +179,7 @@
         if(data.Status == TaskStatus.RanToCompletion)
         {
             ListGroups = data.Result.ToList();
-            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
             {
                 ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
             }
@@ -203,7 +203,7 @@
         if(data.Status == TaskStatus.RanToCompletion)
         {
             ListGroups = data.Result.ToList();
-            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
             {
                 ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
             }
@@ -296,7 +296,7 @@
             {
                 Schedules = Schedules.Where(e => data.Result.Any(m => m.GroupId == e.GroupId)).ToList();
             }
-            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
             {
                 Schedules = Schedules.Where(e => e.Group.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
             }

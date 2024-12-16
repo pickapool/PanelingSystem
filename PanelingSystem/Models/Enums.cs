@@ -1,4 +1,6 @@
-﻿namespace PanelingSystem.Models
+﻿using System.ComponentModel;
+
+namespace PanelingSystem.Models
 {
     public class Enums
     {
@@ -19,8 +21,8 @@
             Admin = 0,
             Instructor = 1,
             Student = 2,
-            Panelist = 3,
-            Adviser = 4,
+            [Description("Panelist/Adviser")]
+            Panelist_Adviser
         }
         public enum AccountTypeForAdmin
         {

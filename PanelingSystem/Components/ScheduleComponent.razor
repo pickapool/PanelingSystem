@@ -94,7 +94,7 @@
     }
     private async Task AddPanels(int groupId)
     {
-        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist)
+        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
         {
             Extensions.ShowAlert("Your are not allowed to add a panel in a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
             return;
