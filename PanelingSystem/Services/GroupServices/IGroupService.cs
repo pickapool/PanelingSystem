@@ -11,5 +11,7 @@ namespace PanelingSystem.Services.GroupServices
         Task<GroupModel> DeleteGroupModel(int id);
         Task<IEnumerable<GroupModel>> GetMyGroups(int userId);
         Task<IEnumerable<GroupModel>> GetGroupsWithUsers();
+        Task<IEnumerable<GroupModel>> GetMyGroups(int userId, FilterParameter param);
+        Task<IEnumerable<GroupModel>> GetGroupsWithUsers(FilterParameter param);
     }
 }

@@ -38,12 +38,70 @@ namespace PanelingSystem.Services.GroupServices
             .ToListAsync();;
         }
         [HttpGet]
+        public async Task<IEnumerable<GroupModel>> GetGroupsWithUsers(FilterParameter param)
+        {
+            var query = _context.Groups
+                        .Include(e => e.Members)
+                        .ThenInclude(e => e.Student)
+                        .AsQueryable();
+
+            // Filter by Program if IsProgram is true
+            if (param.IsProgram && !string.IsNullOrEmpty(param.ProgramName))
+            {
+                query = query.Where(e => e.Program == param.ProgramName);
+            }
+
+            // Filter by Section if IsSection is true
+            if (param.IsSection && !string.IsNullOrEmpty(param.SectionName))
+            {
+                query = query.Where(e => e.Section == param.SectionName);
+            }
+
+            // Filter by Year if IsYear is true
+            if (param.IsYear && !string.IsNullOrEmpty(param.Year))
+            {
+                query = query.Where(e => e.Year == param.Year);
+            }
+
+            return await query.ToListAsync();
+        }
+        [HttpGet]
         public async Task<IEnumerable<GroupModel>> GetMyGroups(int userId)
         {
             return await _context.Groups
                 .Include(m => m.Members)
                 .Where(group => group.Members.Any(member => member.UserId == userId))
                 .ToListAsync();
+        }
+        [HttpGet]
+        public async Task<IEnumerable<GroupModel>> GetMyGroups(int userId, FilterParameter param)
+        {
+            var query = _context.Groups
+                        .Include(m => m.Members)
+                        .AsQueryable();
+
+            // Filter by Program if IsProgram is true
+            if (param.IsProgram && !string.IsNullOrEmpty(param.ProgramName))
+            {
+                query = query.Where(group => group.Program == param.ProgramName);
+            }
+
+            // Filter by Section if IsSection is true
+            if (param.IsSection && !string.IsNullOrEmpty(param.SectionName))
+            {
+                query = query.Where(group => group.Year == param.SectionName);
+            }
+
+            // Filter by Year if IsYear is true
+            if (param.IsYear && !string.IsNullOrEmpty(param.Year))
+            {
+                query = query.Where(group => group.Year == param.Year);
+            }
+
+            // Filter by UserId in Members
+            query = query.Where(group => group.Members.Any(member => member.UserId == userId));
+
+            return await query.ToListAsync();
         }
 
         // GET: api/GroupService/5

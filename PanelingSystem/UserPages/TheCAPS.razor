@@ -348,7 +348,7 @@
     protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
-            GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupServices.GetGroupsWithUsers();
+            GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, new()) : GroupServices.GetGroupsWithUsers(new());
         await data;
         if(data.Status == TaskStatus.RanToCompletion) {
             ListOfGroups = data.Result.ToList();
@@ -376,11 +376,11 @@
                 return true;
             return false;
         }).ToArray(); *@
-        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
-        {
-            ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
-        }
-        totalItems = ListOfGroups.Count();
+        //if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+        //{
+        //    ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+        //}
+        //totalItems = ListOfGroups.Count();
         @* switch (state.SortLabel)
         {
             case "name":
@@ -401,8 +401,8 @@
         } *@
 
         //pagedData = ListOfGroups.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-        Loading = false;
-        StateHasChanged();
+        //Loading = false;
+        //StateHasChanged();
        // return new TableData<GroupModel>() {TotalItems = totalItems, Items = pagedData};
     }
 
@@ -488,7 +488,21 @@
     }
     private async Task Filter()
     {
-
+        Loading = true;
+        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
+            GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, parameter) : GroupServices.GetGroupsWithUsers(parameter);
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion) {
+            ListOfGroups = data.Result.ToList();
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            {
+                ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+            }
+            totalItems = ListOfGroups.Count();
+            Loading = false;
+            Toggle();
+            StateHasChanged();
+        }
     }
 }
 <style>
