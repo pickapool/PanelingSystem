@@ -10,15 +10,41 @@
 @inject IJSRuntime JSRuntime
 
 <div class="d-flex justify-content-center align-items-center">
-    <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<GroupModel>>>(ServerReload))"
-                Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
+        <MudTable Items="ListOfGroups"
+                Dense="true" Hover="true" @ref="table" Height="80vh" style="width: 100%;" Loading="Loading">
             <ToolBarContent>
                 <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Groups</MudText>
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 <MudSpacer />
-                
+                <MudButton OnClick="Toggle" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.FilterList">FILTER</MudButton>
+                <MudPopover Open="@_isOpen" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Fixed="true" Class="px-4 pt-4" style="width: 400px;">
+                    <MudGrid Spacing="1" Class="mb-4">
+                        <MudItem Class="d-flex" xs="12">
+                            <MudText Typo="Typo.button">FILTER</MudText>
+                        </MudItem>
+                        <MudItem Class="mb-2" xs="12">
+                            <MudDivider/>
+                        </MudItem>
+                        <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsProgram"></MudCheckBox></MudItem>
+                        <MudItem xs=10>
+                            <MudTextField @bind-Value="parameter.ProgramName" Label="Program" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsProgram"/>
+                        </MudItem>
+                        <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsSection"></MudCheckBox></MudItem>
+                        <MudItem xs=10>
+                            <MudTextField @bind-Value="parameter.SectionName" Label="Section" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsSection"/>
+                        </MudItem>
+                        <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsYear"></MudCheckBox></MudItem>
+                        <MudItem xs=10>
+                            <MudTextField @bind-Value="parameter.Year" Label="Year" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsYear"/>
+                        </MudItem>
+                        <MudItem xs="7"></MudItem>
+                        <MudItem xs="5">
+                            <MudButton OnClick="@Toggle" Class="ml-auto mr-1 mb-3" Color="MudBlazor.Color.Default">Close</MudButton>
+                            <MudButton OnClick="@Filter" Class="ml-auto mr-n3 mb-3" Variant="MudBlazor.Variant.Filled" Color="Color.Info">Filter</MudButton> 
+                        </MudItem>
+                    </MudGrid>
+                </MudPopover>
             </ToolBarContent>
             <ColGroup>
                 <col />
@@ -308,24 +334,33 @@
                 <MudTablePager />
             </PagerContent>
         </MudTable>
-    </MudPaper>
 </div>
 
 @code {
     private IEnumerable<GroupModel> pagedData;
     private MudTable<GroupModel> table;
-
+    public bool _isOpen;
+    FilterParameter parameter = new();
     private int totalItems;
     private string searchString = null;
     private bool Loading = true, isLoadingComment;
-    private IEnumerable<GroupModel> ListOfGroups = null;
-    private async Task<TableData<GroupModel>> ServerReload(TableState state)
+    private List<GroupModel> ListOfGroups = new();
+    protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
             GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupServices.GetGroupsWithUsers();
         await data;
-        await Task.Delay(300);
-        ListOfGroups = data.Result.Where(grp =>
+        if(data.Status == TaskStatus.RanToCompletion) {
+            ListOfGroups = data.Result.ToList();
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+            {
+                ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+            }
+            totalItems = ListOfGroups.Count();
+            Loading = false;
+            StateHasChanged();
+        }
+        @* ListOfGroups = data.Result.Where(grp =>
         {
             if (string.IsNullOrWhiteSpace(searchString))
                 return true;
@@ -340,13 +375,13 @@
             if (grp.Status.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
             return false;
-        }).ToArray();
+        }).ToArray(); *@
         if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
         {
             ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
         }
         totalItems = ListOfGroups.Count();
-        switch (state.SortLabel)
+        @* switch (state.SortLabel)
         {
             case "name":
                 ListOfGroups = data.Result.OrderByDirection(state.SortDirection, o => o.GroupThesisTitle);
@@ -363,12 +398,12 @@
             case "role":
                 ListOfGroups = data.Result.OrderByDirection(state.SortDirection, o => o.Status);
                 break;
-        }
+        } *@
 
-        pagedData = ListOfGroups.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        //pagedData = ListOfGroups.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
         Loading = false;
         StateHasChanged();
-        return new TableData<GroupModel>() {TotalItems = totalItems, Items = pagedData};
+       // return new TableData<GroupModel>() {TotalItems = totalItems, Items = pagedData};
     }
 
     private void OnSearch(string text)
@@ -444,7 +479,17 @@
         }
         await Extensions.Download(CapstoneFile.File, CapstoneFile.FileName, JSRuntime);
     }
+    public void Toggle()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+    private async Task Filter()
+    {
 
+    }
 }
 <style>
     .mud-toolbar.mud-table-toolbar
