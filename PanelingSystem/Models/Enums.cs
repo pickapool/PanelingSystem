@@ -24,10 +24,7 @@
         }
         public enum AccountTypeForAdmin
         {
-            Admin = 0,
-            Instructor = 1,
-            Panelist = 3,
-            Adviser = 4,
+            Admin = 0
         }
         public enum AccountTypeForInstructor
         {

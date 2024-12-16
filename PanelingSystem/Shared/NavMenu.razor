@@ -9,7 +9,7 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
+        @if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="u/dashboard" Match="NavLinkMatch.All">
@@ -18,7 +18,7 @@
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="/thecaps" Match="NavLinkMatch.All">
-                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FolderCopy"></MudIcon> The CAPS
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FolderCopy"></MudIcon> TheCAPS
                 </NavLink>
             </div>
             @* <div class="nav-item px-3">
@@ -52,31 +52,22 @@
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DateRange"></MudIcon> Schedule
                 </NavLink>
             </div>
-
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="create/account">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.AccountBox"></MudIcon> Accounts
+                </NavLink>
+            </div>
         }
-        else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ||
-            GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor ||
-            GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist ||
-            GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser)
+        else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="u/dashboard" Match="NavLinkMatch.All">
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Dashboard"></MudIcon> Dashboard
                 </NavLink>
             </div>
-            @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser ||
-            GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor ||
-            GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist)
-            {
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="u/userfiles" Match="NavLinkMatch.All">
-                        <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FilePresent"></MudIcon> User Files
-                    </NavLink>
-                </div>
-            }
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="u/capstone" Match="NavLinkMatch.All">
-                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DriveFileMove"></MudIcon> Capstone
+                <NavLink class="nav-link" href="/thecaps" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FolderCopy"></MudIcon> TheCAPS
                 </NavLink>
             </div>
             <div class="nav-item px-3">
@@ -85,8 +76,25 @@
                 </NavLink>
             </div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="u/group" Match="NavLinkMatch.All">
-                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Groups"></MudIcon> @(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? "My Groups" : "Groups")
+                <NavLink class="nav-link" href="u/schedule" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DateRange"></MudIcon> Schedule
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="create/account">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.AccountBox"></MudIcon> Accounts
+                </NavLink>
+            </div>
+        }
+        else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Adviser) {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="u/dashboard" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Dashboard"></MudIcon> Dashboard
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/thecaps" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.FolderCopy"></MudIcon> TheCAPS
                 </NavLink>
             </div>
             <div class="nav-item px-3">
@@ -94,15 +102,48 @@
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DateRange"></MudIcon> Schedule
                 </NavLink>
             </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="create/account">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.AccountBox"></MudIcon> Accounts
+                </NavLink>
+            </div>
+        }
+        else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="u/dashboard" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Dashboard"></MudIcon> Dashboard
+                </NavLink>
+            </div>
+            @* <div class="nav-item px-3">
+                <NavLink class="nav-link" href="u/capstone" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DriveFileMove"></MudIcon> Capstone
+                </NavLink>
+            </div> *@
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="u/grades" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Grade"></MudIcon> Grades
+                </NavLink>
+            </div>
+            @*  <div class="nav-item px-3">
+                <NavLink class="nav-link" href="u/group" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.Groups"></MudIcon> @(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ? "My Groups" : "Groups")
+                </NavLink>
+            </div> *@
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="u/schedule" Match="NavLinkMatch.All">
+                    <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.DateRange"></MudIcon> Schedule
+                </NavLink>
+            </div>
         } 
-        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+       @*  @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
         {
              <div class="nav-item px-3">
                 <NavLink class="nav-link" href="create/account">
                     <MudIcon Class="mr-4" Icon="@Icons.Material.Filled.AccountBox"></MudIcon> Accounts
                 </NavLink>
             </div>
-        }
+        } *@
         
     </nav>
 </div>

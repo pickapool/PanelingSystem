@@ -29,17 +29,21 @@
                 @* <col /> *@
             </ColGroup>
             <HeaderContent>
-                <MudTh><MudTableSortLabel SortLabel="GroupThesisTitle" T="UserAccountModel">Title</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Groupname" T="UserAccountModel">Group Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="GroupThesisTitle" T="UserAccountModel">Members</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Program" T="UserAccountModel">Program</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Year" T="UserAccountModel">Year</MudTableSortLabel></MudTh>
                 @* <MudTh><MudTableSortLabel SortLabel="Status" T="UserAccountModel">Status</MudTableSortLabel></MudTh> *@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="GroupThesisTitle">
-                    <MudButton OnClick="()=> GetFiles(context)" Variant="MudBlazor.Variant.Text">@context.GroupThesisTitle</MudButton>
+                    <MudButton OnClick="()=> GetFiles(context)" Variant="MudBlazor.Variant.Text">@context.Groupname</MudButton>
                 </MudTd>
-                <MudTd DataLabel="Groupname">@context.Groupname</MudTd>
+                <MudTd DataLabel="Groupname">
+                    @foreach(MembersModel member in context.Members) {
+                        <span>@member.Student.Name</span><br>
+                    }
+                </MudTd>
                 <MudTd DataLabel="Program">@context.Program</MudTd>
                 <MudTd DataLabel="Year">@context.Year</MudTd>
                 @* <MudTd DataLabel="Status">
@@ -157,7 +161,7 @@
                                 <MudTabPanel Text="Pre Oral" ToolTip="ToolTip Two">
                                     <MudPaper class="d-flex flex-column pa-3">
                                         <div class="d-flex flex-row gap-10 align-items-center">
-                                            <span class="flex-1"><b>Chapter 1 - </b> @context.Chapter1.Title</span>
+                                            <span class="flex-1"><b>Chapter 1</b> @context.Chapter1.Title</span>
                                             <MudButton OnClick="()=>  {
                                                 GetComments(Enums.Chapter.Chapter1, context, context.chapter1Open);
                                                 context.chapter1Open = !context.chapter1Open;
@@ -182,7 +186,7 @@
                                             <MudButton OnClick="()=> Download(context.Chapter1)" Variant="MudBlazor.Variant.Text">Download</MudButton>
                                         </div>
                                         <div class="d-flex flex-row gap-10 align-items-center">
-                                            <span class="flex-1"><b>Chapter 2 - </b> @context.Chapter2.Title</span>
+                                            <span class="flex-1"><b>Chapter 2</b> @context.Chapter2.Title</span>
                                             <MudButton OnClick="()=>  {
                                                 GetComments(Enums.Chapter.Chapter2, context, context.chapter2Open);
                                                 context.chapter2Open = !context.chapter2Open;
@@ -210,6 +214,83 @@
                                     <hr>
                                 </MudTabPanel>
                                 <MudTabPanel Text="Final" ToolTip="ToolTip Three">
+                                    <MudPaper class="d-flex flex-column pa-3">
+                                        <div class="d-flex flex-row gap-10 align-items-center">
+                                            <span class="flex-1"><b>Chapter 1</b> @context.Chapter3.Title</span>
+                                            <MudButton OnClick="()=>  {
+                                                GetComments(Enums.Chapter.Chapter3, context, context.chapter3Open);
+                                                context.chapter3Open = !context.chapter3Open;
+                                                }" Variant="MudBlazor.Variant.Text">
+                                                <MudPopover Open="@context.chapter3Open" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                                    <div class="d-flex flex-column pa-2 overflow-y-auto" style="width: 400px; height: 400px;">
+                                                        <span>Comments</span>
+                                                        <hr>
+                                                        @if(isLoadingComment)
+                                                        {
+                                                            @foreach (CommentModel comment in context.Comments)
+                                                            {
+                                                                <div class="d-flex flex-column pa-2 gap-2">
+                                                                    <CommentComponent Comment="@comment"></CommentComponent>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </MudPopover>
+                                                Comments
+                                            </MudButton>
+                                            <MudButton OnClick="()=> Download(context.Chapter3)" Variant="MudBlazor.Variant.Text">Download</MudButton>
+                                        </div>
+                                        <div class="d-flex flex-row gap-10 align-items-center">
+                                            <span class="flex-1"><b>Chapter 2</b> @context.Chapter4.Title</span>
+                                            <MudButton OnClick="()=>  {
+                                                GetComments(Enums.Chapter.Chapter4, context, context.chapter4Open);
+                                                context.chapter4Open = !context.chapter4Open;
+                                                }" Variant="MudBlazor.Variant.Text">
+                                                <MudPopover Open="@context.chapter4Open" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                                    <div class="d-flex flex-column pa-2 overflow-y-auto" style="width: 400px; height: 400px;">
+                                                        <span>Comments</span>
+                                                        <hr>
+                                                        @if(isLoadingComment)
+                                                        {
+                                                            @foreach (CommentModel comment in context.Comments)
+                                                            {
+                                                                <div class="d-flex flex-column pa-2 gap-2">
+                                                                    <CommentComponent Comment="@comment"></CommentComponent>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </MudPopover>
+                                                Comments
+                                            </MudButton>
+                                            <MudButton OnClick="()=> Download(context.Chapter4)" Variant="MudBlazor.Variant.Text">Download</MudButton>
+                                        </div>
+                                        <div class="d-flex flex-row gap-10 align-items-center">
+                                            <span class="flex-1"><b>Chapter 2</b> @context.Chapter5.Title</span>
+                                            <MudButton OnClick="()=>  {
+                                                GetComments(Enums.Chapter.Chapter5, context, context.chapter5Open);
+                                                context.chapter5Open = !context.chapter5Open;
+                                                }" Variant="MudBlazor.Variant.Text">
+                                                <MudPopover Open="@context.chapter5Open" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                                    <div class="d-flex flex-column pa-2 overflow-y-auto" style="width: 400px; height: 400px;">
+                                                        <span>Comments</span>
+                                                        <hr>
+                                                        @if(isLoadingComment)
+                                                        {
+                                                            @foreach (CommentModel comment in context.Comments)
+                                                            {
+                                                                <div class="d-flex flex-column pa-2 gap-2">
+                                                                    <CommentComponent Comment="@comment"></CommentComponent>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </MudPopover>
+                                                Comments
+                                            </MudButton>
+                                            <MudButton OnClick="()=> Download(context.Chapter5)" Variant="MudBlazor.Variant.Text">Download</MudButton>
+                                        </div>
+                                    </MudPaper>
                                     <hr>
                                 </MudTabPanel>
                             </MudTabs>
@@ -241,7 +322,7 @@
     private async Task<TableData<GroupModel>> ServerReload(TableState state)
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
-            GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupServices.GetGroups();
+            GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupServices.GetGroupsWithUsers();
         await data;
         await Task.Delay(300);
         ListOfGroups = data.Result.Where(grp =>
