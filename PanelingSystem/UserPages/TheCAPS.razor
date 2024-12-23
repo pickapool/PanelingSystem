@@ -73,39 +73,13 @@
             </MudTd>
             <MudTd DataLabel="Program">@context.Program</MudTd>
             <MudTd DataLabel="Year">@context.Year</MudTd>
-            @* <MudTd DataLabel="Status">
-                    <MudChip Size="Size.Small">@Extensions.GetEnumDescription(context.Status)</MudChip>
-                </MudTd> *@
-            @* <MudTd Class='text-center pa-2'>
-                 <MudMenu Icon='@Icons.Material.Filled.MoreVert' AnchorOrigin='Origin.TopLeft'
-                    TransformOrigin='Origin.TopRight' Dense='true' Size='Size.Small'>
-                         <MudMenuItem OnClick="()=> OpenGroupDialog(context)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.Edit' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Edit</MudText>
-                            </div>
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="()=> AddMembers(context)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.PersonAdd' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Add Members</MudText>
-                            </div>
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="()=> RemoveGroup(context)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Remove</MudText>
-                            </div>
-                        </MudMenuItem>
-                </MudMenu>
-            </MudTd> *@
         </RowTemplate>
         <ChildRowContent>
             @if(context.IsShowDetails) {
                 <td colspan="4" style="background-color: beige;">
                     <div class="pa-2 justify-content-center align-items-center" style="width: 100%;">
                         <MudTabs Elevation="1" Rounded="true" PanelClass="pa-2" style="width: 100%; background: white;">
-                            <MudTabPanel Text="Title" ToolTip="ToolTip One">
+                            <MudTabPanel Text="Title" OnClick="()=> OnChapterChange(Enums.Chapter.Title1, Group)">
                                 <MudPaper class="d-flex flex-column pa-3">
                                     <div class="d-flex flex-row gap-10 align-items-center">
                                         <span class="flex-1"><b>Title - </b> @context.Title1.Title</span>
@@ -213,11 +187,11 @@
                                     </MudItem>
                                     <MudItem xs="8"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
-                                        <MudButton OnClick="SaveVerdict" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                        <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
                                     </MudItem>
                                 </MudGrid>
                             </MudTabPanel>
-                            <MudTabPanel Text="Pre Oral" ToolTip="ToolTip Two">
+                            <MudTabPanel Text="Pre Oral" OnClick="()=> OnChapterChange(Enums.Chapter.Chapter1, Group)">
                                 <MudPaper class="d-flex flex-column pa-3">
                                     <div class="d-flex flex-row gap-10 align-items-center">
                                         <span class="flex-1"><b>Chapter 1</b> @context.Chapter1.Title</span>
@@ -271,8 +245,31 @@
                                     </div>
                                 </MudPaper>
                                 <hr>
+                                <MudGrid Spacing="1">
+                                    <MudItem xs="12">
+                                        <span>Panel Recommendation</span>
+                                        <hr/>
+                                    </MudItem>
+                                    <MudItem xs="2">
+                                        <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
+                                        Variant="MudBlazor.Variant.Outlined">
+                                            @foreach (Enums.Status? item in Enum.GetValues(typeof(Enums.Status)))
+                                            {
+                                                <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                    <MudItem xs="8"></MudItem>
+                                    <MudItem xs="2">
+                                        <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudItem>
+                                    <MudItem xs="10"></MudItem>
+                                    <MudItem Class="d-flex justify-content-end" xs="2">
+                                        <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter1)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                    </MudItem>
+                                </MudGrid>
                             </MudTabPanel>
-                            <MudTabPanel Text="Final" ToolTip="ToolTip Three">
+                            <MudTabPanel Text="Final" OnClick="()=> OnChapterChange(Enums.Chapter.Chapter5, Group)">
                                 <MudPaper class="d-flex flex-column pa-3">
                                     <div class="d-flex flex-row gap-10 align-items-center">
                                         <span class="flex-1"><b>Chapter 1</b> @context.Chapter3.Title</span>
@@ -351,6 +348,29 @@
                                     </div>
                                 </MudPaper>
                                 <hr>
+                                <MudGrid Spacing="1">
+                                    <MudItem xs="12">
+                                        <span>Panel Recommendation</span>
+                                        <hr/>
+                                    </MudItem>
+                                    <MudItem xs="2">
+                                        <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
+                                        Variant="MudBlazor.Variant.Outlined">
+                                            @foreach (Enums.Status? item in Enum.GetValues(typeof(Enums.Status)))
+                                            {
+                                                <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                    <MudItem xs="8"></MudItem>
+                                    <MudItem xs="2">
+                                        <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudItem>
+                                    <MudItem xs="10"></MudItem>
+                                    <MudItem Class="d-flex justify-content-end" xs="2">
+                                        <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter5)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                    </MudItem>
+                                </MudGrid>
                             </MudTabPanel>
                         </MudTabs>
                     </div>
@@ -410,8 +430,9 @@
     {
         DenfenseVerdict.Status = e;
     }
-    private async Task SaveVerdict(){
+    private async Task SaveVerdict(Enums.Chapter e){
         DenfenseVerdict.GroupId = Group.GroupId;
+        DenfenseVerdict.Chapter = e;
         Task t = DenfenseVerdict.DefenseVerdictId <= 0 ? _verdictService.PostDefenseVerdictModel(DenfenseVerdict) : _verdictService.PutDefenseVerdictModel(Convert.ToInt32(DenfenseVerdict.DefenseVerdictId), DenfenseVerdict);
         await t;
         if(t.Status == TaskStatus.RanToCompletion)
