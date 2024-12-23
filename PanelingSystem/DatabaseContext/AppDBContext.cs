@@ -15,6 +15,7 @@ namespace PanelingSystem.DatabaseContext
         public DbSet<CommentModel> Comments { get; set; }
         public DbSet<ScheduleModel> Schedules { get; set; }
         public DbSet<PanelistModel> Panels { get; set; }
+        public DbSet<DefenseVerdictModel> DefenseVerdicts { get; set; }
 
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
@@ -30,6 +31,7 @@ namespace PanelingSystem.DatabaseContext
             modelBuilder.Entity<GradeModel>().ToTable("Grades");
             modelBuilder.Entity<CommentModel>().ToTable("Comments");
             modelBuilder.Entity<PanelistModel>().ToTable("Panels");
+            modelBuilder.Entity<DefenseVerdictModel>().ToTable("DefenseVerdicts");
         }
     }
 }
