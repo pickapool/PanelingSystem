@@ -10,7 +10,7 @@ namespace PanelingSystem.Models
         public long DefenseVerdictId { get; set; }
         public long GroupId { get; set; }
         public Enums.Chapter Chapter { get; set; }
-        public Enums.Status Status { get; set; }
+        public Enums.Status? Status { get; set; }
         public double Grade { get; set; }
     }   
 }

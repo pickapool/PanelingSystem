@@ -9,6 +9,7 @@ using PanelingSystem.DatabaseContext;
 using PanelingSystem.Services.AccountServices;
 using PanelingSystem.Services.CapstoneFilesServices;
 using PanelingSystem.Services.CommentServices;
+using PanelingSystem.Services.DefenseVerdictServices;
 using PanelingSystem.Services.FileServices;
 using PanelingSystem.Services.GradeServices;
 using PanelingSystem.Services.GroupServices;
@@ -45,6 +46,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IPanelistService, PanelistService>();
 builder.Services.AddScoped<IReportService,  ReportService>();
+builder.Services.AddScoped<IVerdictService, VerdictService>();
 
 builder.Services.AddDbContext<AppDBContext>(options =>
 {

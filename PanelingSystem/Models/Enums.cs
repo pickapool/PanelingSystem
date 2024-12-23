@@ -45,8 +45,11 @@ namespace PanelingSystem.Models
             Chapter3 = 2,
             Chapter4 = 3,
             Chapter5 = 4,
+            [Description("Title 1")]
             Title1 = 5,
+            [Description("Title 2")]
             Title2 = 6,
+            [Description("Title 3")]
             Title3 = 7
         }
 
