@@ -179,9 +179,24 @@
         if(data.Status == TaskStatus.RanToCompletion)
         {
             ListGroups = data.Result.ToList();
+            //OLd
+            // if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+            // {
+            //     ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+            // }
             if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
             {
-                ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+                foreach (var item in ListGroups)
+                {
+                    Task<IEnumerable<PanelistModel>> p = PanelistService.GetPanelGroup(item.GroupId);
+                    await p;
+                    if (p.Status == TaskStatus.RanToCompletion)
+                    {
+                        item.ListOfPanels = p.Result.ToList();
+                    }
+
+                }
+                ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId || e.ListOfPanels.Any(b => b.Panel.UserId == GlobalClass.CurrentUserAccount.UserId)).ToList();
             }
             Group = ListGroups.FirstOrDefault() ?? new();
             await GetFiles(Group);
