@@ -1,90 +1,107 @@
 @page "/u/group"
+@using Microsoft.AspNetCore.Mvc
 
 @inject IGroupService GroupServices
 @inject IDialogService DialogService
 @inject IMemberService MemberService
 @inject ISnackbar Snackbar
+@inject IReportService ReportService
+@inject IScheduleService ScheduleService
+@inject IGroupService GroupService
 
 <div class="d-flex justify-content-center align-items-center">
     <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<GroupModel>>>(ServerReload))"
-                Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
-            <ToolBarContent>
-                <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Groups</MudText>
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                <MudSpacer />
-                @if(ListOfGroups == null)
-                {
-                    <MudButton OnClick="()=> OpenGroupDialog(new GroupModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
-                } else {
-                    if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student && ListOfGroups.ToList().Count > 0)
+        @if(!ShowReport)
+        {
+            <MudTable ServerData="@(new Func<TableState, Task<TableData<GroupModel>>>(ServerReload))"
+            Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
+                <ToolBarContent>
+                    <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Groups</MudText>
+                    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    <MudSpacer />
+                    <div class="d-flex flex-1 justify-end">
+                        <MudIconButton OnClick="Print" Icon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" Variant="MudBlazor.Variant.Filled" Size="Size.Small"></MudIconButton>
+                    </div>
+                    @if(ListOfGroups == null)
                     {
-
-                    } else {
                         <MudButton OnClick="()=> OpenGroupDialog(new GroupModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
+                    } else {
+                        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student && ListOfGroups.ToList().Count > 0)
+                        {
+
+                        } else {
+                            <MudButton OnClick="()=> OpenGroupDialog(new GroupModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
+                        }
                     }
-                }
-            </ToolBarContent>
-            <ColGroup>
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col style='width: 20px' />
-            </ColGroup>
-            <HeaderContent>
-                <MudTh><MudTableSortLabel SortLabel="GroupThesisTitle" T="UserAccountModel">Title</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Groupname" T="UserAccountModel">Group Name</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Program" T="UserAccountModel">Program</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Year" T="UserAccountModel">Year</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Status" T="UserAccountModel">Status</MudTableSortLabel></MudTh>
-                <MudTh Class='customheader-1 text-center pa-2'>Action</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="GroupThesisTitle">@context.GroupThesisTitle</MudTd>
-                <MudTd DataLabel="Groupname">@context.Groupname</MudTd>
-                <MudTd DataLabel="Program">@context.Program</MudTd>
-                <MudTd DataLabel="Year">@context.Year</MudTd>
-                <MudTd DataLabel="Status">
-                    <MudChip Size="Size.Small">@Extensions.GetEnumDescription(context.Status)</MudChip>
-                </MudTd>
-                <MudTd Class='text-center pa-2'>
-                 <MudMenu Icon='@Icons.Material.Filled.MoreVert' AnchorOrigin='Origin.TopLeft'
-                    TransformOrigin='Origin.TopRight' Dense='true' Size='Size.Small'>
-                         <MudMenuItem OnClick="()=> OpenGroupDialog(context)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.Edit' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Edit</MudText>
-                            </div>
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="()=> AddMembers(context)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.PersonAdd' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Add Members</MudText>
-                            </div>
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="()=> RemoveGroup(context)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Remove</MudText>
-                            </div>
-                        </MudMenuItem>
-                </MudMenu>
-            </MudTd>
-            </RowTemplate>
-            <NoRecordsContent>
-                <MudText>No matching records found</MudText>
-            </NoRecordsContent>
-            <LoadingContent>
-                <MudText>Loading...</MudText>
-            </LoadingContent>
-            <PagerContent>
-                <MudTablePager />
-            </PagerContent>
-        </MudTable>
+                </ToolBarContent>
+                <ColGroup>
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col style='width: 20px' />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortLabel="GroupThesisTitle" T="UserAccountModel">Title</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="Groupname" T="UserAccountModel">Group Name</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="Program" T="UserAccountModel">Program</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="Year" T="UserAccountModel">Year</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="Status" T="UserAccountModel">Status</MudTableSortLabel></MudTh>
+                    <MudTh Class='customheader-1 text-center pa-2'>Action</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="GroupThesisTitle">@context.GroupThesisTitle</MudTd>
+                    <MudTd DataLabel="Groupname">@context.Groupname</MudTd>
+                    <MudTd DataLabel="Program">@context.Program</MudTd>
+                    <MudTd DataLabel="Year">@context.Year</MudTd>
+                    <MudTd DataLabel="Status">
+                        <MudChip Size="Size.Small">@Extensions.GetEnumDescription(context.Status)</MudChip>
+                    </MudTd>
+                    <MudTd Class='text-center pa-2'>
+                        <MudMenu Icon='@Icons.Material.Filled.MoreVert' AnchorOrigin='Origin.TopLeft'
+                        TransformOrigin='Origin.TopRight' Dense='true' Size='Size.Small'>
+                            <MudMenuItem OnClick="()=> OpenGroupDialog(context)">
+                                <div class='d-flex align-center gap-2 '>
+                                    <MudIcon Icon='@Icons.Material.Filled.Edit' Size='Size.Small' />
+                                    <MudText Typo='Typo.body2'>Edit</MudText>
+                                </div>
+                            </MudMenuItem>
+                            <MudMenuItem OnClick="()=> AddMembers(context)">
+                                <div class='d-flex align-center gap-2 '>
+                                    <MudIcon Icon='@Icons.Material.Filled.PersonAdd' Size='Size.Small' />
+                                    <MudText Typo='Typo.body2'>Add Members</MudText>
+                                </div>
+                            </MudMenuItem>
+                            <MudMenuItem OnClick="()=> RemoveGroup(context)">
+                                <div class='d-flex align-center gap-2 '>
+                                    <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
+                                    <MudText Typo='Typo.body2'>Remove</MudText>
+                                </div>
+                            </MudMenuItem>
+                        </MudMenu>
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>No matching records found</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>Loading...</MudText>
+                </LoadingContent>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        }
+        else
+        {
+            <div class="d-flex flex-column" style="width: 100%;height: 85vh;">
+                <MudButton OnClick="()=> ShowReport = !ShowReport" Class="ml-auto mr-1 mb-3" Variant="MudBlazor.Variant.Filled" Color="Color.Error" Label="true">Close</MudButton>
+                <iframe src='@PDF' style='height:78vh;' />
+            </div>
+        }
     </MudPaper>
 </div>
 
@@ -96,6 +113,10 @@
     private string searchString = null;
     private bool Loading = true;
     private IEnumerable<GroupModel> ListOfGroups = null;
+    private bool ShowReport = false;
+    private string PDF { get; set; } = string.Empty;
+    List<ScheduleModel> Schedules = new();
+    List<GroupModel> Groups = new();
     private async Task<TableData<GroupModel>> ServerReload(TableState state)
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
@@ -146,6 +167,75 @@
         Loading = false;
         StateHasChanged();
         return new TableData<GroupModel>() {TotalItems = totalItems, Items = pagedData};
+    }
+    private async Task Print()
+    {
+        Task task = GetSchedules();
+        await task;
+        if(task.Status == TaskStatus.RanToCompletion)
+        {
+            List<ReportModel> reports = new();
+            int count = 0;
+            foreach (ScheduleModel sched in Schedules)
+            {
+                foreach (MembersModel member in sched.Members)
+                {
+                    ReportModel r = new();
+                    r.ScheduleId = sched.ScheduleId;
+                    r.GroupId = sched.GroupId;
+                    r.StatusText = Extensions.GetEnumDescription(sched.Status);
+                    r.DefenseTypeText = Extensions.GetEnumDescription(sched.DefenseType);
+                    r.Start = sched.Start;
+                    r.End = sched.End;
+                    r.GroupThesisTitle = sched.Group.GroupThesisTitle;
+                    r.Groupname = sched.Group.Groupname;
+                    r.Program = sched.Group.Program;
+                    r.Year = sched.Group.Year;
+                    r.MemberId = member.MemberId;
+                    r.UserId = member.UserId;
+                    r.Name = member.Student.Name;
+                    reports.Add(r);
+                }
+            }
+            IActionResult report = ReportService.GetMasterListReport(reports);
+            if (report is FileContentResult fileContentResult)
+            {
+                byte[] pdfBytes = fileContentResult.FileContents;
+                PDF = "data:application/pdf;base64," + Convert.ToBase64String(pdfBytes);
+            }
+            ShowReport = !ShowReport;
+            StateHasChanged();
+        }
+    }
+    private async Task GetSchedules()
+    {
+        Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules();
+        await task;
+        if (task.Status == TaskStatus.RanToCompletion)
+        {
+            Schedules = task.Result.ToList();
+            await GetMyGroups();
+        }
+    }
+    private async Task GetMyGroups()
+    {
+        Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
+        await aa;
+        if (aa.Status == TaskStatus.RanToCompletion)
+        {
+            Groups = aa.Result.ToList();
+            foreach (ScheduleModel sched in Schedules)
+            {
+                foreach (GroupModel group in Groups)
+                {
+                    if (sched.GroupId == group.GroupId)
+                    {
+                        sched.Members = group.Members;
+                    }
+                }
+            }
+        }
+        StateHasChanged();
     }
 
     private void OnSearch(string text)
