@@ -12,7 +12,8 @@
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 <MudSpacer />
-                <MudButton OnClick="()=> UserDialog(new UserAccountModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">NEW</MudButton>
+                <MudButton OnClick="()=> UserDialog(new UserAccountModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary"
+                           Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)">NEW</MudButton>
             </ToolBarContent>
             <ColGroup>
                 <col />
@@ -50,7 +51,7 @@
                                 <MudText Typo='Typo.body2'>Edit</MudText>
                             </div>
                         </MudMenuItem> 
-                        <MudMenuItem OnClick="()=> RemoveAccount(context)">
+                        <MudMenuItem OnClick="()=> RemoveAccount(context)" Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)">
                             <div class='d-flex align-center gap-2 '>
                                 <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
                                 <MudText Typo='Typo.body2'>Remove</MudText>
@@ -72,7 +73,7 @@
     </MudPaper>
 </div>
 
-    @code {
+@code {
     private IEnumerable<UserAccountModel> pagedData;
     private MudTable<UserAccountModel> table;
 
@@ -103,17 +104,22 @@
         }).ToArray();
         if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
         {
-            ListUserAccount = ListUserAccount.Where( e => 
+            ListUserAccount = ListUserAccount.Where(e =>
             e.AccountType == Enums.AccountType.Panelist_Adviser ||
             e.AccountType == Enums.AccountType.Panelist_Adviser ||
             e.AccountType == Enums.AccountType.Instructor
             ).ToList();
-        } else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+        }
+        else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
         {
-            ListUserAccount = ListUserAccount.Where( e =>
+            ListUserAccount = ListUserAccount.Where(e =>
             e.AccountType == Enums.AccountType.Student
          ).ToList();
 
+        }  else if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+        {
+            ListUserAccount = ListUserAccount.Where(e =>
+            e.UserName == GlobalClass.CurrentUserAccount.UserName).ToList();
         }
         totalItems = ListUserAccount.Count();
         switch (state.SortLabel)

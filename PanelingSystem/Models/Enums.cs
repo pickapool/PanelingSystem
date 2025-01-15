@@ -22,11 +22,14 @@ namespace PanelingSystem.Models
             Instructor = 1,
             Student = 2,
             [Description("Panelist/Adviser")]
-            Panelist_Adviser
+            Panelist_Adviser = 3
         }
         public enum AccountTypeForAdmin
         {
-            Admin = 0
+            Admin = 0,
+            Instructor = 1,
+            [Description("Panelist/Adviser")]
+            Panelist_Adviser = 3
         }
         public enum AccountTypeForInstructor
         {

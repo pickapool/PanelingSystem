@@ -39,22 +39,22 @@
     </div>
     <span>Panels</span>
     <div class="d-flex flex-row justify-content-between align-items-center" style="height: 55px;">
-        @if(Schedule.Panels.Count > 0)
+        @if(Schedule.Panels != null)
         {
             <MudAvatarGroup Max="6" Spacing="2" MaxColor="Color.Primary">
-                @if(Schedule.Panels != null)
+                @if(Schedule.Panels.Count > 0)
                 {
                     @foreach(PanelistModel panel in Schedule.Panels)
                     {
-                        if(panel != null)
+                        if(panel.Panel != null)
                         {
                     
                             <MudTooltip Text="@panel.Panel.Name">
-                            @if (panel.Panel.ProfilePicture.Count() == 0) {
-                                <MudAvatar Image="img/blank_profile.png"/>
-                            } else {
-                                <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(panel.Panel.ProfilePicture)}")' />
-                            }
+                                @if (panel.Panel?.ProfilePicture?.Count() == 0) {
+                                    <MudAvatar Image="img/blank_profile.png"/>
+                                } else {
+                                    <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(panel.Panel.ProfilePicture)}")' />
+                                }
                             </MudTooltip>
                    
                         }
@@ -130,6 +130,11 @@
     }
     private async Task RemoveSchedule()
     {
+        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+        {
+            Extensions.ShowAlert("Your are not allowed to remove a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
+            return;
+        }
         Task t = ScheduleService.DeleteScheduleModel(Schedule.ScheduleId);
         await t;
         if(t.Status == TaskStatus.RanToCompletion)

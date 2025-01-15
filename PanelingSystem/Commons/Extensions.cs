@@ -65,7 +65,7 @@ namespace PanelingSystem.Commons
             // Read the content of the file as a byte array
             using (var memoryStream = new MemoryStream())
             {
-                await file.OpenReadStream().CopyToAsync(memoryStream);
+                await file.OpenReadStream(209715200).CopyToAsync(memoryStream);
                 return memoryStream.ToArray();
             }
         }

@@ -63,7 +63,7 @@
     private async Task<IEnumerable<UserAccountModel>> LoadStudents(string sanc)
     {
         var students = await AccountService.GetAccountsNoStudents();
-        return students.Where(e => e.Name.Contains(sanc, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        return students.Where(e => e.Name.Contains(sanc, StringComparison.InvariantCultureIgnoreCase) && e.AccountType == Enums.AccountType.Panelist_Adviser).ToList();
     }
     private async Task RemoveMember(PanelistModel panel)
     {

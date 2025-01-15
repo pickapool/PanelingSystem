@@ -12,5 +12,6 @@ namespace PanelingSystem.Services.CapstoneFilesServices
         Task<CapstoneFileModel> DeleteCapstoneFileModel(int id);
         bool CapstoneFileModelExists(int id);
         Task<IEnumerable<CapstoneFileModel>> GetCapstoneFilesWithGroup(int GroupId);
+        Task<CapstoneFileModel> GetCapstoneFilesWithGroup2(int GroupId, Enums.Chapter chap);
     }
 }

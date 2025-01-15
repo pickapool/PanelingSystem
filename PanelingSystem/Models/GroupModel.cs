@@ -79,6 +79,9 @@ namespace PanelingSystem.Models
         [NotMapped]
         [JsonIgnore]
         public bool title3Open { get; set; }
-        
+        [NotMapped]
+        [JsonIgnore]
+        public List<PanelistModel> ListOfPanels { get; set; } = new();
+
     }
 }

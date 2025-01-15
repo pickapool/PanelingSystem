@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PanelingSystem.DatabaseContext;
 using PanelingSystem.Models;
 
@@ -31,6 +32,11 @@ namespace PanelingSystem.Services.CapstoneFilesServices
         public async Task<IEnumerable<CapstoneFileModel>> GetCapstoneFilesWithGroup(int GroupId)
         {
             return await _context.CapstoneFiles.Where( e => e.GroupId == GroupId).ToListAsync();
+        }
+        [HttpGet]
+        public async Task<CapstoneFileModel> GetCapstoneFilesWithGroup2(int GroupId, Enums.Chapter chapter)
+        {
+            return await _context.CapstoneFiles.Where(e => e.GroupId == GroupId && e.Chapter == chapter).FirstOrDefaultAsync() ?? new();
         }
 
         // GET: api/CapstoneFileService/5
@@ -83,6 +89,8 @@ namespace PanelingSystem.Services.CapstoneFilesServices
         [HttpPost]
         public async Task<CapstoneFileModel> PostCapstoneFileModel(CapstoneFileModel capstoneFileModel)
         {
+            if (String.IsNullOrEmpty(capstoneFileModel.Title))
+                capstoneFileModel.Title = "No Title";
             _context.CapstoneFiles.Add(capstoneFileModel);
             await _context.SaveChangesAsync();
 
