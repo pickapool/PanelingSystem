@@ -100,6 +100,11 @@
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
                                                         }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title1)"/>
+                                                        }
                                                     }
                                                 </div>
                                             </MudPopover>
@@ -125,6 +130,11 @@
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
                                                         }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title2)"/>
+                                                        }
                                                     }
                                                 </div>
                                             </MudPopover>
@@ -149,6 +159,11 @@
                                                             <div class="d-flex flex-column pa-2 gap-2">
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
+                                                        }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title3)"/>
                                                         }
                                                     }
                                                 </div>
@@ -218,6 +233,11 @@
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
                                                         }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter1)"/>
+                                                        }
                                                     }
                                                 </div>
                                             </MudPopover>
@@ -243,6 +263,11 @@
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
                                                         }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter2)"/>
+                                                        }
                                                     }
                                                 </div>
                                             </MudPopover>
@@ -267,6 +292,11 @@
                                                             <div class="d-flex flex-column pa-2 gap-2">
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
+                                                        }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter3)"/>
                                                         }
                                                     }
                                                 </div>
@@ -327,6 +357,11 @@
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
                                                         }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter4)"/>
+                                                        }
                                                     }
                                                 </div>
                                             </MudPopover>
@@ -351,6 +386,11 @@
                                                             <div class="d-flex flex-column pa-2 gap-2">
                                                                 <CommentComponent Comment="@comment"></CommentComponent>
                                                             </div>
+                                                        }
+                                                        @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                                        {
+                                                            <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
+                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter5)"/>
                                                         }
                                                     }
                                                 </div>
@@ -418,6 +458,7 @@
     private List<GroupModel> ListOfGroups = new();
     DefenseVerdictModel DenfenseVerdict = new();
     GroupModel Group = new();
+    private string comment = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -464,6 +505,22 @@
         DenfenseVerdict = await _verdictService.GetVerdict(group.GroupId, e);
         DenfenseVerdict.Chapter = e;
         StateHasChanged();
+    }
+    private async Task AddComment(GroupModel g, Enums.Chapter chapter)
+    {
+        CommentModel comments = new();
+        comments.Comment = comment;
+        comments.Chapter = chapter;
+        comments.UserId = GlobalClass.CurrentUserAccount.UserId;
+        comments.GroupId = g.GroupId;
+        comments.CommentDate = DateTime.Now;
+        Task<CommentModel> t= CommentService.PostCommentModel(comments);
+        await t;
+        if(t.Status == TaskStatus.RanToCompletion)
+        {
+            g.Comments.Add(t.Result);
+            comment = string.Empty;
+        }
     }
     private void OnStatusChange(Enums.Status? e)
     {
