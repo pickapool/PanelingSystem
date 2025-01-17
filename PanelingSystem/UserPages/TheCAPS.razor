@@ -182,7 +182,7 @@
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Chapter" Value="DenfenseVerdict.Chapter" ValueChanged="(Enums.Chapter e) => OnChapterChange(e, Group)" Margin="Margin.Dense" Label="Title"
                                         Variant="MudBlazor.Variant.Outlined"
-                                                   Disabled="@(context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)">
+                                                   Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))">
                                             @foreach (Enums.Chapter item in Enum.GetValues(typeof(Enums.Chapter)).Cast<Enums.Chapter>().Where(c => c == Enums.Chapter.Title1 || c == Enums.Chapter.Title2 || c == Enums.Chapter.Title3))
                                             {
                                                 <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
@@ -192,12 +192,12 @@
                                     <MudItem xs="8"></MudItem>
                                     <MudItem xs="2">
                                         <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"
-                                                      Disabled="@(context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)"></MudTextField>
+                                                      Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
                                     </MudItem>
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
                                         Variant="MudBlazor.Variant.Outlined"
-                                        Disabled="@(context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)">
+                                        Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))">
                                             @foreach (Enums.Status? item in Enum.GetValues(typeof(Enums.Status)))
                                             {
                                                 <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
@@ -314,7 +314,7 @@
                                     </MudItem>
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
-                                                   Disabled="@(context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)"
+                                                   Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"
                                         Variant="MudBlazor.Variant.Outlined">
                                             @foreach (Enums.Status? item in Enum.GetValues(typeof(Enums.Status)))
                                             {
@@ -325,7 +325,7 @@
                                     <MudItem xs="8"></MudItem>
                                     <MudItem xs="2">
                                         <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"
-                                                      Disabled="@(context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)"></MudTextField>
+                                                      Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
                                     </MudItem>
                                     <MudItem xs="10"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
@@ -409,7 +409,7 @@
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
                                         Variant="MudBlazor.Variant.Outlined"
-                                                   Disabled="@(context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)">
+                                                   Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))">
                                             @foreach (Enums.Status? item in Enum.GetValues(typeof(Enums.Status)))
                                             {
                                                 <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
@@ -419,7 +419,7 @@
                                     <MudItem xs="8"></MudItem>
                                     <MudItem xs="2">
                                         <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"
-                                                      Disabled="@(context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)"></MudTextField>
+                                                      Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
                                     </MudItem>
                                     <MudItem xs="10"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
