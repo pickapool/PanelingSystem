@@ -5,6 +5,8 @@
 @inject IGradeService GradeService
 @inject AppState AppState
 @inject ISnackbar SnackBar
+@inject ICapstoneFileService CapstoneFileService
+@inject IJSRuntime JSRuntime
 
 <div class="d-flex justify-content-center align-items-center">
     @if(IsDataFetch)
@@ -71,29 +73,53 @@
                                 <MudTd>@context.Group.Section</MudTd>
                                 <MudTd>
                                     <MudTextField @bind-Value="@context.TitleGrade" Variant="MudBlazor.Variant.Text" 
+                                    Margin="Margin.Dense"
+                                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Title1)"
                                     Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
                                 </MudTd>
                                 <MudTd>
-                                    <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" 
+                                    <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter1)"
                                     Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
                                 </MudTd>
                                 <MudTd>
-                                    <MudTextField  accesskey=" "@bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" 
+                                    <MudTextField  accesskey=" "@bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter4)"
                                     Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
                                 </MudTd>
                                 <MudTd>
-                                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Info" OnClick="()=> SaveMember(context)" 
+                                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Info" OnClick="()=> SaveMember(context)" Size="Size.Small"
+                                    
                                     Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
                                                 GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)">Update</MudButton>
                                 </MudTd>
                             </RowTemplate>
+                            <ChildRowContent>
+                                <td colspan="8">
+                                    @if(OpenFile)
+                                    {
+                                        if(curentChapter == Enums.Chapter.Title1) {
+                                            <MudButton OnClick="()=> Download(context.Group.Title1)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 1</MudButton>
+                                            <MudButton OnClick="()=> Download(context.Group.Title2)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 2</MudButton>
+                                            <MudButton OnClick="()=> Download(context.Group.Title3)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 3</MudButton>
+                                        } else if(curentChapter == Enums.Chapter.Chapter1) {
+                                            <MudButton OnClick="()=> Download(context.Group.Chapter1)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 1</MudButton>
+                                            <MudButton OnClick="()=> Download(context.Group.Chapter2)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 2</MudButton>
+                                            <MudButton OnClick="()=> Download(context.Group.Chapter3)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 3</MudButton>
+                                        } else if(curentChapter == Enums.Chapter.Chapter4) {
+                                            <MudButton OnClick="()=> Download(context.Group.Chapter4)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 4</MudButton>
+                                            <MudButton OnClick="()=> Download(context.Group.Chapter5)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 5</MudButton>
+                                        }
+                                    }
+                                </td>
+                            </ChildRowContent>
                         </MudTable>
                     </MudItem>
                 </MudGrid>
@@ -126,6 +152,8 @@
     public string[] labels = { "TOTAL AVERAGE",""};
     bool IsDataFetch = false;
     private static double GPA = 0.00;
+    bool OpenFile = false;
+    Enums.Chapter curentChapter;
     protected override async Task OnInitializedAsync()
     {
         await GetGroups();   
@@ -144,9 +172,39 @@
             {
                 ListGroups = ListGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
             }
+            foreach (var item in GroupMembers)
+            {
+                item.Group.Chapter1 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Chapter1);
+                item.Group.Chapter2 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Chapter2);
+                item.Group.Chapter3 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Chapter3);
+                item.Group.Chapter4 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Chapter4);
+                item.Group.Chapter5 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Chapter5);
+                item.Group.Title1 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Title1);
+                item.Group.Title2 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Title2);
+                item.Group.Title3 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Title3);
+            }
             Group = ListGroups.FirstOrDefault() ?? new();
             await SetGroup(Group);
         } 
+    }
+    private async Task Download(CapstoneFileModel CapstoneFile)
+    {
+        if(CapstoneFile.File == null)
+        {
+            Extensions.ShowAlert("No file has been found.", MudBlazor.Variant.Filled, SnackBar, Severity.Error);
+            return;
+        }
+        if(CapstoneFile.File.Length <= 0)
+        {
+            Extensions.ShowAlert("No file has been found.", MudBlazor.Variant.Filled, SnackBar, Severity.Error);
+            return;
+        }
+        await Extensions.Download(CapstoneFile.File, CapstoneFile.FileName, JSRuntime);
+    }
+    private async Task OpenFiles(Enums.Chapter chapter) {
+        if(!OpenFile)
+            OpenFile = !OpenFile;
+        curentChapter = chapter;
     }
     private async Task SetGroup(GroupModel groupModel)
     {
@@ -172,7 +230,7 @@
             {
                 ListGrades = list.Result.ToList();
                 await NotifyChanged();
-                GPA = GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Sum(e => e.TitleGrade + e.PreOralGrade + e.FinalGrade) / GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Count;
+                GPA = Extensions.CalculateGPA(GroupMembers);
                 IsDataFetch = true;
                 data = new double[] { GPA, GPA - 100 };
                 await AppState.NotifyStateChangedAsync();
@@ -193,7 +251,7 @@
                     .Select(g => g.OrderByDescending(g => g.GradeId).FirstOrDefault())
                     .ToList().Count;
         }
-        GPA = GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Sum(e => e.Average) / GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Count;
+        GPA = GPA = Extensions.CalculateGPA(GroupMembers);
         @* GPA = (ListGrades.Where( e => e.GroupId == Group.GroupId).ToList().Sum( e => e.Grade) / GroupMembers.Count) ; *@
         data = new double[] { GPA, GPA - 100 };
         await AppState.NotifyStateChangedAsync();

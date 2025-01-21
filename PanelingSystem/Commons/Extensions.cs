@@ -73,5 +73,15 @@ namespace PanelingSystem.Commons
         {
             await JSRuntime.InvokeVoidAsync("downloadFile", Convert.ToBase64String(file), fileName);
         }
+        public static double CalculateGPA(List<MembersModel> GroupMembers)
+        {
+            double totalAverage = GroupMembers.Sum(member =>
+                (member.TitleGrade + member.PreOralGrade + member.FinalGrade) / 3);
+            
+            int totalMembers = GroupMembers.Count;
+            double GPA = totalMembers > 0 ? totalAverage / totalMembers : 0;
+
+            return GPA;
+        }
     }
 }

@@ -8,6 +8,10 @@ namespace PanelingSystem.Models
     [PrimaryKey("GroupId")]
     public class GroupModel
     {
+        public GroupModel()
+        {
+            GroupThesisTitle = "N/A";
+        }
         public int GroupId { get; set; }
         public string GroupThesisTitle { get; set; } = string.Empty;
         public string Groupname { get; set; } = string.Empty;
