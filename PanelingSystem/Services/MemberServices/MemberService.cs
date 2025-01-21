@@ -32,6 +32,7 @@ namespace PanelingSystem.Services.MemberServices
         {
             var groupMembers = await _context.Members
                 .Include( e => e.Student)
+                .Include(e => e.Group)
                 .Where(member => member.GroupId == groupId)
                 .ToListAsync();
 

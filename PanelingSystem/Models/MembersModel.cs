@@ -11,11 +11,15 @@ namespace PanelingSystem.Models
     {
         public int MemberId { get; set; }
         public int GroupId { get; set; }
+        public GroupModel Group { get; set; }
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel Student { get; set; }
         [NotMapped]
         [JsonIgnore]
         public double Average { get; set; }
+        public double TitleGrade { get; set; }
+        public double PreOralGrade { get; set; }
+        public double FinalGrade { get; set; }
     }
 }

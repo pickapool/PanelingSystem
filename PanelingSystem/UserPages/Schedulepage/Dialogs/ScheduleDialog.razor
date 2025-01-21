@@ -18,14 +18,14 @@
                     }
                 </MudSelect>
             </MudItem>
-            <MudItem xs="12">
+            @* <MudItem xs="12">
                 <MudSelect @bind-Value="Schedule.Status" Margin="Margin.Dense" Label="Status" HelperText="Required*" Placeholder="Role" AdornmentIcon="@Icons.Material.Filled.Workspaces" AdornmentColor="Color.Primary">
                     @foreach (Enums.Status item in Enum.GetValues(typeof(Enums.Status)))
                     {
                         <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
                     }
                 </MudSelect>
-            </MudItem>
+            </MudItem> *@
             <MudItem xs="12">
                 <MudSelect @bind-Value="Schedule.DefenseType" Margin="Margin.Dense" Label="Type" HelperText="Required*" Placeholder="Role" AdornmentIcon="@Icons.Material.Filled.Workspaces" AdornmentColor="Color.Primary">
                     @foreach (Enums.FilePosition item in Enum.GetValues(typeof(Enums.FilePosition)))

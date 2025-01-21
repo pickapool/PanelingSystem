@@ -4,6 +4,7 @@
 @inject IGroupService GroupService
 @inject IGradeService GradeService
 @inject AppState AppState
+@inject ISnackbar SnackBar
 
 <div class="d-flex justify-content-center align-items-center">
     @if(IsDataFetch)
@@ -23,13 +24,77 @@
                                 }
                             </MudSelect>
                     </MudItem>
+                    <MudItem xs="4">
+                         <MudSelect Value="@Section" 
+                            ValueChanged="(GroupModel g)=> SetSection(g)"
+                            Margin="Margin.Dense" Text=""
+                            Label="Select Section" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                                @foreach (var g in ListGroups.ToList().DistinctBy(e => e.Section).ToList())
+                                {
+                                    <MudSelectItem Value="@g">@g.Section</MudSelectItem>
+                                }
+                            </MudSelect>
+                    </MudItem>
                     <MudItem xs="4"></MudItem>
-                    <MudItem xs="4"></MudItem>
-                    <MudItem xs="12">
+                    @* <MudItem xs="12">
                         @foreach(MembersModel member in GroupMembers)
                         {
                             <GradesComponents @bind-Average="@member.Average" Member="member" Grades="ListGrades" GroupId="Group.GroupId" OnGradeChange="()=> NotifyChanged()"/>
                         }
+                    </MudItem> *@
+                    <MudItem xs=12>
+                        <MudTable Items="GroupMembers"  Class="pa-2" Elevation="3" style="width: ;">
+                            <ColGroup>
+                                <col/>
+                                <col/>
+                                <col/>
+                                <col/>
+                                <col style="width: 10%;"/>
+                                <col style="width: 10%;"/>
+                                <col style="width: 10%;"/>
+                                <col style="width: 1%;"/>
+                            </ColGroup>
+                            <HeaderContent>
+                                <MudTh>Student Name</MudTh>
+                                <MudTh>Course</MudTh>
+                                <MudTh>Year</MudTh>
+                                <MudTh>Section</MudTh>
+                                <MudTh Class="text-center">Title Defense Grade</MudTh>
+                                <MudTh Class="text-center">Pre Oral Defense Grade</MudTh>
+                                <MudTh Class="text-center">Final Defense Grade</MudTh>
+                                <MudTh></MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>@context.Student.Name</MudTd>
+                                <MudTd>@context.Group.Program</MudTd>
+                                <MudTd>@context.Group.Year</MudTd>
+                                <MudTd>@context.Group.Section</MudTd>
+                                <MudTd>
+                                    <MudTextField @bind-Value="@context.TitleGrade" Variant="MudBlazor.Variant.Text" 
+                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
+                                </MudTd>
+                                <MudTd>
+                                    <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" 
+                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
+                                </MudTd>
+                                <MudTd>
+                                    <MudTextField  accesskey=" "@bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" 
+                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
+                                </MudTd>
+                                <MudTd>
+                                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Info" OnClick="()=> SaveMember(context)" 
+                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
+                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)">Update</MudButton>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
                     </MudItem>
                 </MudGrid>
             </MudPaper>
@@ -51,6 +116,7 @@
 @code
 {
     private GroupModel Group = new();
+    private GroupModel Section = new();
     private List<MembersModel> GroupMembers = new();
     private List<GroupModel> ListGroups = new();
     private List<GradeModel> ListGrades = new();
@@ -87,6 +153,12 @@
         Group = groupModel;
         await GetMembers();
     }
+    private async Task SetSection(GroupModel groupModel)
+    {
+        Section = groupModel;
+        GroupMembers = GroupMembers.Where(e => e.Group.Section == Section.Section).ToList();
+    }
+    
     private async Task GetMembers()
     {
         Task<IEnumerable<MembersModel>> t =  MemberService.GetMyGroupMembers(Group.GroupId);
@@ -100,7 +172,7 @@
             {
                 ListGrades = list.Result.ToList();
                 await NotifyChanged();
-                GPA = GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Sum(e => e.Average) / GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Count;
+                GPA = GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Sum(e => e.TitleGrade + e.PreOralGrade + e.FinalGrade) / GroupMembers.Where( e => e.GroupId == Group.GroupId).ToList().Count;
                 IsDataFetch = true;
                 data = new double[] { GPA, GPA - 100 };
                 await AppState.NotifyStateChangedAsync();
@@ -126,4 +198,19 @@
         data = new double[] { GPA, GPA - 100 };
         await AppState.NotifyStateChangedAsync();
     }
+    private async Task SaveMember(MembersModel member) 
+    {
+        Task task = MemberService.PutMembersModel(member.MemberId, member);
+        await task;
+        if(task.Status == TaskStatus.RanToCompletion)
+        {
+            Extensions.ShowAlert("Member has been updated.", MudBlazor.Variant.Filled, SnackBar, Severity.Success);
+            await NotifyChanged();
+        }
+    }
 }
+<style>
+    .mud-input > input.mud-input-root, div.mud-input-slot.mud-input-root {
+        text-align: center;
+    }
+</style>
