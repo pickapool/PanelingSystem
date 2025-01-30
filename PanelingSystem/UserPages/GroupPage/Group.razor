@@ -13,7 +13,7 @@
     <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
         @if(!ShowReport)
         {
-            <MudTable ServerData="@(new Func<TableState, Task<TableData<GroupModel>>>(ServerReload))"
+            <MudTable ServerData="@(new Func<TableState, Task<TableData<GroupModel>>>(ServerReload))" RowsPerPage="50"
             Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
                 <ToolBarContent>
                     <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Groups</MudText>

@@ -7,12 +7,12 @@
     <DialogContent>
         <MudGrid Spacing="3"  Class="pa-3 mr-4">
             <MudItem xs="6">
-                 <MudGrid Spacing="3">
+                <MudGrid Spacing="3">
                     <MudItem xs="12" Class="mb-2">
-                    <MudText>Adviser</MudText>
-                    <BlazoredTypeahead Context="acc" @bind-Value="@Adviser" SearchMethod='LoadAccounts' DisableClear placeholder='Adviser'
-                            Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor? false : true)"
-                            Debounce="300">
+                        <MudText>Adviser</MudText>
+                        <BlazoredTypeahead Context="acc" @bind-Value="@Adviser" SearchMethod='LoadAccounts' DisableClear placeholder='Adviser'
+                        Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor? false : true)"
+                        Debounce="300">
                             <SelectedTemplate>
                                 @(String.IsNullOrEmpty(acc.Name) == true ? "-" : acc.Name)
                             </SelectedTemplate>
@@ -37,14 +37,14 @@
                         <MudTextField @bind-Value="@Group.Year" Label="Year" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"/>
                     </MudItem>
 
-                   
+
                 </MudGrid>
             </MudItem>
             <MudItem xs="6">
-                <MudGrid Spacing="3" Class="pa-3 mr-4">
+                <MudGrid Spacing="1" Class="pa-3 mr-4">
                     <MudItem xs="9">
-                        <MudText Typo="Typo.caption">Student</MudText>
-                            <BlazoredTypeahead Context="acc"  @bind-Value="@UserAccount" SearchMethod='LoadStudents' DisableClear placeholder='Student'
+                        
+                        @*  <BlazoredTypeahead Context="acc"  @bind-Value="@UserAccount" SearchMethod='LoadStudents' DisableClear placeholder='Student'
                                 Debounce="300">
                                 <SelectedTemplate>
                                     @(String.IsNullOrEmpty(acc.Name) == true ? "-" : acc.Name)
@@ -52,16 +52,23 @@
                                 <ResultTemplate>
                                 <PersonTemplate Account="acc"/>
                                 </ResultTemplate>
-                            </BlazoredTypeahead>
+                            </BlazoredTypeahead> *@
+                        <MudTextField @bind-Value="@Group.GroupLeader" Label="GroupLeader" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" ReadOnly/>
                     </MudItem>
-                    <MudItem xs="3" Class="d-flex justify-conten-center align-center mt-5">
-                        <MudButton OnClick="()=> Add(UserAccount)" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">ADD</MudButton>
+                    <MudItem xs="3" Class="d-flex justify-content-center align-center">
+                        <MudButton OnClick="()=> AddMembers()" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary">Members</MudButton>
                     </MudItem>
                     <MudItem xs="12">
                         <span>Members</span>
                     </MudItem>
                     <MudItem xs="12">
-                        @if(Group.Members.Count > 0)
+                        @foreach (MembersModel member in Group.Members)
+                        {
+                            <MudTextField @bind-Value="@member.Student.Name" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense" HelperText="Required*"
+                                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Hail" AdornmentColor="Color.Secondary"
+                                          OnAdornmentClick="()=> Group.GroupLeader = member.Student.Name" />
+                        }
+                        @* @if(Group.Members.Count > 0)
                         {
                         <MudStack>
                             @foreach(MembersModel member in Group.Members)
@@ -76,12 +83,12 @@
                             <MudPaper Class="pa-1 d-flex justify-content-center align-center">
                                 <span><b>NO MEMBERS</b></span>
                             </MudPaper>
-                        }
+                        } *@
                     </MudItem>
                 </MudGrid>
             </MudItem>
         </MudGrid>
-       
+
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -94,6 +101,9 @@
     private MembersModel Member = new();
     private UserAccountModel UserAccount = new();
     private UserAccountModel Adviser = new();
+    public string GroupLeader = string.Empty;
+    List<string> GroupMembers = new();
+
     protected override async Task OnParametersSetAsync()
     {
         if(Group == null)
@@ -108,22 +118,23 @@
 
     private async Task Submit()
     {
-        bool isAdd = Group.GroupId == 0? true : false;
-        Group.UserId = Adviser.UserId;
-        Task<GroupModel> t = Group.GroupId == 0 ? GroupService.PostGroupModel(Group) : GroupService.PutGroupModel(Group.GroupId, Group);
-        await t;
-        if(t.Status == TaskStatus.RanToCompletion)
-        {
-            if(isAdd)
-            {
-                MembersModel member = new();
-                member.GroupId = t.Result.GroupId;
-                member.UserId = GlobalClass.CurrentUserAccount.UserId;
-                await MemberService.PostMembersModel(member);
-            }
-            MudDialog.Close(DialogResult.Ok(true));
-            Extensions.ShowAlert("Group successfully save", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
-        }
+        await CreateAccountsForNewStudents();
+        // bool isAdd = Group.GroupId == 0? true : false;
+        // Group.UserId = Adviser.UserId;
+        // Task<GroupModel> t = Group.GroupId == 0 ? GroupService.PostGroupModel(Group) : GroupService.PutGroupModel(Group.GroupId, Group);
+        // await t;
+        // if(t.Status == TaskStatus.RanToCompletion)
+        // {
+        //     if(isAdd)
+        //     {
+        //         MembersModel member = new();
+        //         member.GroupId = t.Result.GroupId;
+        //         member.UserId = GlobalClass.CurrentUserAccount.UserId;
+        //         await MemberService.PostMembersModel(member);
+        //     }
+        //     MudDialog.Close(DialogResult.Ok(true));
+        //     Extensions.ShowAlert("Group successfully save", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
+        // }
     }
     void Cancel() => MudDialog.Cancel();
     private async Task<IEnumerable<UserAccountModel>> LoadStudents(string sanc)
@@ -150,6 +161,46 @@
         }
         StateHasChanged();
     }
+    private void AddMembers() {
+        MembersModel m = new();
+        m.Student = new();
+        Group.Members.Add(m);
+        StateHasChanged();
+    }
+
+    private async Task CreateAccountsForNewStudents() {
+        List<MembersModel> currentMembers = Extensions.Clone(Group.Members);
+        Task<GroupModel> t = Group.GroupId == 0 ? GroupService.PostGroupModel(Group) : GroupService.PutGroupModel(Group.GroupId, Group);
+        await t;
+        if (t.Status == TaskStatus.RanToCompletion)
+        {
+            Group = t.Result;
+            foreach (MembersModel member in currentMembers)
+            {
+                UserAccountModel user = new();
+                user.Name = member.Student.Name;
+                user.Email = member.Student.Email;
+                user.AccountType = Enums.AccountType.Student;
+                Task<UserAccountModel> t1 = user.UserId == 0 ? AccountService.PostUserAccountModel(user) : AccountService.PutUserAccountModel(user.UserId, user);
+                await t1;
+                // if (t1.Status == TaskStatus.RanToCompletion)
+                // {
+                //     member.UserId = user.UserId;
+                //     member.GroupId = Group.GroupId;
+                //     member.Student = t1.Result;
+                //     Task t2 = MemberService.PostMembersModel(member);
+                //     await t2;
+                //     if (t2.Status == TaskStatus.RanToCompletion)
+                //     {
+
+                //     }
+                // }
+            }
+            Extensions.ShowAlert("Group has been added", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
     private async Task Add(UserAccountModel user)
     {
         @* if(Group.Members.Any(( e => e.UserId == user.UserId)))

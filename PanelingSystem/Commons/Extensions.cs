@@ -48,8 +48,13 @@ namespace PanelingSystem.Commons
         }
         public static T Clone<T>(T source)
         {
-            var serialized = JsonConvert.SerializeObject(source);
-            return JsonConvert.DeserializeObject<T>(serialized);
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            var serialized = JsonConvert.SerializeObject(source, settings);
+            return JsonConvert.DeserializeObject<T>(serialized, settings);
         }
 
         public static void NewtonsoftLog<T>(T t)

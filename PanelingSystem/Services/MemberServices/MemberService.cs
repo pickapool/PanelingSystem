@@ -90,6 +90,10 @@ namespace PanelingSystem.Services.MemberServices
         public async Task<MembersModel> PostMembersModel(MembersModel membersModel)
         {
             _context.Members.Add(membersModel);
+            if(membersModel.Student != null)
+            {
+                _context.Entry(membersModel.Student).State = EntityState.Unchanged;
+            }
             await _context.SaveChangesAsync();
 
             return membersModel;

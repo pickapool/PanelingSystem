@@ -12,6 +12,7 @@ namespace PanelingSystem.Models
         {
             GroupThesisTitle = "N/A";
         }
+        public string GroupLeader { get; set; } = string.Empty;
         public int GroupId { get; set; }
         public string GroupThesisTitle { get; set; } = string.Empty;
         public string Groupname { get; set; } = string.Empty;
