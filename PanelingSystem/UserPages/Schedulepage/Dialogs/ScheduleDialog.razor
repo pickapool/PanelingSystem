@@ -60,7 +60,11 @@
     TimeSpan? time2 = new TimeSpan(00, 02, 00);
     IEnumerable<UserAccountModel> Accounts;
     IEnumerable<GroupModel> GroupsWithMembers;
+    IEnumerable<ScheduleModel> list;
 
+    protected override async Task OnInitializedAsync() {
+        list = await ScheduleService.GetSchedules();
+    }
     protected override async Task OnParametersSetAsync()
     {
         if(Schedule.ScheduleId == 0 )
@@ -107,6 +111,28 @@
     }
     private async Task Save()
     {    
+
+        if (Schedule.DefenseType == Enums.FilePosition.PreOral) {
+            if (!list.ToList().Any(e => e.DefenseType == Enums.FilePosition.Title && Group.GroupId == e.Group.GroupId)) {
+                Extensions.ShowAlert("Group does not have title defense.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+                return;
+            }
+        }
+        else if (Schedule.DefenseType == Enums.FilePosition.Finals)
+        {
+            if (!list.ToList().Any(e => e.DefenseType == Enums.FilePosition.Title && Group.GroupId == e.Group.GroupId))
+            {
+                Extensions.ShowAlert("Group does not have Title defense.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+                return;
+            }
+            if (!list.ToList().Any(e => e.DefenseType == Enums.FilePosition.PreOral && Group.GroupId == e.Group.GroupId))
+            {
+                Extensions.ShowAlert("Group does not have Pre Oral defense.", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+                return;
+            }
+        }
+
+
         DateTime newStart = new DateTime(Schedule.Start.Value.Year, Schedule.Start.Value.Month, Schedule.Start.Value.Day, time1.Value.Hours,time1.Value.Minutes,0);
         DateTime newEnd = new DateTime(Schedule.End.Value.Year, Schedule.End.Value.Month, Schedule.Start.Value.Day, time2.Value.Hours,time2.Value.Minutes,0);
 
