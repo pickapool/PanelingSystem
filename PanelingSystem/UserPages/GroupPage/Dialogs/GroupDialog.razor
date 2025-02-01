@@ -163,7 +163,10 @@
     }
     private void AddMembers() {
         MembersModel m = new();
-        m.Student = new();
+        UserAccountModel account = new ();
+        account.AccountType = Enums.AccountType.Student;
+        m.Student = account;
+        m.GroupId = Group.GroupId;
         Group.Members.Add(m);
         StateHasChanged();
     }
@@ -175,27 +178,27 @@
         if (t.Status == TaskStatus.RanToCompletion)
         {
             Group = t.Result;
-            foreach (MembersModel member in currentMembers)
-            {
-                UserAccountModel user = new();
-                user.Name = member.Student.Name;
-                user.Email = member.Student.Email;
-                user.AccountType = Enums.AccountType.Student;
-                Task<UserAccountModel> t1 = user.UserId == 0 ? AccountService.PostUserAccountModel(user) : AccountService.PutUserAccountModel(user.UserId, user);
-                await t1;
-                // if (t1.Status == TaskStatus.RanToCompletion)
-                // {
-                //     member.UserId = user.UserId;
-                //     member.GroupId = Group.GroupId;
-                //     member.Student = t1.Result;
-                //     Task t2 = MemberService.PostMembersModel(member);
-                //     await t2;
-                //     if (t2.Status == TaskStatus.RanToCompletion)
-                //     {
+            // foreach (MembersModel member in currentMembers)
+            // {
+            //     UserAccountModel user = new();
+            //     user.Name = member.Student.Name;
+            //     user.Email = member.Student.Email;
+            //     user.AccountType = Enums.AccountType.Student;
+            //     Task<UserAccountModel> t1 = user.UserId == 0 ? AccountService.PostUserAccountModel(user) : AccountService.PutUserAccountModel(user.UserId, user);
+            //     await t1;
+            //     // if (t1.Status == TaskStatus.RanToCompletion)
+            //     // {
+            //     //     member.UserId = user.UserId;
+            //     //     member.GroupId = Group.GroupId;
+            //     //     member.Student = t1.Result;
+            //     //     Task t2 = MemberService.PostMembersModel(member);
+            //     //     await t2;
+            //     //     if (t2.Status == TaskStatus.RanToCompletion)
+            //     //     {
 
-                //     }
-                // }
-            }
+            //     //     }
+            //     // }
+            // }
             Extensions.ShowAlert("Group has been added", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
             MudDialog.Close(DialogResult.Ok(true));
         }

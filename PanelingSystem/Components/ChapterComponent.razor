@@ -41,13 +41,13 @@
     [Parameter] public string Title { get; set; }
     [Parameter] public string DateFile { get; set; }
     [Parameter] public Enums.Chapter Chapter { get; set;}
-    [Parameter] public int GroupId { get; set; }
+    [Parameter] public GroupModel Group { get; set; }
     [Parameter] public List<CapstoneFileModel> ListChapters { get; set; }
     [Parameter] public EventCallback OnClick { get; set; }
     private CapstoneFileModel CapstoneFile = new();
     protected override void OnParametersSet()
     {
-        CapstoneFile = ListChapters.Where( e => e.Chapter == Chapter && e.GroupId == GroupId).FirstOrDefault()?? new();
+        CapstoneFile = ListChapters.Where(e => e.Chapter == Chapter && e.GroupId == Group.GroupId).FirstOrDefault() ?? new();
     }
     private async Task Click()
     {
@@ -55,10 +55,22 @@
     }
     private async Task UploadFiles(IBrowserFile file)
     {
+        if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student) {
+            if (Group.Members.Any(e => (e.TitleGrade <= 0) && (Chapter == Enums.Chapter.Chapter1 || Chapter == Enums.Chapter.Chapter2 || Chapter == Enums.Chapter.Chapter3)))
+            {
+                Extensions.ShowAlert("Upload is restricted, grade not found in Title Defense", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+                return;
+            }
+            if (Group.Members.Any(e => (e.PreOralGrade <= 0) && (Chapter == Enums.Chapter.Chapter4 || Chapter == Enums.Chapter.Chapter5)))
+            {
+                Extensions.ShowAlert("Upload is restricted, grade not found in Pre Oral Defense", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+                return;
+            }
+        }
         CapstoneFile.File = await Extensions.ToByteArrayAsync(file);
         CapstoneFile.Chapter = Chapter;
         CapstoneFile.FileName = file.Name;
-        CapstoneFile.GroupId = GroupId;
+        CapstoneFile.GroupId = Group.GroupId;
         CapstoneFile.DateAdded = DateTime.Now;
         Task<CapstoneFileModel> t = CapstoneFile.CapstoneFileId == 0 ? CapstoneFileService.PostCapstoneFileModel(CapstoneFile) : CapstoneFileService.PutCapstoneFileModel(CapstoneFile.CapstoneFileId, CapstoneFile);
         await t;
@@ -71,7 +83,7 @@
     }
     private async Task Save() {
         CapstoneFile.Chapter = Chapter;
-        CapstoneFile.GroupId = GroupId;
+        CapstoneFile.GroupId = Group.GroupId;
         CapstoneFile.DateAdded = DateTime.Now;
         Task<CapstoneFileModel> t = CapstoneFile.CapstoneFileId == 0 ? CapstoneFileService.PostCapstoneFileModel(CapstoneFile) : CapstoneFileService.PutCapstoneFileModel(CapstoneFile.CapstoneFileId, CapstoneFile);
         await t;
