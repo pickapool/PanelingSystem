@@ -18,6 +18,13 @@
             <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Groups</MudText>
             <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+            {
+                <div class="d-flex gap-2 px-2">
+                    <MudButton OnClick="()=> Filter(true)" Variant="MudBlazor.Variant.Filled">Panelist</MudButton>
+                    <MudButton OnClick="()=> Filter(false)" Variant="MudBlazor.Variant.Filled">Adviser</MudButton>
+                </div>
+            }
             <MudSpacer />
             <MudButton OnClick="Toggle" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.FilterList">FILTER</MudButton>
             <MudPopover Open="@_isOpen" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Fixed="true" Class="px-4 pt-4" style="width: 400px;">
@@ -634,6 +641,15 @@
             Loading = false;
             Toggle();
             StateHasChanged();
+        }
+    }
+    private async Task Filter(bool isPanelist)
+    {
+        await OnInitializedAsync();
+        if(isPanelist) {
+            ListOfGroups = ListOfGroups.Where(e => e.ListOfPanels.Any(b => b.Panel.UserId == GlobalClass.CurrentUserAccount.UserId)).ToList();
+        } else {
+            ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
         }
     }
 }

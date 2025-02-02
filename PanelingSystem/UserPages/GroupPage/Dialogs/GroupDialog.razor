@@ -172,6 +172,8 @@
     }
 
     private async Task CreateAccountsForNewStudents() {
+        if(Adviser.UserId > 0)
+            Group.UserId = Adviser.UserId;
         List<MembersModel> currentMembers = Extensions.Clone(Group.Members);
         Task<GroupModel> t = Group.GroupId == 0 ? GroupService.PostGroupModel(Group) : GroupService.PutGroupModel(Group.GroupId, Group);
         await t;
