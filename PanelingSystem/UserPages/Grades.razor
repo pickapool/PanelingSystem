@@ -75,30 +75,22 @@
                                     <MudTextField @bind-Value="@context.TitleGrade" Variant="MudBlazor.Variant.Text" 
                                     Margin="Margin.Dense"
                                     Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Title1)"
-                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
+                                    Disabled="@( 
+                                                GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
                                 </MudTd>
                                 <MudTd>
                                     <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
                                     Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter1)"
-                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
+                                                      Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
                                 </MudTd>
                                 <MudTd>
-                                    <MudTextField  accesskey=" "@bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                    <MudTextField @bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
                                     Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter4)"
-                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)"/>
+                                                      Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
                                 </MudTd>
                                 <MudTd>
                                     <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Info" OnClick="()=> SaveMember(context)" Size="Size.Small"
-                                    
-                                    Disabled="@( GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser || 
-                                                GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)">Update</MudButton>
+                                                   Disabled="@( GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)">Update</MudButton>
                                 </MudTd>
                             </RowTemplate>
                             <ChildRowContent>
