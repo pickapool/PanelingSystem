@@ -12,7 +12,7 @@
     @if(IsDataFetch)
     {
     <MudGrid Spacing="2">
-        <MudItem xs="8">
+        <MudItem xs="9">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
                 <MudGrid Spacing="2">
                     <MudItem xs="4">
@@ -45,15 +45,15 @@
                         }
                     </MudItem> *@
                     <MudItem xs=12>
-                        <MudTable Items="GroupMembers"  Class="pa-2" Elevation="3" style="width: ;">
+                        <MudTable Items="GroupMembers"  Class="pa-2 overflow-auto" Elevation="3" Height="calc(100vh - 230px)" Width="100%">
                             <ColGroup>
+                                <col style="width: 20%;"/>
                                 <col/>
                                 <col/>
                                 <col/>
-                                <col/>
-                                <col style="width: 10%;"/>
-                                <col style="width: 10%;"/>
-                                <col style="width: 10%;"/>
+                                <col  />
+                                <col />
+                                <col />
                                 <col style="width: 1%;"/>
                             </ColGroup>
                             <HeaderContent>
@@ -73,6 +73,7 @@
                                 <MudTd>@context.Group.Section</MudTd>
                                 <MudTd>
                                     <MudTextField @bind-Value="@context.TitleGrade" Variant="MudBlazor.Variant.Text" 
+                                    style="width: 100px;"
                                     Margin="Margin.Dense"
                                     Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Title1)"
                                     Disabled="@( 
@@ -80,11 +81,13 @@
                                 </MudTd>
                                 <MudTd>
                                     <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                    style="width: 100px;"
                                     Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter1)"
                                                       Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
                                 </MudTd>
                                 <MudTd>
                                     <MudTextField @bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                    style="width: 100px;"
                                     Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter4)"
                                                       Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
                                 </MudTd>
@@ -117,11 +120,11 @@
                 </MudGrid>
             </MudPaper>
         </MudItem>
-        <MudItem xs="4">
+        <MudItem xs="3">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
                 <div class="d-flex flex-column align-items-center">
                     <MudText Typo="Typo.h2">GPA @((double.IsNaN(GPA) == true ? 0 : GPA).ToString("N2")) %</MudText>
-                    <MudChart ChartType="ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="Index" InputData="@data" InputLabels="@labels"></MudChart>
+                        <MudChart ChartType="ChartType.Donut" Width="250px" Height="250px" @bind-SelectedIndex="Index" InputData="@data" InputLabels="@labels"></MudChart>
                 </div>
             </MudPaper>
         </MudItem>
