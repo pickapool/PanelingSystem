@@ -1,17 +1,29 @@
 <div class="d-flex flex-row">
     @if (Account == null)
     {
-        <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Medium' />
+        <MudAvatar>
+             <MudImage  Class='mt-4' Src="img/blank_profile.png" Size='Size.Medium' />
+        </MudAvatar>
+       
     } else {
         if(Account.ProfilePicture != null)
         {
             if (Account.ProfilePicture.Count() == 0) {
-                <MudAvatar Class='mr-2' Image="img/blank_profile.png" Size='Size.Medium' />
+                <MudAvatar>
+                     <MudImage  Class='mr-2' Src="img/blank_profile.png" Size='Size.Medium' />
+                </MudAvatar>
+               
             } else {
-                <MudAvatar Class='mr-2' Image='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+                <MudAvatar>
+                    <MudImage  Class='mr-2' Src='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+                </MudAvatar>
+                
             }
         } else {
-            <MudAvatar Class='' Image="img/blank_profile.png" Size='Size.Medium' />
+            <MudAvatar>
+                <MudImage Class='' Src="img/blank_profile.png" Size='Size.Medium' />
+            </MudAvatar>
+            
         }
     }
     <div class="d-flex flex-column">

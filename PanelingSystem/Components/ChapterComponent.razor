@@ -22,14 +22,14 @@
         <MudIconButton OnClick="()=> Click()" Class="mt-2" Icon="@Icons.Material.Filled.Comment" Size="Size.Medium"/>
         <MudIconButton OnClick="()=> Download()" Class="mt-2" Icon="@Icons.Material.Filled.FileDownload" Size="Size.Medium"/>
         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
-        <ButtonTemplate>
+         <ActivatorContent>
             <MudButton HtmlTag="label"
                     Variant="MudBlazor.Variant.Text"
                     Size="Size.Large"
                     Color="Color.Primary"
                     StartIcon="@Icons.Material.Filled.CloudUpload">
             </MudButton>
-    </ButtonTemplate>
+    </ActivatorContent>
 </MudFileUpload>
     </div>
      <MudText Typo="Typo.body1">@(CapstoneFile.DateAdded == null || CapstoneFile.File.Length <= 0 ? "No File" : CapstoneFile.DateAdded?.ToString("MMMM dd, yyyy hh:mm tt"))</MudText>

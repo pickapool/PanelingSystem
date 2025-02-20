@@ -26,12 +26,21 @@
                 @if(member.Student.ProfilePicture != null)
                 {
                     if (member.Student.ProfilePicture.Count() == 0) {
-                        <MudAvatar Image="img/blank_profile.png" />
+                        <MudAvatar>
+                            <MudImage Src="img/blank_profile.png" />
+                        </MudAvatar>
+                        
                     } else {
-                        <MudAvatar Image='@($"data:image/png;base64, {Convert.ToBase64String(member.Student.ProfilePicture)}")' />
+                        <MudAvatar>
+                            <MudImage Src='@($"data:image/png;base64, {Convert.ToBase64String(member.Student.ProfilePicture)}")' />
+                        </MudAvatar>
+                        
                     }
                 } else {
-                    <MudAvatar Class='mt-4' Image="img/blank_profile.png" Size='Size.Large' />
+                    <MudAvatar>
+                            <MudImage Class='mt-4' Src="img/blank_profile.png" Size='Size.Large' />
+                    </MudAvatar>
+                    
                 }
             </MudTooltip>
             }
@@ -51,9 +60,15 @@
                     
                             <MudTooltip Text="@panel.Panel.Name">
                                 @if (panel.Panel?.ProfilePicture?.Count() == 0) {
-                                    <MudAvatar Image="img/blank_profile.png"/>
+                                    <MudAvatar>
+                                        <MudImage Src="img/blank_profile.png"/>
+                                    </MudAvatar>
+                                    
                                 } else {
-                                    <MudAvatar Class='mr-4' Image='@($"data:image/png;base64, {Convert.ToBase64String(panel.Panel.ProfilePicture)}")' />
+                                    <MudAvatar>
+                                        <MudImage Class='mr-4' Src='@($"data:image/png;base64, {Convert.ToBase64String(panel.Panel.ProfilePicture)}")' />
+                                    </MudAvatar>
+                                    
                                 }
                             </MudTooltip>
                    
