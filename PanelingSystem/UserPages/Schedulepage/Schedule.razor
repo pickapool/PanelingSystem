@@ -84,7 +84,7 @@
     IList<ScheduleModel> Schedules;
     List<ScheduleModel> SelectedSchedules = new();
     List<GroupModel> Groups = new();
-    private bool isDataFetch = false;
+    private bool isDataFetch = true;
     protected override async Task OnInitializedAsync()
     {
         IsReload = false;
@@ -92,7 +92,7 @@
     }
     private async Task GetSchedules()
     {
-        isDataFetch = false;
+        //isDataFetch = false;
         Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules();
         await task;
         if(task.Status == TaskStatus.RanToCompletion)
@@ -135,11 +135,12 @@
                                 {
                                     if (!sched.Panels.Any(e => e.Panel.UserId == panel.UserId))
                                         sched.Panels.Add(panel);
+                                    StateHasChanged();
                                 }
                             }
                         }
                     }
-                    isDataFetch = true;
+                    //isDataFetch = true;
                     StateHasChanged();
                 }
             }
