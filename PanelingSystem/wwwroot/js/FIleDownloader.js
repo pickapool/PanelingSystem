@@ -20,3 +20,19 @@ window.downloadFile = function (fileContent, fileName) {
     // Clean up
     document.body.removeChild(link);
 };
+
+window.getBlobURL = function (fileContent, fileName) {
+    // Convert base64 string to blob
+    var byteCharacters = atob(fileContent);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray]);
+
+    // Create Blob URL
+    var blobUrl = window.URL.createObjectURL(blob);
+    // Return the Blob URL
+    return blobUrl;
+};
