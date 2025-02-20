@@ -9,8 +9,8 @@
    <hr>
     <div class="d-flex flex-row justify-content-between">
         <div class="d-flex flex-row">
-            <MudChip Color="Color.Info" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.DefenseType)</MudChip>
-            <MudChip Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip>
+            <MudChip T="string" Color="Color.Info" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.DefenseType)</MudChip>
+            <MudChip T="string" Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip>
         </div>
         <div>
             <MudIconButton OnClick="RemoveSchedule" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"/>
@@ -99,12 +99,12 @@
             Extensions.ShowAlert("Your are not allowed to add a panel in a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
             return;
         }
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,BackdropClick = true };
         var param = new DialogParameters();
         param.Add("GroupId", groupId);
         param.Add("Schedule", Schedule);
         var dialog =  await DialogService.Show<AddPanelsDialogs>("Add Panels", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {
             await OnRemovePanel.InvokeAsync();
         }
@@ -116,13 +116,13 @@
             Extensions.ShowAlert("Your are not allowed to view a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
             return;
         }
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,BackdropClick = true };
         var param = new DialogParameters();
         param.Add("Schedule", schedule);
         param.Add("DateStart", schedule.Start);
         param.Add("DateEnd", schedule.End);
         var dialog =  await DialogService.Show<ScheduleDialog>(schedule.GroupId == 0 ? "Add Schedule" : "Edit Schedule", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {   
             await OnRemovePanel.InvokeAsync();
             Extensions.ShowAlert("Schedule has been saved." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);

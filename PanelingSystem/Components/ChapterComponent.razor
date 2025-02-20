@@ -13,7 +13,7 @@
             }
         </MudText>
         @if(Chapter == Enums.Chapter.Title1 || Chapter == Enums.Chapter.Title2 || Chapter == Enums.Chapter.Title3) {
-            <MudTextField Typo="Typo.Subtitle" style="margin-bottom: 20px;" @bind-Value="@CapstoneFile.Title" Margin="Margin.Dense"
+            <MudTextField Typo="Typo.subtitle1" style="margin-bottom: 20px;" @bind-Value="@CapstoneFile.Title" Margin="Margin.Dense"
             AdornmentColor="Color.Primary"
             Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Save" OnAdornmentClick="Save"
             ></MudTextField>
@@ -27,8 +27,7 @@
                     Variant="MudBlazor.Variant.Text"
                     Size="Size.Large"
                     Color="Color.Primary"
-                    StartIcon="@Icons.Material.Filled.CloudUpload"
-                    for="@context.Id">
+                    StartIcon="@Icons.Material.Filled.CloudUpload">
             </MudButton>
     </ButtonTemplate>
 </MudFileUpload>

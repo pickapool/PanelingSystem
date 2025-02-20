@@ -5,15 +5,15 @@
 
 <div class="d-flex justify-content-center align-items-center">
     <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<UserAccountModel>>>(ServerReload))"
-                Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
+        <MudTable Items="ListUserAccount"
+        Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
             <ToolBarContent>
                 <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Accounts</MudText>
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 <MudSpacer />
                 <MudButton OnClick="()=> UserDialog(new UserAccountModel())" StartIcon="@Icons.Material.Filled.Add" Variant="MudBlazor.Variant.Filled" Size="Size.Small"  Color="Color.Primary"
-                           Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)">NEW</MudButton>
+                Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)">NEW</MudButton>
             </ToolBarContent>
             <ColGroup>
                 <col />
@@ -40,25 +40,25 @@
                 <MudTd DataLabel="role">@Extensions.FormatPassword(context.Password)</MudTd>
                 <MudTd DataLabel="designation">@context.Designation</MudTd>
                 <MudTd DataLabel="role">
-                    <MudChip Size="Size.Small">@Extensions.GetEnumDescription(context.AccountType)</MudChip>
+                    <MudChip T="string" Size="Size.Small">@Extensions.GetEnumDescription(context.AccountType)</MudChip>
                 </MudTd>
                 <MudTd Class='text-center pa-2'>
-                 <MudMenu Icon='@Icons.Material.Filled.MoreVert' AnchorOrigin='Origin.TopLeft'
-                    TransformOrigin='Origin.TopRight' Dense='true' Size='Size.Small'>
-                         <MudMenuItem OnClick="()=> UserDialog(context)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.Edit' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Edit</MudText>
-                            </div>
-                        </MudMenuItem> 
-                        <MudMenuItem OnClick="()=> RemoveAccount(context)" Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)">
-                            <div class='d-flex align-center gap-2 '>
-                                <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
-                                <MudText Typo='Typo.body2'>Remove</MudText>
-                            </div>
-                        </MudMenuItem>
-                </MudMenu>
-            </MudTd>
+                    <MudMenu Icon='@Icons.Material.Filled.MoreVert' AnchorOrigin='Origin.TopLeft'
+                        TransformOrigin='Origin.TopRight' Dense='true' Size='Size.Small'>
+                            <MudMenuItem OnClick="()=> UserDialog(context)">
+                                <div class='d-flex align-center gap-2 '>
+                                    <MudIcon Icon='@Icons.Material.Filled.Edit' Size='Size.Small' />
+                                    <MudText Typo='Typo.body2'>Edit</MudText>
+                                </div>
+                            </MudMenuItem> 
+                            <MudMenuItem OnClick="()=> RemoveAccount(context)" Disabled="@(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)">
+                                <div class='d-flex align-center gap-2 '>
+                                    <MudIcon Icon='@Icons.Material.Filled.Delete' Size='Size.Small' />
+                                    <MudText Typo='Typo.body2'>Remove</MudText>
+                                </div>
+                            </MudMenuItem>
+                    </MudMenu>
+                </MudTd>
             </RowTemplate>
             <NoRecordsContent>
                 <MudText>No matching records found</MudText>
@@ -81,6 +81,33 @@
     private string searchString = null;
     private bool Loading = true;
     private IEnumerable<UserAccountModel> ListUserAccount = null;
+    protected override async Task OnInitializedAsync()
+    {
+        ListUserAccount = await AccountService.GetAccounts();
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Admin)
+        {
+            ListUserAccount = ListUserAccount.Where(e =>
+            e.AccountType == Enums.AccountType.Panelist_Adviser ||
+            e.AccountType == Enums.AccountType.Panelist_Adviser ||
+            e.AccountType == Enums.AccountType.Instructor
+            ).ToList();
+        }
+        else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Instructor)
+        {
+            ListUserAccount = ListUserAccount.Where(e =>
+            e.AccountType == Enums.AccountType.Student
+         ).ToList();
+
+        }
+        else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+        {
+            ListUserAccount = ListUserAccount.Where(e =>
+            e.UserName == GlobalClass.CurrentUserAccount.UserName).ToList();
+        }
+        totalItems = ListUserAccount.Count();
+        Loading = false;
+        StateHasChanged();
+    }
     private async Task<TableData<UserAccountModel>> ServerReload(TableState state)
     {
         Task<IEnumerable<UserAccountModel>> data = AccountService.GetAccounts();
@@ -154,11 +181,11 @@
     }
     private async Task UserDialog(UserAccountModel account)
     {
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = true };
         var param = new DialogParameters();
         param.Add("Account", account);
         var dialog =  await DialogService.Show<CreateAccountDialog>(account.UserId == 0 ? "Add Account" : "Edit Account", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {
             await table.ReloadServerData();
         }

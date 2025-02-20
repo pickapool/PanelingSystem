@@ -50,7 +50,7 @@
 
 @code
 {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; }
     [Parameter] public ScheduleModel Schedule { get; set; }
     [Parameter] public DateTime? DateStart { get; set; }
     [Parameter] public DateTime? DateEnd { get; set; }

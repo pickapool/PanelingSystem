@@ -36,7 +36,6 @@
                     Class="relative d-flex justify-end gap-4 z-30">
             <MudButton HtmlTag="label"
                        Color="Color.Primary"
-                       for="@context.Id"
                        Variant="MudBlazor.Variant.Filled">
                 Browse
             </MudButton>
@@ -49,7 +48,7 @@
     @foreach(var file in FileModels)
     {
         <div class="d-flex flex-row justify-content-between align-items-center">
-        <MudChip Label="true" Color="Color.Default" OnClose="()=> Remove(file)">@file.FileName</MudChip>
+        <MudChip T="string" Label="true" Color="Color.Default" OnClose="()=> Remove(file)">@file.FileName</MudChip>
         <MudIconButton OnClick="()=> Extensions.Download(file.File, file.FileName, JSRuntime)" style="width: 40px;" Icon="@Icons.Material.Filled.Download"></MudIconButton>
         </div>
     }

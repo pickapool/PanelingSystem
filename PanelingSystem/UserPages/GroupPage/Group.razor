@@ -13,7 +13,7 @@
     <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
         @if(!ShowReport)
         {
-            <MudTable ServerData="@(new Func<TableState, Task<TableData<GroupModel>>>(ServerReload))" RowsPerPage="50"
+            <MudTable Items="ListOfGroups"
             Dense="true" Hover="true" @ref="table" Height="70vh" Loading="Loading">
                 <ToolBarContent>
                     <MudText Class="mr-2" Typo="Typo.h6" Dense="Margin.Dense" Immediate="true">Groups</MudText>
@@ -117,6 +117,18 @@
     private string PDF { get; set; } = string.Empty;
     List<ScheduleModel> Schedules = new();
     List<GroupModel> Groups = new();
+    protected override async Task OnInitializedAsync()
+    {
+        ListOfGroups = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ?
+            await GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : await GroupServices.GetGroups();
+        if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+        {
+            ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+        }
+        totalItems = ListOfGroups.Count();
+        Loading = false;
+        StateHasChanged();
+    }
     private async Task<TableData<GroupModel>> ServerReload(TableState state)
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
@@ -245,11 +257,11 @@
     }
     private async Task OpenGroupDialog(GroupModel group)
     {
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true,BackdropClick = true };
         var param = new DialogParameters();
         param.Add("Group", group);
         var dialog =  await DialogService.Show<GroupDialog>(group.GroupId == 0 ? "Add Group" : "Edit Group", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {
             await table.ReloadServerData();
         }
@@ -265,11 +277,11 @@
     }
     private async Task AddMembers(GroupModel group)
     {
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,BackdropClick = true };
         var param = new DialogParameters();
         param.Add("Group", group);
         var dialog =  await DialogService.Show<AddMembersDialog>("Add Members", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {
             await table.ReloadServerData();
         }

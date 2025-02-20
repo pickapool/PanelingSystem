@@ -36,7 +36,7 @@
                    
                         @foreach(MembersModel member in context.Members)
                         {
-                            <MudChip Size="Size.Small">@member.Student.Name</MudChip>
+                            <MudChip T="string" Size="Size.Small">@member.Student.Name</MudChip>
                         }
                    
                 </MudTd>

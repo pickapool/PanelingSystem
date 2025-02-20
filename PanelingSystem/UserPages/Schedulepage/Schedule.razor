@@ -233,13 +233,13 @@
             Extensions.ShowAlert("Your are not allowed to add a schedule." , MudBlazor.Variant.Filled , Snackbar , Severity.Success);
             return;
         }
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,BackdropClick = true };
         var param = new DialogParameters();
         param.Add("Schedule", schedule);
         param.Add("DateStart", SelectedDateStart);
         param.Add("DateEnd", SelectedDateEnd);
         var dialog =  await DialogService.Show<ScheduleDialog>(schedule.GroupId == 0 ? "Add Schedule" : "Edit Schedule", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {
             await GetSchedules();
             ToggleRightDrawer();

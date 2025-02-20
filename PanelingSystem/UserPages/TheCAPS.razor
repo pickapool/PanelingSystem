@@ -35,15 +35,15 @@
                     <MudItem Class="mb-2" xs="12">
                         <MudDivider/>
                     </MudItem>
-                    <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsProgram"></MudCheckBox></MudItem>
+                    <MudItem xs=2><MudCheckBox @bind-Value="parameter.IsProgram"></MudCheckBox></MudItem>
                     <MudItem xs=10>
                         <MudTextField @bind-Value="parameter.ProgramName" Label="Program" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsProgram"/>
                     </MudItem>
-                    <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsSection"></MudCheckBox></MudItem>
+                    <MudItem xs=2><MudCheckBox @bind-Value="parameter.IsSection"></MudCheckBox></MudItem>
                     <MudItem xs=10>
                         <MudTextField @bind-Value="parameter.SectionName" Label="Section" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsSection"/>
                     </MudItem>
-                    <MudItem xs=2><MudCheckBox @bind-Checked="parameter.IsYear"></MudCheckBox></MudItem>
+                    <MudItem xs=2><MudCheckBox @bind-Value="parameter.IsYear"></MudCheckBox></MudItem>
                     <MudItem xs=10>
                         <MudTextField @bind-Value="parameter.Year" Label="Year" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsYear"/>
                     </MudItem>
@@ -550,11 +550,11 @@
     }
     private async Task OpenGroupDialog(GroupModel group)
     {
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true,BackdropClick = true };
         var param = new DialogParameters();
         param.Add("Group", group);
         var dialog =  await DialogService.Show<GroupDialog>(group.GroupId == 0 ? "Add Group" : "Edit Group", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {
             await table.ReloadServerData();
         }
@@ -570,11 +570,11 @@
     }
     private async Task AddMembers(GroupModel group)
     {
-        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,DisableBackdropClick = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true,BackdropClick = true };
         var param = new DialogParameters();
         param.Add("Group", group);
         var dialog =  await DialogService.Show<AddMembersDialog>("Add Members", param, options).Result;
-        if(!dialog.Cancelled)
+        if(!dialog.Canceled)
         {
             await table.ReloadServerData();
         }
