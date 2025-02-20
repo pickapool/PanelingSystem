@@ -2,12 +2,15 @@
 
 <MudDialog>
     <DialogContent>
-        <div style="width: 100%; height: 800px; margin-top: 20px">
-            <MudExFileDisplay HandleContentErrorFunc="@HandleContentError"
-                StreamUrlHandling="StreamUrlHandling.BlobUrl"
-                ParametersForSubControls="@GetParams()"
-                Dense="true" FileName="@FileName" ContentStream="@memoryStream" ContentType="@ContentType"></MudExFileDisplay>
+        @if (!IsLoading)
+        {
+            <div style="width: 100%; height: 800px; margin-top: 20px">
+                <MudExFileDisplay HandleContentErrorFunc="@HandleContentError"
+            StreamUrlHandling="StreamUrlHandling.BlobUrl"
+            ParametersForSubControls="@GetParams()"
+            Dense="true" FileName="@FileName" ContentStream="@memoryStream" ContentType="@ContentType"></MudExFileDisplay>
         </div>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Close</MudButton>
@@ -19,9 +22,13 @@
     [Parameter] public string ContentType { get; set; } = string.Empty;
     [Parameter] public byte[] FileStream { get; set; } 
     MemoryStream memoryStream = null;
-    protected override async Task OnParametersSetAsync()
+    string base64 = string.Empty;
+    bool IsLoading = true;
+    protected override async Task OnInitializedAsync()
     {
         memoryStream = Extensions.ConvertToStream(FileStream);
+        IsLoading = false;
+
     }
     private Task<MudExFileDisplayContentErrorResult> HandleContentError(IMudExFileDisplayInfos arg)
     {
