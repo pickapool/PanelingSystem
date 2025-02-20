@@ -9,7 +9,7 @@ using PanelingSystem.Models;
 
 namespace PanelingSystem.Commons
 {
-    public class Extensions
+    public static class Extensions
     {
         public static void ShowAlert(string message, Variant variant, ISnackbar snackbarService, Severity severityType)
         {
@@ -87,6 +87,52 @@ namespace PanelingSystem.Commons
             double GPA = totalMembers > 0 ? totalAverage / totalMembers : 0;
 
             return GPA;
+        }
+        public static MemoryStream ConvertToStream(byte[] byteArray)
+        {
+            // Create a MemoryStream using the byte array
+            return new MemoryStream(byteArray);
+        }
+        private static readonly Dictionary<string, string> MimeTypes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { ".jpg", "image/jpeg" },
+            { ".jpeg", "image/jpeg" },
+            { ".png", "image/png" },
+            { ".gif", "image/gif" },
+            { ".bmp", "image/bmp" },
+            { ".tiff", "image/tiff" },
+            { ".webp", "image/webp" },
+            { ".svg", "image/svg+xml" },
+            { ".pdf", "application/pdf" },
+            { ".doc", "application/msword" },
+            { ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+            { ".xls", "application/vnd.ms-excel" },
+            { ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+            { ".ppt", "application/vnd.ms-powerpoint" },
+            { ".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+            { ".txt", "text/plain" },
+            { ".csv", "text/csv" },
+            { ".html", "text/html" },
+            { ".css", "text/css" },
+            { ".js", "application/javascript" },
+            { ".xml", "application/xml" },
+            { ".zip", "application/zip" },
+            { ".mp4", "video/mp4" },
+            { ".mp3", "audio/mpeg" },
+            { ".wav", "audio/wav" },
+            { ".json", "application/json" },
+            { ".exe", "application/x-msdownload" }
+            // Add more file types as needed
+        };
+        public static string GetContentType(this string filename)
+        {
+            // Extract file extension (without the dot)
+            var extension = System.IO.Path.GetExtension(filename)?.ToLowerInvariant();
+            
+            // Return corresponding MIME type, or "application/octet-stream" if not found
+            return extension != null && MimeTypes.TryGetValue(extension, out var mimeType) 
+                ? mimeType 
+                : "application/octet-stream";
         }
     }
 }

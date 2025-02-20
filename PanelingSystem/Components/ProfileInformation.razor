@@ -16,18 +16,18 @@
                     {
                         if (Account.ProfilePicture.Count() == 0) {
                             <MudAvatar>
-                                <MudImage Class='mt-4' Src="img/blank_profile.png" Size='Size.Medium' />
+                                <MudImage Src="img/blank_profile.png" Size='Size.Medium' />
                             </MudAvatar>
                             
                         } else {
                             <MudAvatar>
-                                <MudImage Class='mr-4' Src='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
+                                <MudImage Src='@($"data:image/png;base64, {Convert.ToBase64String(Account.ProfilePicture)}")' Size='Size.Medium' />
                             </MudAvatar>
                             
                         }
                     } else {
                         <MudAvatar>
-                                <MudImage Class='mt-4' Src="img/blank_profile.png" Size='Size.Large' />
+                                <MudImage Src="img/blank_profile.png" Size='Size.Large' />
                         </MudAvatar>
                     
                     }

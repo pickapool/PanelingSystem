@@ -32,6 +32,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddRazorComponents();
 builder.Services.AddMudServicesWithExtensions();
+builder.Services.AddMudExtensions();
 builder.Services.AddScoped<Radzen.DialogService>();
 builder.Services.AddScoped<Radzen.NotificationService>();
 builder.Services.AddScoped<Radzen.ContextMenuService>();
