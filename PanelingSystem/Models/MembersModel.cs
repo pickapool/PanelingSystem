@@ -27,5 +27,8 @@ namespace PanelingSystem.Models
         [JsonIgnore]
         [NotMapped]
         public PanelGradeModel CurrentPanelGrade { get; set; } = new();
+        [JsonIgnore]
+        [NotMapped]
+        public List<PanelGradeModel> PanelGrades { get; set; } = new();
     }
 }

@@ -9,5 +9,6 @@ namespace PanelingSystem.Services.PanelGradeServices
         Task<PanelGradeModel> PutPanelGrade(int id, PanelGradeModel PanelGradeModel);
         Task<PanelGradeModel> PostPanelGrade(PanelGradeModel PanelGradeModel);
         Task<PanelGradeModel> DeletePanelGrade(int id);
+        Task<List<PanelGradeModel>> GetMemeberGrades(int memberId);
     }
 }

@@ -11,12 +11,12 @@
 <div class="d-flex justify-content-center align-items-center">
     @if(IsDataFetch)
     {
-    <MudGrid Spacing="2">
-        <MudItem xs="9">
-            <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
-                <MudGrid Spacing="2">
-                    <MudItem xs="4">
-                        <MudSelect Value="@Group" 
+        <MudGrid Spacing="2">
+            <MudItem xs="9">
+                <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+                    <MudGrid Spacing="2">
+                        <MudItem xs="4">
+                            <MudSelect Value="@Group" 
                             ValueChanged="(GroupModel g)=> SetGroup(g)"
                             Margin="Margin.Dense" Text=""
                             Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
@@ -25,9 +25,9 @@
                                     <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
                                 }
                             </MudSelect>
-                    </MudItem>
-                    <MudItem xs="4">
-                         <MudSelect Value="@Section" 
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudSelect Value="@Section" 
                             ValueChanged="(GroupModel g)=> SetSection(g)"
                             Margin="Margin.Dense" Text=""
                             Label="Select Section" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
@@ -36,99 +36,118 @@
                                     <MudSelectItem Value="@g">@g.Section</MudSelectItem>
                                 }
                             </MudSelect>
-                    </MudItem>
-                    <MudItem xs="4"></MudItem>
-                    @* <MudItem xs="12">
+                        </MudItem>
+                        <MudItem xs="4"></MudItem>
+                        @* <MudItem xs="12">
                         @foreach(MembersModel member in GroupMembers)
                         {
                             <GradesComponents @bind-Average="@member.Average" Member="member" Grades="ListGrades" GroupId="Group.GroupId" OnGradeChange="()=> NotifyChanged()"/>
                         }
                     </MudItem> *@
-                    <MudItem xs=12>
-                        <MudTable Items="GroupMembers"  Class="pa-2 overflow-auto" Elevation="3" Height="calc(100vh - 230px)" Width="100%">
-                            <ColGroup>
-                                <col style="width: 20%;"/>
-                                <col/>
-                                <col/>
-                                <col/>
-                                <col  />
-                                <col />
-                                <col />
-                                <col style="width: 1%;"/>
-                            </ColGroup>
-                            <HeaderContent>
-                                <MudTh>Student Name</MudTh>
-                                <MudTh>Course</MudTh>
-                                <MudTh>Year</MudTh>
-                                <MudTh>Section</MudTh>
-                                <MudTh Class="text-center">Title Defense Grade</MudTh>
-                                <MudTh Class="text-center">Pre Oral Defense Grade</MudTh>
-                                <MudTh Class="text-center">Final Defense Grade</MudTh>
-                                <MudTh></MudTh>
-                            </HeaderContent>
-                            <RowTemplate>
-                                <MudTd>@context.Student.Name</MudTd>
-                                <MudTd>@context.Group.Program</MudTd>
-                                <MudTd>@context.Group.Year</MudTd>
-                                <MudTd>@context.Group.Section</MudTd>
-                                <MudTd>
-                                    <MudTextField @bind-Value="@context.TitleGrade" Variant="MudBlazor.Variant.Text" 
-                                    style="width: 100px;"
-                                    Margin="Margin.Dense"
-                                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Title1)"
-                                    Disabled="@( 
+                        <MudItem xs=12>
+                            <MudTable Items="GroupMembers"  Class="pa-2 overflow-auto" Elevation="3" Height="calc(100vh - 230px)" Width="100%">
+                                <ColGroup>
+                                    <col style="width: 20%;"/>
+                                    <col/>
+                                    <col/>
+                                    <col/>
+                                    <col  />
+                                    <col />
+                                    <col />
+                                    <col style="width: 1%;"/>
+                                </ColGroup>
+                                <HeaderContent>
+                                    <MudTh>Student Name</MudTh>
+                                    <MudTh>Course</MudTh>
+                                    <MudTh>Year</MudTh>
+                                    <MudTh>Section</MudTh>
+                                    <MudTh Class="text-center">Title Defense Grade</MudTh>
+                                    <MudTh Class="text-center">Pre Oral Defense Grade</MudTh>
+                                    <MudTh Class="text-center">Final Defense Grade</MudTh>
+                                    <MudTh></MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    <MudTd>@context.Student.Name</MudTd>
+                                    <MudTd>@context.Group.Program</MudTd>
+                                    <MudTd>@context.Group.Year</MudTd>
+                                    <MudTd>@context.Group.Section</MudTd>
+                                    <MudTd>
+                                        <MudTextField @bind-Value="@context.TitleGrade" Variant="MudBlazor.Variant.Text" 
+                                        style="width: 100px;"
+                                        Margin="Margin.Dense"
+                                        Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Title1)"
+                                        Disabled="@( 
                                                 GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
-                                </MudTd>
-                                <MudTd>
-                                    <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
-                                    style="width: 100px;"
-                                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter1)"
-                                                      Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
-                                </MudTd>
-                                <MudTd>
-                                    <MudTextField @bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
-                                    style="width: 100px;"
-                                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter4)"
-                                                      Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
-                                </MudTd>
-                                <MudTd>
-                                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Info" OnClick="()=> SaveMember(context)" Size="Size.Small"
-                                                   Disabled="@( GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)">Update</MudButton>
-                                </MudTd>
-                            </RowTemplate>
-                            <ChildRowContent>
-                                <td colspan="8">
-                                    @if(OpenFile)
-                                    {
-                                        if(curentChapter == Enums.Chapter.Title1) {
-                                            <MudButton OnClick="()=> Download(context.Group.Title1)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 1</MudButton>
-                                            <MudButton OnClick="()=> Download(context.Group.Title2)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 2</MudButton>
-                                            <MudButton OnClick="()=> Download(context.Group.Title3)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 3</MudButton>
-                                        } else if(curentChapter == Enums.Chapter.Chapter1) {
-                                            <MudButton OnClick="()=> Download(context.Group.Chapter1)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 1</MudButton>
-                                            <MudButton OnClick="()=> Download(context.Group.Chapter2)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 2</MudButton>
-                                            <MudButton OnClick="()=> Download(context.Group.Chapter3)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 3</MudButton>
-                                        } else if(curentChapter == Enums.Chapter.Chapter4) {
-                                            <MudButton OnClick="()=> Download(context.Group.Chapter4)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 4</MudButton>
-                                            <MudButton OnClick="()=> Download(context.Group.Chapter5)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 5</MudButton>
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                        style="width: 100px;"
+                                        Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter1)"
+                                        Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudTextField @bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                        style="width: 100px;"
+                                        Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter4)"
+                                        Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudTooltip Text="Show Panel Grades">
+                                            <MudIconButton OnClick="()=> ShowGrades(context)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
+                                            </MudIconButton>
+                                            <MudPopover Open="@context.OpenGrade" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                                <div class="d-flex flex-column pa-3 gap-2" style="width: 200px; height: auto;">
+                                                    <span>Grades</span>
+                                                    <MudDivider/>
+                                                    @foreach(var g in context.PanelGrades) {
+                                                        <div class="d-flex justify-space-between">
+                                                            <span>@g.UserAccount?.Name</span>
+                                                            <span>@g.Grade</span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </MudPopover>
+                                        </MudTooltip>
+
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Info" OnClick="()=> SaveMember(context)" Size="Size.Small"
+                                        Disabled="@( GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)">Update</MudButton>
+                                    </MudTd>
+                                </RowTemplate>
+                                <ChildRowContent>
+                                    <td colspan="8">
+                                        @if(OpenFile)
+                                        {
+                                            if(curentChapter == Enums.Chapter.Title1) {
+                                                <MudButton OnClick="()=> Download(context.Group.Title1)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 1</MudButton>
+                                                <MudButton OnClick="()=> Download(context.Group.Title2)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 2</MudButton>
+                                                <MudButton OnClick="()=> Download(context.Group.Title3)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Title 3</MudButton>
+                                            } else if(curentChapter == Enums.Chapter.Chapter1) {
+                                                <MudButton OnClick="()=> Download(context.Group.Chapter1)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 1</MudButton>
+                                                <MudButton OnClick="()=> Download(context.Group.Chapter2)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 2</MudButton>
+                                                <MudButton OnClick="()=> Download(context.Group.Chapter3)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 3</MudButton>
+                                            } else if(curentChapter == Enums.Chapter.Chapter4) {
+                                                <MudButton OnClick="()=> Download(context.Group.Chapter4)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 4</MudButton>
+                                                <MudButton OnClick="()=> Download(context.Group.Chapter5)" Variant="MudBlazor.Variant.Text" EndIcon="@Icons.Material.Filled.Download">Chapter 5</MudButton>
+                                            }
                                         }
-                                    }
-                                </td>
-                            </ChildRowContent>
-                        </MudTable>
-                    </MudItem>
-                </MudGrid>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="3">
-            <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
-                <div class="d-flex flex-column align-items-center">
-                    <MudText Typo="Typo.h2">GPA @((double.IsNaN(GPA) == true ? 0 : GPA).ToString("N2")) %</MudText>
+                                    </td>
+                                </ChildRowContent>
+                            </MudTable>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="3">
+                <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
+                    <div class="d-flex flex-column align-items-center">
+                        <MudText Typo="Typo.h2">GPA @((double.IsNaN(GPA) == true ? 0 : GPA).ToString("N2")) %</MudText>
                         <MudChart ChartType="ChartType.Donut" Width="250px" Height="250px" @bind-SelectedIndex="Index" InputData="@data" InputLabels="@labels"></MudChart>
-                </div>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
+                    </div>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
     } else {
         <MudSkeleton Height="100vh" Width="100%"></MudSkeleton>
     }
@@ -211,7 +230,7 @@
         Section = groupModel;
         GroupMembers = GroupMembers.Where(e => e.Group.Section == Section.Section).ToList();
     }
-    
+
     private async Task GetMembers()
     {
         Task<IEnumerable<MembersModel>> t =  MemberService.GetMyGroupMembers(Group.GroupId);
@@ -260,6 +279,17 @@
             Extensions.ShowAlert("Member has been updated.", MudBlazor.Variant.Filled, SnackBar, Severity.Success);
             await NotifyChanged();
         }
+    }
+    private async Task ShowGrades(MembersModel member) {
+        member.PanelGrades = await _panelGradeService.GetMemeberGrades(member.MemberId);
+        member.OpenGrade = !member.OpenGrade;
+        GroupMembers.ForEach(e =>
+        {
+            if (member.MemberId != e.MemberId)
+                e.OpenGrade = false;
+        });
+
+        StateHasChanged();
     }
 }
 <style>
