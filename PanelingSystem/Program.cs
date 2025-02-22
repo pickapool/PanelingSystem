@@ -15,6 +15,7 @@ using PanelingSystem.Services.FileServices;
 using PanelingSystem.Services.GradeServices;
 using PanelingSystem.Services.GroupServices;
 using PanelingSystem.Services.MemberServices;
+using PanelingSystem.Services.PanelGradeServices;
 using PanelingSystem.Services.PanelistServices;
 using PanelingSystem.Services.ReportServices;
 using PanelingSystem.Services.ScheduleServices;
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IPanelistService, PanelistService>();
 builder.Services.AddScoped<IReportService,  ReportService>();
 builder.Services.AddScoped<IVerdictService, VerdictService>();
+builder.Services.AddScoped<IPanelGradeService, PanelGradeService>();
 
 builder.Services.AddDbContext<AppDBContext>(options =>
 {

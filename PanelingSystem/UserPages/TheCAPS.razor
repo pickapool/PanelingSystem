@@ -76,7 +76,24 @@
             </MudTd>
             <MudTd DataLabel="Groupname">
                 @foreach(MembersModel member in context.Members) {
-                    <span>@member.Student.Name</span><br>
+                    <div class="d-flex justify-space-between">
+                        <span>@member.Student.Name</span><br>
+                        <MudTooltip Text="Add Grade">
+                            <MudIconButton OnClick="()=> GetPanelGrade(member)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
+                            </MudIconButton>
+                            <MudPopover Open="@member.OpenGrade" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                <div class="d-flex flex-column pa-3 gap-2" style="width: 200px; height: auto;">
+                                    <MudTextField @bind-Value="@member.CurrentPanelGrade.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    <MudButton OnClick="()=> SavePanelGrade(member)" Variant="MudBlazor.Variant.Filled" Size="Size.Small" Color="Color.Primary">Save Grade</MudButton>
+                                    <style>
+                                        .mud-input.mud-input-outlined {
+                                        flex: unset;
+                                        }
+                                    </style>
+                                </div>
+                            </MudPopover>
+                        </MudTooltip>
+                    </div>
                 }
             </MudTd>
             <MudTd DataLabel="Program">@context.Program</MudTd>
@@ -110,7 +127,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title1)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title1)"/>
                                                         }
                                                     }
                                                 </div>
@@ -141,7 +158,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title2)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title2)"/>
                                                         }
                                                     }
                                                 </div>
@@ -172,7 +189,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title3)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Title3)"/>
                                                         }
                                                     }
                                                 </div>
@@ -192,7 +209,7 @@
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Chapter" Value="DenfenseVerdict.Chapter" ValueChanged="(Enums.Chapter e) => OnChapterChange(e, Group)" Margin="Margin.Dense" Label="Title"
                                         Variant="MudBlazor.Variant.Outlined"
-                                                   Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))">
+                                        Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))">
                                             @foreach (Enums.Chapter item in Enum.GetValues(typeof(Enums.Chapter)).Cast<Enums.Chapter>().Where(c => c == Enums.Chapter.Title1 || c == Enums.Chapter.Title2 || c == Enums.Chapter.Title3))
                                             {
                                                 <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
@@ -202,7 +219,7 @@
                                     <MudItem xs="8"></MudItem>
                                     <MudItem xs="2">
                                         <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"
-                                                      Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
+                                        Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
                                     </MudItem>
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
@@ -250,7 +267,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter1)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter1)"/>
                                                         }
                                                     }
                                                 </div>
@@ -280,7 +297,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter2)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter2)"/>
                                                         }
                                                     }
                                                 </div>
@@ -310,7 +327,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter3)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter3)"/>
                                                         }
                                                     }
                                                 </div>
@@ -328,7 +345,7 @@
                                     </MudItem>
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
-                                                   Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"
+                                        Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"
                                         Variant="MudBlazor.Variant.Outlined">
                                             @foreach (Enums.Status? item in Enum.GetValues(typeof(Enums.Status)))
                                             {
@@ -339,7 +356,7 @@
                                     <MudItem xs="8"></MudItem>
                                     <MudItem xs="2">
                                         <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"
-                                                      Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
+                                        Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
                                     </MudItem>
                                     <MudItem xs="10"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
@@ -356,7 +373,7 @@
                             </MudTabPanel>
                             <MudTabPanel Text="Final" OnClick="()=> OnChapterChange(Enums.Chapter.Chapter3, Group)">
                                 <MudPaper class="d-flex flex-column pa-3">
-                                    
+
                                     <div class="d-flex flex-row gap-10 align-items-center">
                                         <span class="flex-1"><b>Chapter 4</b></span>
                                         <MudButton OnClick="()=>  {
@@ -378,7 +395,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter4)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter4)"/>
                                                         }
                                                     }
                                                 </div>
@@ -408,7 +425,7 @@
                                                         @if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                                         {
                                                             <MudTextField @bind-Value="comment" HelperText="Type your comment here." AdornmentIcon="@Icons.Material.Filled.Send" 
-                                                                Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter5)"/>
+                                                            Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="()=> AddComment(context, Enums.Chapter.Chapter5)"/>
                                                         }
                                                     }
                                                 </div>
@@ -427,7 +444,7 @@
                                     <MudItem xs="2">
                                         <MudSelect T="Enums.Status?" Value="DenfenseVerdict.Status" ValueChanged="(e) => OnStatusChange(e)" Margin="Margin.Dense" Label="Verdict"
                                         Variant="MudBlazor.Variant.Outlined"
-                                                   Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))">
+                                        Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))">
                                             @foreach (Enums.Status? item in Enum.GetValues(typeof(Enums.Status)))
                                             {
                                                 <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
@@ -437,7 +454,7 @@
                                     <MudItem xs="8"></MudItem>
                                     <MudItem xs="2">
                                         <MudTextField T="double" @bind-Value="DenfenseVerdict.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"
-                                                      Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
+                                        Disabled="@((context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser) && !context.ListOfPanels.Any( e => e.UserId == GlobalClass.CurrentUserAccount.UserId))"></MudTextField>
                                     </MudItem>
                                     <MudItem xs="10"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
@@ -522,7 +539,7 @@
     }
     private async Task OnChapterChange(Enums.Chapter e, GroupModel group)
     {
-        
+
         DenfenseVerdict.Chapter = e;
         DenfenseVerdict = await _verdictService.GetVerdict(group.GroupId, e);
         DenfenseVerdict.Chapter = e;
@@ -644,7 +661,7 @@
         var dialog =  await DialogService.Show<DocumentViewerDialog>("VIEW DOCUMENT", param, options).Result;
         if(!dialog.Canceled)
         {
-            
+
         }
     }
     public void Toggle()
@@ -680,6 +697,27 @@
         } else {
             ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
         }
+    }
+    private async Task SavePanelGrade(MembersModel member) {
+        member.CurrentPanelGrade.MemberId = member.MemberId;
+        member.CurrentPanelGrade.UserId = GlobalClass.CurrentUserAccount.UserId;
+        member.CurrentPanelGrade = member.CurrentPanelGrade.PanelGradeId <= 0 ?
+        await _panelGradeService.PostPanelGrade(member.CurrentPanelGrade) :
+        await _panelGradeService.PutPanelGrade(member.CurrentPanelGrade.PanelGradeId, member.CurrentPanelGrade);
+        Extensions.ShowAlert("Grade has been save.", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
+    }
+    private async Task GetPanelGrade(MembersModel member) {
+        member.CurrentPanelGrade = await _panelGradeService.GetPanelGrade(GlobalClass.CurrentUserAccount.UserId, member.MemberId);
+        member.OpenGrade = !member.OpenGrade;
+        ListOfGroups.ForEach(e => {
+            e.Members.ForEach(e =>
+            {
+                if(member.MemberId != e.MemberId)
+                    e.OpenGrade = false;
+            });
+        });
+        
+        StateHasChanged();
     }
 }
 <style>
