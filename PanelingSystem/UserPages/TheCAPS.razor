@@ -216,7 +216,7 @@
                                     </MudItem>
                                     <MudItem xs="8"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
-                                        @if (context.UserId != GlobalClass.CurrentUserAccount.UserId && GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                        @if (context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
                                             <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
                                         }
@@ -339,7 +339,7 @@
                                     </MudItem>
                                     <MudItem xs="10"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
-                                        @if (context.UserId != GlobalClass.CurrentUserAccount.UserId && GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                        @if (context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
                                             <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter1)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
                                         }
@@ -433,7 +433,7 @@
                                     </MudItem>
                                     <MudItem xs="10"></MudItem>
                                     <MudItem Class="d-flex justify-content-end" xs="2">
-                                        @if (context.UserId != GlobalClass.CurrentUserAccount.UserId && GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                        @if (context.UserId == GlobalClass.CurrentUserAccount.UserId || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
                                             <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter5)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
                                         }
