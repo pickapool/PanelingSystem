@@ -12,13 +12,13 @@
                     <MudGrid>
                         <MudItem xs="4">
                             <MudSelect Value="@Group" style="width: 30%;"
-                                ValueChanged="(GroupModel g)=> GetFiles(g)"
-                                Margin="Margin.Dense" Text=""
-                                    Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
-                                    @foreach (var g in ListGroups.ToList())
-                                    {
-                                        <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
-                                    }
+                            ValueChanged="(GroupModel g)=> GetFiles(g)"
+                            Margin="Margin.Dense" Text=""
+                            Label="Select Group" HelperText="Required*" Placeholder="Group" AdornmentIcon="@Icons.Material.Filled.People" AdornmentColor="Color.Primary">
+                                @foreach (var g in ListGroups.ToList())
+                                {
+                                    <MudSelectItem Value="@g">@g.Groupname</MudSelectItem>
+                                }
                             </MudSelect>
                         </MudItem>
                     </MudGrid>
@@ -33,13 +33,14 @@
                         <ChapterComponent OnClick="()=> GetComments(Enums.Chapter.Chapter5)" Title="CHAPTER 5" Chapter="Enums.Chapter.Chapter5" ListChapters="ListChapters" Group="Group"/>
                     </div>
                 </div>
-                
+
             </MudPaper>
         </MudItem>
         <MudItem xs="3">
             <MudPaper Class="pa-2" Elevation="3" Height="88vh" Width="100%">
                 <div class="d-flex flex-column justify-content-between gap-2" style="height: 100%;">
                     <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.caption">@ChapterTitle</MudText>
                         <MudText Typo="Typo.caption">Comments</MudText>
                         <MudDivider/>
                         @foreach(CommentModel comment in ListComments)
@@ -48,18 +49,18 @@
                         }
                     </div>
                     <div>
-                    @if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student &&
-                        GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Admin)
-                    {
-                        <MudTextField @bind-Value="comment" HelperText="Comment" AdornmentIcon="@Icons.Material.Filled.Send" 
+                        @if(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Student &&
+                           GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Admin)
+                        {
+                            <MudTextField @bind-Value="comment" HelperText="Comment" AdornmentIcon="@Icons.Material.Filled.Send" 
                             Variant="MudBlazor.Variant.Text" Adornment="Adornment.End"  Margin="Margin.Dense" OnAdornmentClick="AddComment"/>
-                    }
+                        }
                     </div>
                 </div>
             </MudPaper>
         </MudItem>
     </MudGrid>
-    
+
 </div>
 @code
 {
@@ -67,10 +68,10 @@
     private GroupModel Group = new();
     private List<CapstoneFileModel> ListChapters = new();
     private List<CommentModel> ListComments = new();
-    private string comment = string.Empty;
+    private string comment = string.Empty, ChapterTitle = string.Empty;
     private Enums.Chapter chapter;
     protected override async Task OnInitializedAsync()
-     {
+    {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
             GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId) : GroupService.GetGroups();
         await data;
@@ -115,6 +116,7 @@
     private async Task GetComments(Enums.Chapter chap)
     {
         Console.WriteLine("asd");
+        ChapterTitle = Extensions.GetEnumDescription(chap);
         chapter = chap;
         Task<IEnumerable<CommentModel>> c = CommentService.GetComments(chap);
         await c;
