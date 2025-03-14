@@ -7,7 +7,7 @@ namespace PanelingSystem.Services.GradeServices
         Task<DefenseVerdictModel> DeleteDefenseVerdictModel(int id);
         Task<DefenseVerdictModel> PostDefenseVerdictModel(DefenseVerdictModel DefenseVerdictModel);
         Task<DefenseVerdictModel> PutDefenseVerdictModel(int id, DefenseVerdictModel DefenseVerdictModel);
-        Task<IEnumerable<DefenseVerdictModel>> GetDefenseVerdictModel();
+        Task<List<DefenseVerdictModel>> GetDefenseVerdictModel();
         Task<DefenseVerdictModel> GetVerdict(long GroupId, Enums.Chapter chapter);
         bool DefenseVerdictModelExists(int id);
     }

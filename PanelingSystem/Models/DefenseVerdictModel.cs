@@ -12,5 +12,8 @@ namespace PanelingSystem.Models
         public Enums.Chapter Chapter { get; set; }
         public Enums.Status? Status { get; set; }
         public double Grade { get; set; }
+
+        [ForeignKey("GroupId")]
+        public GroupModel? Group { get; set; }
     }   
 }

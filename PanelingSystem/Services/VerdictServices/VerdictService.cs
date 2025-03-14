@@ -90,9 +90,9 @@ namespace PanelingSystem.Services.DefenseVerdictServices
             return _context.DefenseVerdicts.Any(e => e.DefenseVerdictId == id);
         }
 
-        public Task<IEnumerable<DefenseVerdictModel>> GetDefenseVerdictModel()
+        public async Task<List<DefenseVerdictModel>> GetDefenseVerdictModel()
         {
-            throw new NotImplementedException();
+            return await _context.DefenseVerdicts.Include( e => e.Group).ToListAsync();
         }
 
         public async Task<DefenseVerdictModel> GetVerdict(long GroupId, Enums.Chapter chapter)
