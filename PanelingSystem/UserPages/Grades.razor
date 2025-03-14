@@ -54,6 +54,9 @@
                                     <col  />
                                     <col />
                                     <col />
+                                    <col  />
+                                    <col />
+                                    <col />
                                     <col style="width: 1%;"/>
                                 </ColGroup>
                                 <HeaderContent>
@@ -62,7 +65,9 @@
                                     <MudTh>Year</MudTh>
                                     <MudTh>Section</MudTh>
                                     <MudTh Class="text-center">Title Defense Grade</MudTh>
+                                    <MudTh></MudTh>
                                     <MudTh Class="text-center">Pre Oral Defense Grade</MudTh>
+                                    <MudTh></MudTh>
                                     <MudTh Class="text-center">Final Defense Grade</MudTh>
                                     <MudTh></MudTh>
                                 </HeaderContent>
@@ -80,10 +85,58 @@
                                                 GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
                                     </MudTd>
                                     <MudTd>
+                                        <MudTooltip Text="Show Panel Grades">
+                                            <MudIconButton OnClick="()=> ShowGrades(context, Enums.FilePosition.Title)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
+                                            </MudIconButton>
+                                            <MudPopover Open="@context.OpenGrade1" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                                <div class="d-flex flex-column pa-3 gap-2" style="width: 200px; height: auto;">
+                                                    <span>Final Grades</span>
+                                                    <MudDivider/>
+                                                    @foreach(var g in context.PanelGrades) {
+                                                        <div class="d-flex justify-space-between">
+                                                            <span>@g.UserAccount?.Name</span>
+                                                            <span>@g.Grade</span>
+                                                        </div>
+                                                    }
+                                                    <MudDivider></MudDivider>
+                                                    <div class="d-flex justify-space-between">
+                                                        <span>Average </span>
+                                                        <span>@((context.PanelGrades.Sum( e => e.Grade) / context.PanelGrades.Count).ToString("N2"))</span>
+                                                    </div>
+                                                </div>
+                                            </MudPopover>
+                                        </MudTooltip>
+
+                                    </MudTd>
+                                    <MudTd>
                                         <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
                                         style="width: 100px;"
                                         Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter1)"
                                         Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudTooltip Text="Show Panel Grades">
+                                            <MudIconButton OnClick="()=> ShowGrades(context, Enums.FilePosition.PreOral)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
+                                            </MudIconButton>
+                                            <MudPopover Open="@context.OpenGrade2" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                                <div class="d-flex flex-column pa-3 gap-2" style="width: 200px; height: auto;">
+                                                    <span>Final Grades</span>
+                                                    <MudDivider/>
+                                                    @foreach(var g in context.PanelGrades) {
+                                                        <div class="d-flex justify-space-between">
+                                                            <span>@g.UserAccount?.Name</span>
+                                                            <span>@g.Grade</span>
+                                                        </div>
+                                                    }
+                                                    <MudDivider></MudDivider>
+                                                    <div class="d-flex justify-space-between">
+                                                        <span>Average </span>
+                                                        <span>@((context.PanelGrades.Sum( e => e.Grade) / context.PanelGrades.Count).ToString("N2"))</span>
+                                                    </div>
+                                                </div>
+                                            </MudPopover>
+                                        </MudTooltip>
+
                                     </MudTd>
                                     <MudTd>
                                         <MudTextField @bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
@@ -93,11 +146,11 @@
                                     </MudTd>
                                     <MudTd>
                                         <MudTooltip Text="Show Panel Grades">
-                                            <MudIconButton OnClick="()=> ShowGrades(context)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
+                                            <MudIconButton OnClick="()=> ShowGrades(context, Enums.FilePosition.Finals)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
                                             </MudIconButton>
-                                            <MudPopover Open="@context.OpenGrade" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                                            <MudPopover Open="@context.OpenGrade3" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
                                                 <div class="d-flex flex-column pa-3 gap-2" style="width: 200px; height: auto;">
-                                                    <span>Grades</span>
+                                                    <span>Final Grades</span>
                                                     <MudDivider/>
                                                     @foreach(var g in context.PanelGrades) {
                                                         <div class="d-flex justify-space-between">
@@ -105,6 +158,11 @@
                                                             <span>@g.Grade</span>
                                                         </div>
                                                     }
+                                                    <MudDivider></MudDivider>
+                                                    <div class="d-flex justify-space-between">
+                                                        <span>Average </span>
+                                                        <span>@((context.PanelGrades.Sum( e => e.Grade) / context.PanelGrades.Count).ToString("N2"))</span>
+                                                    </div>
                                                 </div>
                                             </MudPopover>
                                         </MudTooltip>
@@ -280,13 +338,31 @@
             await NotifyChanged();
         }
     }
-    private async Task ShowGrades(MembersModel member) {
-        member.PanelGrades = await _panelGradeService.GetMemeberGrades(member.MemberId);
-        member.OpenGrade = !member.OpenGrade;
+    private async Task ShowGrades(MembersModel member, Enums.FilePosition defenseType) {
+        member.PanelGrades = await _panelGradeService.GetMemeberGrades(member.MemberId, defenseType);
+        if(defenseType == Enums.FilePosition.Title) {
+            member.OpenGrade1 = !member.OpenGrade1;
+            member.OpenGrade2 = false;
+            member.OpenGrade3 = false;
+        } else if(defenseType == Enums.FilePosition.PreOral){
+            member.OpenGrade2 = !member.OpenGrade2;
+
+            member.OpenGrade1 = false;
+            member.OpenGrade3 = false;
+        } else {
+            member.OpenGrade3 = !member.OpenGrade3;
+
+            member.OpenGrade1 = false;
+            member.OpenGrade2 = false;
+        }
         GroupMembers.ForEach(e =>
         {
             if (member.MemberId != e.MemberId)
-                e.OpenGrade = false;
+            {
+                e.OpenGrade1 = false;
+                e.OpenGrade2 = false;
+                e.OpenGrade3 = false;
+            }
         });
 
         StateHasChanged();

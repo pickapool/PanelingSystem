@@ -92,7 +92,7 @@
     }
     private async Task GetSchedules()
     {
-        //isDataFetch = false;
+        isDataFetch = false;
         Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules();
         await task;
         if(task.Status == TaskStatus.RanToCompletion)
@@ -140,7 +140,7 @@
                             }
                         }
                     }
-                    //isDataFetch = true;
+                    isDataFetch = true;
                     StateHasChanged();
                 }
             }

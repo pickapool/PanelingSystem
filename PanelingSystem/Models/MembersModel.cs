@@ -23,7 +23,13 @@ namespace PanelingSystem.Models
         public double FinalGrade { get; set; }
         [JsonIgnore]
         [NotMapped]
-        public bool OpenGrade { get; set; }
+        public bool OpenGrade1 { get; set; }
+        [JsonIgnore]
+        [NotMapped]
+        public bool OpenGrade2 { get; set; }
+        [JsonIgnore]
+        [NotMapped]
+        public bool OpenGrade3 { get; set; }
         [JsonIgnore]
         [NotMapped]
         public PanelGradeModel CurrentPanelGrade { get; set; } = new();
