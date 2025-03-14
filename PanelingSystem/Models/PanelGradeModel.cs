@@ -11,6 +11,7 @@ namespace PanelingSystem.Models
         public int MemberId { get; set; }
         public double Grade { get; set; }
         public int? UserId { get; set; }
+        public Enums.FilePosition DefenseType { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel? UserAccount { get; set; }
 

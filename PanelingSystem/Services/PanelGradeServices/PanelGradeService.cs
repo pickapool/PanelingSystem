@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Mono.TextTemplating;
 using PanelingSystem.DatabaseContext;
 using PanelingSystem.Models;
 
@@ -27,9 +28,14 @@ namespace PanelingSystem.Services.PanelGradeServices
             return membersModel;
         }
 
-        public async Task<PanelGradeModel> GetPanelGrade(int accountId, int memberId)
+        public async Task<PanelGradeModel> GetPanelGrade(int accountId, int memberId, Enums.FilePosition pos)
         {
-            return await _context.PanelGrades.Include(e => e.UserAccount).FirstOrDefaultAsync(e => e.UserId == accountId && e.MemberId == memberId) ?? new();
+            var get = await _context.PanelGrades.Include(e => e.UserAccount).FirstOrDefaultAsync(e => e.UserId == accountId && e.MemberId == memberId && e.DefenseType == pos);
+            if(get == null) {
+                get = new();
+                get.DefenseType = pos;
+            }
+            return get;
         }
 
         public async Task<IEnumerable<PanelGradeModel>> GetPanelGrades()
@@ -50,32 +56,25 @@ namespace PanelingSystem.Services.PanelGradeServices
             return PanelGradeModel;
         }
 
-        public async Task<PanelGradeModel> PutPanelGrade(int id, PanelGradeModel PanelGradeModel)
+        public async Task<PanelGradeModel> PutPanelGrade(int id, PanelGradeModel panelGradeModel)
         {
-            if (id != PanelGradeModel.PanelGradeId)
-            {
-                return null;
-            }
+             var existingPanelGrade = await _context.PanelGrades
+                .FirstOrDefaultAsync(pg => pg.DefenseType == panelGradeModel.DefenseType && pg.MemberId == panelGradeModel.MemberId);
 
-            _context.Entry(PanelGradeModel).State = EntityState.Modified;
-
-            try
+            if (existingPanelGrade == null)
             {
+                panelGradeModel.PanelGradeId = 0; 
+                _context.PanelGrades.Add(panelGradeModel);  
                 await _context.SaveChangesAsync();
+                return panelGradeModel;
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!PanelModelExists(id))
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
+                //_context.Entry(panelGradeModel.UserAccount).State = State.Unc;
+                _context.Entry(panelGradeModel).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return panelGradeModel;
             }
-
-            return PanelGradeModel;
         }
         private bool PanelModelExists(int id)
         {

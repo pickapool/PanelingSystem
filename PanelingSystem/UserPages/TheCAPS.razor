@@ -79,10 +79,20 @@
                     <div class="d-flex justify-space-between">
                         <span>@member.Student.Name</span><br>
                         <MudTooltip Text="Add Grade">
-                            <MudIconButton OnClick="()=> GetPanelGrade(member)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
+                            <MudIconButton OnClick="()=> GetPanelGrade(member, Enums.FilePosition.Title, true)" Icon="@Icons.Material.Filled.RateReview" Size="Size.Small">
                             </MudIconButton>
                             <MudPopover Open="@member.OpenGrade" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
                                 <div class="d-flex flex-column pa-3 gap-2" style="width: 200px; height: auto;">
+                                    @if(!isLoadingType) {
+                                        <MudSelect T="Enums.FilePosition" 
+                                            Value="member.CurrentPanelGrade.DefenseType" 
+                                            ValueChanged="(e)=> GetPanelGrade(member, e, false)"Label="Defense Type">
+                                            @foreach (Enums.FilePosition item in Enum.GetValues(typeof(Enums.FilePosition)))
+                                            {
+                                                <MudSelectItem Value="item">@item</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    }
                                     <MudTextField @bind-Value="@member.CurrentPanelGrade.Grade" Label="Grade" Variant="MudBlazor.Variant.Outlined" Margin="Margin.Dense"></MudTextField>
                                     <MudButton OnClick="()=> SavePanelGrade(member)" Variant="MudBlazor.Variant.Filled" Size="Size.Small" Color="Color.Primary">Save Grade</MudButton>
                                     <style>
@@ -498,7 +508,7 @@
     DefenseVerdictModel DenfenseVerdict = new();
     GroupModel Group = new();
     private string comment = string.Empty;
-
+    bool isLoadingType = false;
     protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
@@ -706,9 +716,11 @@
         await _panelGradeService.PutPanelGrade(member.CurrentPanelGrade.PanelGradeId, member.CurrentPanelGrade);
         Extensions.ShowAlert("Grade has been save.", MudBlazor.Variant.Filled, Snackbar, Severity.Success);
     }
-    private async Task GetPanelGrade(MembersModel member) {
-        member.CurrentPanelGrade = await _panelGradeService.GetPanelGrade(GlobalClass.CurrentUserAccount.UserId, member.MemberId);
-        member.OpenGrade = !member.OpenGrade;
+    private async Task GetPanelGrade(MembersModel member, Enums.FilePosition defenseType, bool closePanel) {
+        isLoadingType = true;
+        member.CurrentPanelGrade = await _panelGradeService.GetPanelGrade(GlobalClass.CurrentUserAccount.UserId, member.MemberId, defenseType);
+        if(closePanel)
+            member.OpenGrade = !member.OpenGrade;
         ListOfGroups.ForEach(e => {
             e.Members.ForEach(e =>
             {
@@ -716,7 +728,8 @@
                     e.OpenGrade = false;
             });
         });
-        
+        isLoadingType = false;
+        Console.WriteLine(defenseType);
         StateHasChanged();
     }
 }
