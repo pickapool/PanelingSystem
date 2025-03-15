@@ -90,9 +90,29 @@ namespace PanelingSystem.Services.DefenseVerdictServices
             return _context.DefenseVerdicts.Any(e => e.DefenseVerdictId == id);
         }
 
-        public async Task<List<DefenseVerdictModel>> GetDefenseVerdictModel()
+        public async Task<List<DefenseVerdictModel>> GetDefenseVerdictModel(FilterParameter param)
         {
-            return await _context.DefenseVerdicts.Include( e => e.Group).ToListAsync();
+             var query = _context.DefenseVerdicts.Include( e => e.Group).AsQueryable();
+
+            // Apply filters based on the FilterParameter values
+
+            if (param.IsProgram && !string.IsNullOrEmpty(param.ProgramName))
+            {
+                query = query.Where(e => e.Group.Program == param.ProgramName);
+            }
+
+            if (param.IsSection && !string.IsNullOrEmpty(param.SectionName))
+            {
+                query = query.Where(e => e.Group.Section == param.SectionName);
+            }
+
+            if (param.IsYear && !string.IsNullOrEmpty(param.Year))
+            {
+                query = query.Where(e => e.Group.Year == param.Year);
+            }
+
+            // Execute and return the filtered list of schedules
+            return await query.ToListAsync();
         }
 
         public async Task<DefenseVerdictModel> GetVerdict(long GroupId, Enums.Chapter chapter)

@@ -95,7 +95,7 @@
                             }
                             else
                             {
-                            <MudTable Class="flex-1" Items="@Schedules.Where( e => e.Status == Enums.Status.Approved).ToList()" Hover="true" Dense
+                            <MudTable Class="flex-1" Items="@DefenseVerdicts.Where( e => e.Status == Enums.Status.Approved).ToList()" Hover="true" Dense
                                 Breakpoint="Breakpoint.Sm"  LoadingProgressColor="Color.Info">
                                 <ToolBarContent>
                                     <MudText Typo="Typo.h6">APPROVED TITLES</MudText>
@@ -104,41 +104,42 @@
                                 <RowTemplate>
                                     <MudTd DataLabel="Nr">
                                         <div class="d-flex flex-row justify-content-between align-items-center">
-                                            <span>@context.Group.GroupThesisTitle</span>
-                                            <MudChip T="string" Color="Color.Success" Size="Size.Small">@context.DefenseType</MudChip>
+                                            <span>@context.Group?.GroupThesisTitle</span>
+                                            <MudChip T="string" Color="Color.Success" Size="Size.Small">@Extensions.GetEnumDescription(context.Chapter)</MudChip>
                                         </div>
 
                                     </MudTd>
                                 </RowTemplate>
                             </MudTable>
-                            <MudTable Class="flex-1" Items="@Schedules.Where( e => e.Status == Enums.Status.Rejected).ToList()" Hover="true" Dense
-                                Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                            <MudTable Class="flex-1" Items="@DefenseVerdicts.Where( e => e.Status == Enums.Status.Rejected).ToList()" Hover="true" Dense
+                                Breakpoint="Breakpoint.Sm"  LoadingProgressColor="Color.Info">
                                 <ToolBarContent>
-                                    <MudText Typo="Typo.h6">REJECTED TITLES</MudText>
+                                    <MudText Typo="Typo.h6">APPROVED TITLES</MudText>
                                     <MudSpacer />
                                 </ToolBarContent>
                                 <RowTemplate>
                                     <MudTd DataLabel="Nr">
                                         <div class="d-flex flex-row justify-content-between align-items-center">
-                                            <span>@context.Group.GroupThesisTitle</span>
-                                            <MudChip T="string" Color="Color.Warning" Size="Size.Small">@context.DefenseType</MudChip>
+                                            <span>@context.Group?.GroupThesisTitle</span>
+                                            <MudChip T="string" Color="Color.Success" Size="Size.Small">@Extensions.GetEnumDescription(context.Chapter)</MudChip>
                                         </div>
 
                                     </MudTd>
                                 </RowTemplate>
                             </MudTable>
-                            <MudTable Class="flex-1" Items="@Schedules.Where( e => e.Status == Enums.Status.Completed).ToList()" Hover="true" Dense
-                                Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                            <MudTable Class="flex-1" Items="@DefenseVerdicts.Where( e => e.Status == Enums.Status.Completed).ToList()" Hover="true" Dense
+                                Breakpoint="Breakpoint.Sm"  LoadingProgressColor="Color.Info">
                                 <ToolBarContent>
-                                    <MudText Typo="Typo.h6">COMPLETED TITLES</MudText>
+                                    <MudText Typo="Typo.h6">APPROVED TITLES</MudText>
                                     <MudSpacer />
                                 </ToolBarContent>
                                 <RowTemplate>
                                     <MudTd DataLabel="Nr">
                                         <div class="d-flex flex-row justify-content-between align-items-center">
-                                            <span>@context.Group.GroupThesisTitle</span>
-                                            <MudChip T="string" Color="Color.Info" Size="Size.Small">@context.DefenseType</MudChip>
+                                            <span>@context.Group?.GroupThesisTitle</span>
+                                            <MudChip T="string" Color="Color.Success" Size="Size.Small">@Extensions.GetEnumDescription(context.Chapter)</MudChip>
                                         </div>
+
                                     </MudTd>
                                 </RowTemplate>
                             </MudTable>
@@ -156,6 +157,7 @@
     bool isDataFetch;
     List<GroupModel> Groups = new();
     IList<ScheduleModel> Schedules;
+    List<DefenseVerdictModel> DefenseVerdicts = new();
     private List<GroupModel> ListGroups = new();
     private GroupModel Group = new();
     bool show,show1 = false;
@@ -249,25 +251,25 @@
             @* double t1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
-            double t4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Title).ToList().Count; *@
+            double t4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t7= schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
             double t8= schedules.Result.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && e.DefenseType == Enums.FilePosition.Title).ToList().Count;
 
-            @* double p1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
+            double p1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
-            double p4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count; *@
+            double p4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p7 = schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
             double p8 = schedules.Result.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && e.DefenseType == Enums.FilePosition.PreOral).ToList().Count;
 
-            @* double d1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
+            double d1 = schedules.Result.Where( e => e.Status == Enums.Status.InProgress && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d2 = schedules.Result.Where( e => e.Status == Enums.Status.Failed && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d3 = schedules.Result.Where( e => e.Status == Enums.Status.Success && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
-            double d4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Finals).ToList().Count; *@
+            double d4 = schedules.Result.Where( e => e.Status == Enums.Status.Pending && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d5 = schedules.Result.Where( e => e.Status == Enums.Status.Rejected && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d6 = schedules.Result.Where( e => e.Status == Enums.Status.Completed && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
             double d7 = schedules.Result.Where( e => e.Status == Enums.Status.Redefend && e.DefenseType == Enums.FilePosition.Finals).ToList().Count;
@@ -284,7 +286,7 @@
 
             labels = new string[] { "Rejected- " +t5, "Completed- " + t6, "Redefend- " + t7, "Rejected With Revisions -" +t8};
             labels1 = new string[] { "Rejected- " + p5, "Completed- " + p6, "Redefend- " + p7, "Rejected With Revisions -" +p8 };
-            labels2 = new string[] { "Rejected- " + d5, "Completed- " + d6, "Redefend- " + d7, "Rejected With Revisions -" + d8 };
+            labels2 = new string[] { "Rejected- " + d5, "Completed- " + d6, "Redefend- " + d7, "Rejected With Revisions -" + d8 }; *@
             await GetScheduless();
             await AppState.NotifyStateChangedAsync();
         }
@@ -292,17 +294,44 @@
     private async Task GetScheduless()
     {
         isDataFetch = false;
-        Task<IEnumerable<ScheduleModel>> task = ScheduleService.GetSchedules(parameter);
+        Task<List<DefenseVerdictModel>> task = _verdictService.GetDefenseVerdictModel(parameter);
         await task;
         if (task.Status == TaskStatus.RanToCompletion)
         {
-            Schedules = task.Result.ToList();
+            @* Schedules = task.Result.ToList(); *@
+            DefenseVerdicts = task.Result;
+            double t1 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Rejected && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
+            double t2 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Completed && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
+            double t3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
+            double t4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
+            double t5= DefenseVerdicts.Where( e => e.Status == Enums.Status.Approved && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
+
+            double c1 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Rejected && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
+            double c2 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Completed && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
+            double c3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
+            double c4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
+            double c5= DefenseVerdicts.Where( e => e.Status == Enums.Status.Approved && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
+
+            double f1 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Rejected && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
+            double f2 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Completed && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
+            double f3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
+            double f4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
+            double f5= DefenseVerdicts.Where( e => e.Status == Enums.Status.Approved && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
+
+            data = new double[] { t1, t2, t3, t4 ,t5};
+            data1 = new double[] { c1, c2, c3, c4 , c5};
+            data2 = new double[] { f1, f2, f3, f4 , f5};
+
+            labels = new string[] { "Rejected- " +t1, "Completed- " + t2, "Redefend- " + t3, "Rejected With Revisions -" + t4,"Approved -" +t5  };
+            labels1 = new string[] { "Rejected- " + c1, "Completed- " + c2, "Redefend- " + c3, "Rejected With Revisions -" +c4 ,"Approved -" +c5};
+            labels2 = new string[] { "Rejected- " + f1, "Completed- " + f2, "Redefend- " + f3, "Rejected With Revisions -" + f4 ,"Approved -" +f5};
+
             await GetMyGroups();
         }
     }
     private async Task GetMyGroups()
     {
-        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ?
+        @* Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ?
         GroupService.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, parameter) : GroupService.GetGroups(parameter);
         await data;
         if (data.Status == TaskStatus.RanToCompletion)
@@ -344,8 +373,8 @@
             }
 
         }
-        StateHasChanged();
-        
+        StateHasChanged(); *@
+        isDataFetch = true;
     }
 }
 <style>
