@@ -112,10 +112,6 @@
             {
                 Schedules = Schedules.Where( e => data.Result.Any( m => m.GroupId == e.GroupId)).ToList();
             }
-            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
-            {
-                Schedules = Schedules.Where(e => e.Group.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
-            }
             Task<IEnumerable<GroupModel>> aa = GroupService.GetGroupsWithUsers();
             await aa;
             if(aa.Status == TaskStatus.RanToCompletion)
@@ -133,7 +129,7 @@
                             {
                                 if (sched.GroupId == panel.GroupId && sched.ScheduleId == panel.ScheduleId)
                                 {
-                                    if (!sched.Panels.Any(e => e.Panel.UserId == panel.UserId))
+                                    if (!sched.Panels.Any(e => e.Panel.UserId == panel.UserId) || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         sched.Panels.Add(panel);
                                     StateHasChanged();
                                 }
