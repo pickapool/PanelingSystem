@@ -10,7 +10,7 @@
     <div class="d-flex flex-row justify-content-between">
         <div class="d-flex flex-row">
             <MudChip T="string" Color="Color.Info" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.DefenseType)</MudChip>
-            <MudChip T="string" Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip>
+            @* <MudChip T="string" Color="Color.Warning" Size="Size.Small">@Extensions.GetEnumDescription(@Schedule.Status)</MudChip> *@
         </div>
         <div>
             <MudIconButton OnClick="RemoveSchedule" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"/>

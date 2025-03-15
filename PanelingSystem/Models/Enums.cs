@@ -6,14 +6,20 @@ namespace PanelingSystem.Models
     {
         public enum Status
         {
-            // InProgress = 0,
+            [Description("In Progress")]
+             InProgress = 0,
             // Failed = 1,
             // Success = 2,
             // Pending = 3,
+            [Description("Rejected")]
             Rejected = 4,
+            [Description("Completed")]
             Completed = 5,
+            [Description("Redefend")]
             Redefend = 6,
+            [Description("Approved")]
             Approved = 7,
+            [Description("AcceptedWithRevisions")]
             AcceptedWithRevisions = 8,
         }
         public enum AccountType

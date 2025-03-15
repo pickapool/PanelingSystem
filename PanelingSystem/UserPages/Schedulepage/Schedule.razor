@@ -129,7 +129,7 @@
                             {
                                 if (sched.GroupId == panel.GroupId && sched.ScheduleId == panel.ScheduleId)
                                 {
-                                    if (!sched.Panels.Any(e => e.Panel.UserId == panel.UserId) || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+                                    if (!sched.Panels.Any(e => e.Panel?.UserId == panel.UserId) || GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         sched.Panels.Add(panel);
                                     StateHasChanged();
                                 }
