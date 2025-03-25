@@ -77,7 +77,7 @@
                                     <MudTd>@context.Group.Year</MudTd>
                                     <MudTd>@context.Group.Section</MudTd>
                                     <MudTd>
-                                        <MudTextField @bind-Value="@context.TitleGrade" Variant="MudBlazor.Variant.Text" 
+                                        <MudTextField @bind-Value="@context.TitleAverage" Variant="MudBlazor.Variant.Text" 
                                         style="width: 100px;"
                                         Margin="Margin.Dense"
                                         Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Title1)"
@@ -109,7 +109,7 @@
 
                                     </MudTd>
                                     <MudTd>
-                                        <MudTextField @bind-Value="@context.PreOralGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                        <MudTextField @bind-Value="@context.PreOralAverage" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
                                         style="width: 100px;"
                                         Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter1)"
                                         Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
@@ -139,7 +139,7 @@
 
                                     </MudTd>
                                     <MudTd>
-                                        <MudTextField @bind-Value="@context.FinalGrade" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
+                                        <MudTextField @bind-Value="@context.FinalAverage" Variant="MudBlazor.Variant.Text" Margin="Margin.Dense"
                                         style="width: 100px;"
                                         Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderCopy" OnAdornmentClick="()=> OpenFiles(Enums.Chapter.Chapter4)"
                                         Disabled="@(GlobalClass.CurrentUserAccount.AccountType != Enums.AccountType.Panelist_Adviser)" />
@@ -255,6 +255,13 @@
                 item.Group.Title2 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Title2);
                 item.Group.Title3 = await CapstoneFileService.GetCapstoneFilesWithGroup2(item.GroupId, Enums.Chapter.Title3);
             }
+
+            foreach(var item in ListGroups) {
+                foreach(var g in item.Members) {
+                    g.PanelGrades = await _panelGradeService.GetMemeberGrades(g.MemberId);
+                }
+            }
+
             Group = ListGroups.FirstOrDefault() ?? new();
             await SetGroup(Group);
         } 

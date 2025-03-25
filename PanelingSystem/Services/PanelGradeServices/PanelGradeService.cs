@@ -46,6 +46,10 @@ namespace PanelingSystem.Services.PanelGradeServices
         {
             return await _context.PanelGrades.Include( e => e.UserAccount).Where( e => e.MemberId == memberId && e.DefenseType == defenseType).ToListAsync();
         }
+        public async Task<List<PanelGradeModel>> GetMemeberGrades(int memberId)
+        {
+            return await _context.PanelGrades.Include( e => e.UserAccount).Where( e => e.MemberId == memberId).ToListAsync();
+        }
 
 
         public async Task<PanelGradeModel> PostPanelGrade(PanelGradeModel PanelGradeModel)

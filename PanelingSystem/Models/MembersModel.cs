@@ -39,5 +39,44 @@ namespace PanelingSystem.Models
         [JsonIgnore]
         [NotMapped]
         public List<PanelGradeModel> PanelGrades { get; set; } = new();
+        [JsonIgnore]
+        [NotMapped]
+        public double TitleAverage { 
+            get {
+                if(PanelGrades != null)
+                {
+                    if(PanelGrades.Count > 0) {
+                        return PanelGrades.Where( e => e.DefenseType == Enums.FilePosition.Title).Sum( e => e.Grade) / PanelGrades.Count;
+                    }
+                }
+                return 0;
+            } set {}
+        }
+        [JsonIgnore]
+        [NotMapped]
+        public double PreOralAverage { 
+            get {
+                if(PanelGrades != null)
+                {
+                    if(PanelGrades.Count > 0) {
+                        return PanelGrades.Where( e => e.DefenseType == Enums.FilePosition.PreOral).Sum( e => e.Grade) / PanelGrades.Count;
+                    }
+                }
+                return 0;
+            } set {}
+        }
+        [JsonIgnore]
+        [NotMapped]
+        public double FinalAverage { 
+            get {
+                if(PanelGrades != null)
+                {
+                    if(PanelGrades.Count > 0) {
+                        return PanelGrades.Where( e => e.DefenseType == Enums.FilePosition.Finals).Sum( e => e.Grade) / PanelGrades.Count;
+                    }
+                }
+                return 0;
+            } set {}
+        }
     }
 }

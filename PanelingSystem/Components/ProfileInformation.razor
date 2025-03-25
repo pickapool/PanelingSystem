@@ -1,6 +1,7 @@
 @inject ILocalStorageService LocalStorageService
 @inject AppState AppState
 @inject IAccountService AccountService
+@inject NavigationManager NavigationManager 
 
 <div class="d-flex flex-column gap-0 align-items-center" style="width: 240px;">
     <div class="top-border">
@@ -59,6 +60,7 @@
             GlobalClass.CurrentUserAccount = null;
             await OnCloseDialog.InvokeAsync();
             await AppState.NotifyStateChangedAsync();
+            NavigationManager.NavigateTo("/");
         }
     }
     private async Task UploadFiles(IBrowserFile file)

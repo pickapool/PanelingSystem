@@ -10,5 +10,6 @@ namespace PanelingSystem.Services.PanelGradeServices
         Task<PanelGradeModel> PostPanelGrade(PanelGradeModel PanelGradeModel);
         Task<PanelGradeModel> DeletePanelGrade(int id);
         Task<List<PanelGradeModel>> GetMemeberGrades(int memberId, Enums.FilePosition defenseType);
+        Task<List<PanelGradeModel>> GetMemeberGrades(int memberId);
     }
 }
