@@ -250,11 +250,15 @@
                                     <MudItem Class="d-flex justify-content-end" xs="2">
                                         @if (context.UserId != GlobalClass.CurrentUserAccount.UserId && GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
-                                            <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info" Disabled="@(DenfenseVerdict.DefenseVerdictId != 0)">SAVE</MudButton>
+                                            if(DenfenseVerdict.DefenseVerdictId == 0) {
+                                            <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                            }
                                         }
                                         else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
-                                            <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info" Disabled="@(DenfenseVerdict.DefenseVerdictId != 0)">SAVE</MudButton>
+                                            if(DenfenseVerdict.DefenseVerdictId == 0) {
+                                            <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                            }
                                         }
                                     </MudItem>
                                 </MudGrid>
@@ -377,11 +381,15 @@
                                     <MudItem Class="d-flex justify-content-end" xs="2">
                                         @if (context.UserId != GlobalClass.CurrentUserAccount.UserId && GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
-                                            <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter1)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info" Disabled="@(DenfenseVerdict.DefenseVerdictId != 0)">SAVE</MudButton>
+                                            if(DenfenseVerdict.DefenseVerdictId == 0) {
+                                                <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter1)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                            }
                                         }
                                         else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
-                                            <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info" Disabled="@(DenfenseVerdict.DefenseVerdictId != 0)">SAVE</MudButton>
+                                            if(DenfenseVerdict.DefenseVerdictId == 0) {
+                                                <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                            }
                                         }
                                     </MudItem>
                                 </MudGrid>
@@ -475,11 +483,15 @@
                                     <MudItem Class="d-flex justify-content-end" xs="2">
                                         @if (context.UserId != GlobalClass.CurrentUserAccount.UserId && GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
-                                            <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter5)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info" Disabled="@(DenfenseVerdict.DefenseVerdictId != 0)">SAVE</MudButton>
+                                            if(DenfenseVerdict.DefenseVerdictId == 0) {
+                                                <MudButton OnClick="()=> SaveVerdict(Enums.Chapter.Chapter5)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                            }
                                         }
                                         else if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
                                         {
-                                            <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info" Disabled="@(DenfenseVerdict.DefenseVerdictId != 0)">SAVE</MudButton>
+                                            if(DenfenseVerdict.DefenseVerdictId == 0) {
+                                                <MudButton OnClick="()=> SaveVerdict(DenfenseVerdict.Chapter)" style="height: 40px;" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Info">SAVE</MudButton>
+                                            }
                                         }
                                     </MudItem>
                                 </MudGrid>
