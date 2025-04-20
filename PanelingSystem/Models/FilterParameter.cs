@@ -7,5 +7,7 @@ namespace PanelingSystem.Models
         public string SectionName = string.Empty;
         public bool IsYear;
         public string Year = string.Empty;
+        public bool IsChapter;
+        public Enums.FilePosition GradeType;
     }
 }

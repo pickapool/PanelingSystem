@@ -24,6 +24,10 @@ namespace PanelingSystem.Models
         [JsonIgnore]
         [NotMapped]
         public string? Program { get ;set; }
+        [JsonIgnore]
+        [NotMapped]
+        public string? MemberName { get ;set; }
+
 
     }
 }
