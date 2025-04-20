@@ -21,8 +21,45 @@
                     AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     <MudSpacer />
                     <div class="d-flex flex-1 justify-end">
-                        <MudButton Class="mr-3" OnClick="Print" StartIcon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" Variant="MudBlazor.Variant.Filled" Size="Size.Small">GRADE SHEETS</MudButton>
+                        <MudButton Class="mr-3" OnClick="Toggle" StartIcon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" Variant="MudBlazor.Variant.Filled" Size="Size.Small">GRADE SHEETS</MudButton>
                         <MudButton Class="mr-3" OnClick="Print" StartIcon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" Variant="MudBlazor.Variant.Filled" Size="Size.Small">PRINT GROUPS</MudButton>
+                                    <MudPopover Open="@_isOpen" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Fixed="true" Class="px-4 pt-4" style="width: 400px;">
+                            <MudGrid Spacing="1" Class="mb-4">
+                                <MudItem Class="d-flex" xs="12">
+                                    <MudText Typo="Typo.button">FILTER</MudText>
+                                </MudItem>
+                                <MudItem Class="mb-2" xs="12">
+                                    <MudDivider/>
+                                </MudItem>
+                                <MudItem xs=2><MudCheckBox @bind-Value="parameter.IsProgram"></MudCheckBox></MudItem>
+                                <MudItem xs=10>
+                                    <MudTextField @bind-Value="parameter.ProgramName" Label="Program" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsProgram"/>
+                                </MudItem>
+                                <MudItem xs=2><MudCheckBox @bind-Value="parameter.IsSection"></MudCheckBox></MudItem>
+                                <MudItem xs=10>
+                                    <MudTextField @bind-Value="parameter.SectionName" Label="Section" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsSection"/>
+                                </MudItem>
+                                <MudItem xs=2><MudCheckBox @bind-Value="parameter.IsYear"></MudCheckBox></MudItem>
+                                <MudItem xs=10>
+                                    <MudTextField @bind-Value="parameter.Year" Label="Year" Variant='MudBlazor.Variant.Outlined' Margin='Margin.Dense' Disabled="!parameter.IsYear"/>
+                                </MudItem>
+                                <MudItem xs=2><MudCheckBox @bind-Value="parameter.IsChapter"></MudCheckBox></MudItem>
+                                <MudItem xs="10">
+                                    <MudSelect @bind-Value="parameter.GradeType" Margin="Margin.Dense" Label="Type" Variant='MudBlazor.Variant.Outlined'  AdornmentColor="Color.Primary" Disabled="!parameter.IsChapter">
+                                        @foreach (Enums.FilePosition item in Enum.GetValues(typeof(Enums.FilePosition)))
+                                        {
+                                            <MudSelectItem Value="@item">@Extensions.GetEnumDescription(item)</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="6"></MudItem>
+                                <MudItem xs="6">
+                                    <MudButton OnClick="@Toggle" Class="ml-auto mr-1 mb-3" Color="MudBlazor.Color.Default">Close</MudButton>
+                                    <MudButton OnClick="@Filter" Class="ml-auto mr-n3 mb-3" Variant="MudBlazor.Variant.Filled" Color="Color.Info">Generate</MudButton> 
+                                </MudItem>
+                            </MudGrid>
+                        </MudPopover>
+                    
                     </div>
                     @if(ListOfGroups == null)
                     {
@@ -41,9 +78,8 @@
                     <col />
                     <col />
                     <col />
-                    <col />
+                    <col style="width: 1%;"/>
                     @* <col /> *@
-                    <col style='width: 20px' />
                 </ColGroup>
                 <HeaderContent>
                     <MudTh><MudTableSortLabel SortLabel="GroupThesisTitle" T="UserAccountModel">Title</MudTableSortLabel></MudTh>
@@ -118,6 +154,9 @@
     private string PDF { get; set; } = string.Empty;
     List<ScheduleModel> Schedules = new();
     List<GroupModel> Groups = new();
+
+    public bool _isOpen;
+    FilterParameter parameter = new();
     protected override async Task OnInitializedAsync()
     {
         ListOfGroups = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student ?
@@ -285,6 +324,37 @@
         if(!dialog.Canceled)
         {
             await table.ReloadServerData();
+        }
+    }
+    public void Toggle()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+    private async Task Filter()
+    {
+        Loading = true;
+        Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
+            GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, parameter) : GroupServices.GetGroupsWithUsers(parameter);
+        await data;
+        if(data.Status == TaskStatus.RanToCompletion) {
+            ListOfGroups = data.Result.ToList();
+            if (GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Panelist_Adviser)
+            {
+                ListOfGroups = ListOfGroups.Where(e => e.UserId == GlobalClass.CurrentUserAccount.UserId).ToList();
+            }
+            totalItems = ListOfGroups.Count();
+            Loading = false;
+            Toggle();
+            StateHasChanged();
+            foreach(var g in ListOfGroups) {
+                foreach(var m in g.Members) {
+                    m.PanelGrades = await _panelGradeService.GetMemeberGrades(m.MemberId, parameter.GradeType);
+                    StateHasChanged();
+                }
+            }
         }
     }
 

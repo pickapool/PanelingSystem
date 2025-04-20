@@ -44,7 +44,17 @@ namespace PanelingSystem.Services.PanelGradeServices
         }
         public async Task<List<PanelGradeModel>> GetMemeberGrades(int memberId, Enums.FilePosition defenseType)
         {
-            return await _context.PanelGrades.Include( e => e.UserAccount).Where( e => e.MemberId == memberId && e.DefenseType == defenseType).ToListAsync();
+            var grades = await _context.PanelGrades
+                .Include(e => e.UserAccount)
+                .Where(e => e.MemberId == memberId && e.DefenseType == defenseType)
+                .ToListAsync();
+
+            if (grades == null || !grades.Any())
+            {
+                return new();
+            }
+
+            return grades;
         }
         public async Task<List<PanelGradeModel>> GetMemeberGrades(int memberId)
         {

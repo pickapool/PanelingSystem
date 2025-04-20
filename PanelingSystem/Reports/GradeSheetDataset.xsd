@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GradeSheetDataset" targetNamespace="http://tempuri.org/GradeSheetDataset.xsd" xmlns:mstns="http://tempuri.org/GradeSheetDataset.xsd" xmlns="http://tempuri.org/GradeSheetDataset.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GradeSheetDataset" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="GradeSheetDataset" msprop:Generator_DataSetName="GradeSheetDataset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GradeSheetDatatable" msprop:Generator_RowEvHandlerName="GradeSheetDatatableRowChangeEventHandler" msprop:Generator_RowDeletedName="GradeSheetDatatableRowDeleted" msprop:Generator_RowDeletingName="GradeSheetDatatableRowDeleting" msprop:Generator_RowEvArgName="GradeSheetDatatableRowChangeEvent" msprop:Generator_TablePropName="GradeSheetDatatable" msprop:Generator_RowChangedName="GradeSheetDatatableRowChanged" msprop:Generator_RowChangingName="GradeSheetDatatableRowChanging" msprop:Generator_TableClassName="GradeSheetDatatableDataTable" msprop:Generator_RowClassName="GradeSheetDatatableRow" msprop:Generator_TableVarName="tableGradeSheetDatatable" msprop:Generator_UserTableName="GradeSheetDatatable">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Section" msprop:Generator_ColumnPropNameInRow="Section" msprop:Generator_ColumnPropNameInTable="SectionColumn" msprop:Generator_ColumnVarNameInTable="columnSection" msprop:Generator_UserColumnName="Section" type="xs:string" minOccurs="0" />
+              <xs:element name="Year" msprop:Generator_ColumnPropNameInRow="Year" msprop:Generator_ColumnPropNameInTable="YearColumn" msprop:Generator_ColumnVarNameInTable="columnYear" msprop:Generator_UserColumnName="Year" type="xs:string" minOccurs="0" />
+              <xs:element name="Program" msprop:Generator_ColumnPropNameInRow="Program" msprop:Generator_ColumnPropNameInTable="ProgramColumn" msprop:Generator_ColumnVarNameInTable="columnProgram" msprop:Generator_UserColumnName="Program" type="xs:string" minOccurs="0" />
+              <xs:element name="Grade" msprop:Generator_ColumnPropNameInRow="Grade" msprop:Generator_ColumnPropNameInTable="GradeColumn" msprop:Generator_ColumnVarNameInTable="columnGrade" msprop:Generator_UserColumnName="Grade" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
