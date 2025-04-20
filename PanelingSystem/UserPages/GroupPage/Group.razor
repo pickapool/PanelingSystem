@@ -52,10 +52,10 @@
                                         }
                                     </MudSelect>
                                 </MudItem>
-                                <MudItem xs="7"></MudItem>
-                                <MudItem xs="5">
+                                <MudItem xs="6"></MudItem>
+                                <MudItem xs="6">
                                     <MudButton OnClick="@Toggle" Class="ml-auto mr-1 mb-3" Color="MudBlazor.Color.Default">Close</MudButton>
-                                    <MudButton OnClick="@Filter" Class="ml-auto mr-n3 mb-3" Variant="MudBlazor.Variant.Filled" Color="Color.Info">Filter</MudButton> 
+                                    <MudButton OnClick="@Filter" Class="ml-auto mr-n3 mb-3" Variant="MudBlazor.Variant.Filled" Color="Color.Info">Generate</MudButton> 
                                 </MudItem>
                             </MudGrid>
                         </MudPopover>
@@ -78,9 +78,8 @@
                     <col />
                     <col />
                     <col />
-                    <col />
+                    <col style="width: 1%;"/>
                     @* <col /> *@
-                    <col style='width: 20px' />
                 </ColGroup>
                 <HeaderContent>
                     <MudTh><MudTableSortLabel SortLabel="GroupThesisTitle" T="UserAccountModel">Title</MudTableSortLabel></MudTh>
@@ -350,6 +349,12 @@
             Loading = false;
             Toggle();
             StateHasChanged();
+            foreach(var g in ListOfGroups) {
+                foreach(var m in g.Members) {
+                    m.PanelGrades = await _panelGradeService.GetMemeberGrades(m.MemberId, parameter.GradeType);
+                    StateHasChanged();
+                }
+            }
         }
     }
 

@@ -5,6 +5,7 @@ namespace PanelingSystem.Services.ReportServices
 {
     public interface IReportService
     {
-        IActionResult GetMasterListReport(List<ReportModel> scheds);    
+        IActionResult GetMasterListReport(List<ReportModel> scheds);
+        IActionResult GetGradeSheetReport(List<GradeSheetModel> grades, Enums.FilePosition DefenseType);
     }
 }
