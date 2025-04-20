@@ -346,7 +346,7 @@
         }
     }
     private async Task ShowGrades(MembersModel member, Enums.FilePosition defenseType) {
-        member.PanelGrades = await _panelGradeService.GetMemeberGrades(member.MemberId, defenseType);
+       // member.PanelGrades = await _panelGradeService.GetMemeberGrades(member.MemberId, defenseType);
         if(defenseType == Enums.FilePosition.Title) {
             member.OpenGrade1 = !member.OpenGrade1;
             member.OpenGrade2 = false;
