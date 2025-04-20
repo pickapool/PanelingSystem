@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PanelingSystem.Models
 {
@@ -14,6 +15,15 @@ namespace PanelingSystem.Models
         public Enums.FilePosition DefenseType { get; set; }
         [ForeignKey("UserId")]
         public UserAccountModel? UserAccount { get; set; }
+        [JsonIgnore]
+        [NotMapped]
+        public string? Section { get ;set; }
+        [JsonIgnore]
+        [NotMapped]
+        public string? Year { get ;set; }
+        [JsonIgnore]
+        [NotMapped]
+        public string? Program { get ;set; }
 
     }
 }

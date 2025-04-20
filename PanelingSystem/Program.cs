@@ -26,11 +26,19 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddServerSideBlazor().AddCircuitOptions(e => e.DetailedErrors = true);
+}
+else
+{
+    builder.Services.AddServerSideBlazor(); // Register services without detailed errors in production
+}
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddServerSideBlazor();
 builder.Services.AddRazorComponents();
 builder.Services.AddMudServicesWithExtensions();
 builder.Services.AddMudExtensions();

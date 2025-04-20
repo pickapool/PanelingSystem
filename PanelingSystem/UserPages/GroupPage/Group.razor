@@ -21,7 +21,8 @@
                     AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     <MudSpacer />
                     <div class="d-flex flex-1 justify-end">
-                        <MudIconButton Class="mr-3" OnClick="Print" Icon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" Variant="MudBlazor.Variant.Filled" Size="Size.Small"></MudIconButton>
+                        <MudButton Class="mr-3" OnClick="Print" StartIcon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" Variant="MudBlazor.Variant.Filled" Size="Size.Small">GRADE SHEETS</MudButton>
+                        <MudButton Class="mr-3" OnClick="Print" StartIcon="@Icons.Material.Filled.PictureAsPdf" Color="Color.Error" Variant="MudBlazor.Variant.Filled" Size="Size.Small">PRINT GROUPS</MudButton>
                     </div>
                     @if(ListOfGroups == null)
                     {
