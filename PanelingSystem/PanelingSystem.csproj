@@ -48,6 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Reports\GradeSheetDataset.Designer.cs">
+      <DependentUpon>GradeSheetDataset.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Reports\masterlistdataset.Designer.cs">
       <DependentUpon>masterlistdataset.xsd</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -56,6 +61,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Reports\GradeSheetDataset.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>GradeSheetDataset.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
     <None Update="Reports\masterlistdataset.xsd">
       <SubType>Designer</SubType>
       <LastGenOutput>masterlistdataset.Designer.cs</LastGenOutput>

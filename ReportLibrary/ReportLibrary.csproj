@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="GradeSheetDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GradeSheetDataset.xsd</DependentUpon>
+    </Compile>
     <Compile Update="masterlistdataset.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -16,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="GradeSheetDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GradeSheetDataset.Designer.cs</LastGenOutput>
+    </None>
     <None Update="masterlistdataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>masterlistdataset.Designer.cs</LastGenOutput>
