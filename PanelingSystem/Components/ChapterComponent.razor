@@ -55,14 +55,15 @@
     private async Task UploadFiles(IBrowserFile file)
     {
         if(GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student) {
-            if (Group.Members.Any(e => (e.TitleGrade <= 0) && (Chapter == Enums.Chapter.Chapter1 || Chapter == Enums.Chapter.Chapter2 || Chapter == Enums.Chapter.Chapter3)))
+            if (Group.Members.Any(e => (e.PreOralGrade <= 0) && (Chapter == Enums.Chapter.Title1 || Chapter == Enums.Chapter.Title2 ||Chapter == Enums.Chapter.Title3)))
             {
                 Extensions.ShowAlert("Upload is restricted, grade not found in Title Defense", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
                 return;
             }
-            if (Group.Members.Any(e => (e.PreOralGrade <= 0) && (Chapter == Enums.Chapter.Chapter4 || Chapter == Enums.Chapter.Chapter5)))
+            if (Group.Members.Any(e => e.PreOralGrade <= 0) && Chapter == Enums.Chapter.Chapter4 || Chapter == Enums.Chapter.Chapter5)
             {
-                Extensions.ShowAlert("Upload is restricted, grade not found in Pre Oral Defense", MudBlazor.Variant.Filled, Snackbar, Severity.Error);
+                Extensions.ShowAlert("Upload is restricted, grade not found in Pre Oral Defense",
+                    MudBlazor.Variant.Filled, Snackbar, Severity.Error);
                 return;
             }
         }

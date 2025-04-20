@@ -41,6 +41,8 @@ namespace PanelingSystem.Reports {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        [System.ObsoleteAttribute("This API supports obsolete formatter-based serialization. It should not be called" +
+            " or extended by application code.", DiagnosticId="SYSLIB0051")]
         protected masterlistdataset(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
@@ -279,7 +281,7 @@ namespace PanelingSystem.Reports {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class reportdatatableDataTable : global::System.Data.TypedTableBase<reportdatatableRow> {
             
-            private global::System.Data.DataColumn columnScheduleId;
+            private global::System.Data.DataColumn columnGroup_Name;
             
             private global::System.Data.DataColumn columnGroupId;
             
@@ -335,6 +337,8 @@ namespace PanelingSystem.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [System.ObsoleteAttribute("This API supports obsolete formatter-based serialization. It should not be called" +
+                " or extended by application code.", DiagnosticId="SYSLIB0051")]
             protected reportdatatableDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
@@ -342,9 +346,9 @@ namespace PanelingSystem.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ScheduleIdColumn {
+            public global::System.Data.DataColumn Group_NameColumn {
                 get {
-                    return this.columnScheduleId;
+                    return this.columnGroup_Name;
                 }
             }
             
@@ -489,10 +493,10 @@ namespace PanelingSystem.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public reportdatatableRow AddreportdatatableRow(string ScheduleId, string GroupId, string StatusText, string DefenseTypeText, string Start, string End, string Text, string GroupThesisTitle, string Groupname, string Program, string Year, string MemberId, string UserId, string Name) {
+            public reportdatatableRow AddreportdatatableRow(string Group_Name, string GroupId, string StatusText, string DefenseTypeText, string Start, string End, string Text, string GroupThesisTitle, string Groupname, string Program, string Year, string MemberId, string UserId, string Name) {
                 reportdatatableRow rowreportdatatableRow = ((reportdatatableRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        ScheduleId,
+                        Group_Name,
                         GroupId,
                         StatusText,
                         DefenseTypeText,
@@ -528,7 +532,7 @@ namespace PanelingSystem.Reports {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
-                this.columnScheduleId = base.Columns["ScheduleId"];
+                this.columnGroup_Name = base.Columns["Group Name"];
                 this.columnGroupId = base.Columns["GroupId"];
                 this.columnStatusText = base.Columns["StatusText"];
                 this.columnDefenseTypeText = base.Columns["DefenseTypeText"];
@@ -547,8 +551,8 @@ namespace PanelingSystem.Reports {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnScheduleId = new global::System.Data.DataColumn("ScheduleId", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnScheduleId);
+                this.columnGroup_Name = new global::System.Data.DataColumn("Group Name", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnGroup_Name);
                 this.columnGroupId = new global::System.Data.DataColumn("GroupId", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnGroupId);
                 this.columnStatusText = new global::System.Data.DataColumn("StatusText", typeof(string), null, global::System.Data.MappingType.Element);
@@ -717,17 +721,17 @@ namespace PanelingSystem.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ScheduleId {
+            public string Group_Name {
                 get {
                     try {
-                        return ((string)(this[this.tablereportdatatable.ScheduleIdColumn]));
+                        return ((string)(this[this.tablereportdatatable.Group_NameColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ScheduleId\' in table \'reportdatatable\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Group Name\' in table \'reportdatatable\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereportdatatable.ScheduleIdColumn] = value;
+                    this[this.tablereportdatatable.Group_NameColumn] = value;
                 }
             }
             
@@ -941,14 +945,14 @@ namespace PanelingSystem.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsScheduleIdNull() {
-                return this.IsNull(this.tablereportdatatable.ScheduleIdColumn);
+            public bool IsGroup_NameNull() {
+                return this.IsNull(this.tablereportdatatable.Group_NameColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetScheduleIdNull() {
-                this[this.tablereportdatatable.ScheduleIdColumn] = global::System.Convert.DBNull;
+            public void SetGroup_NameNull() {
+                this[this.tablereportdatatable.Group_NameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
