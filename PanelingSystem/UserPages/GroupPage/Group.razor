@@ -78,6 +78,7 @@
                     <col />
                     <col />
                     <col />
+                    <col />
                     <col style="width: 1%;"/>
                     @* <col /> *@
                 </ColGroup>
@@ -86,6 +87,7 @@
                     <MudTh><MudTableSortLabel SortLabel="Groupname" T="UserAccountModel">Group Name</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="Program" T="UserAccountModel">Program</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="Year" T="UserAccountModel">Year</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="Section" T="UserAccountModel">Section</MudTableSortLabel></MudTh>
                     @* <MudTh><MudTableSortLabel SortLabel="Status" T="UserAccountModel">Status</MudTableSortLabel></MudTh> *@
                     <MudTh Class='customheader-1 text-center pa-2'>Action</MudTh>
                 </HeaderContent>
@@ -94,6 +96,7 @@
                     <MudTd DataLabel="Groupname">@context.Groupname</MudTd>
                     <MudTd DataLabel="Program">@context.Program</MudTd>
                     <MudTd DataLabel="Year">@context.Year</MudTd>
+                    <MudTd DataLabel="Year">@context.Section</MudTd>
                     @* <MudTd DataLabel="Status">
                         <MudChip Size="Size.Small">@Extensions.GetEnumDescription(context.Status)</MudChip>
                     </MudTd> *@
@@ -335,6 +338,7 @@
     }
     private async Task Filter()
     {
+        List<GradeSheetModel> gSheets = new();
         Loading = true;
         Task<IEnumerable<GroupModel>> data = GlobalClass.CurrentUserAccount.AccountType == Enums.AccountType.Student?
             GroupServices.GetMyGroups(GlobalClass.CurrentUserAccount.UserId, parameter) : GroupServices.GetGroupsWithUsers(parameter);
@@ -351,10 +355,31 @@
             StateHasChanged();
             foreach(var g in ListOfGroups) {
                 foreach(var m in g.Members) {
+                    var grades = new GradeSheetModel();
                     m.PanelGrades = await _panelGradeService.GetMemeberGrades(m.MemberId, parameter.GradeType);
+                    grades.Section  = g.Section;
+                    grades.Year  = g.Year;
+                    grades.Program  = g.Program;
+                    grades.Name = m.Student.Name;
+                    if(parameter.GradeType == Enums.FilePosition.Title) {
+                        grades.Grade = m.TitleAverage;
+                    } else if(parameter.GradeType == Enums.FilePosition.PreOral) {
+                        grades.Grade = m.PreOralAverage;
+                    } else {
+                        grades.Grade = m.FinalAverage;
+                    }
+                    gSheets.Add(grades);
                     StateHasChanged();
                 }
             }
+            IActionResult report = ReportService.GetGradeSheetReport(gSheets, parameter.GradeType);
+            if (report is FileContentResult fileContentResult)
+            {
+                byte[] pdfBytes = fileContentResult.FileContents;
+                PDF = "data:application/pdf;base64," + Convert.ToBase64String(pdfBytes);
+            }
+            ShowReport = !ShowReport;
+            StateHasChanged();
         }
     }
 

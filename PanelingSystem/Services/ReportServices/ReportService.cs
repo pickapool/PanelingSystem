@@ -11,7 +11,7 @@ namespace PanelingSystem.Services.ReportServices
     {
         public IActionResult GetGradeSheetReport(List<GradeSheetModel> grades, Enums.FilePosition DefenseType)
         {
-            using var rs = Assembly.GetExecutingAssembly().GetManifestResourceStream("PanelingSystem.Reports.GradeSheetReport.rdlc");
+            using var rs = Assembly.GetExecutingAssembly().GetManifestResourceStream("PanelingSystem.Reports.GradesheetReport.rdlc");
             LocalReport report = new();
             report.LoadReportDefinition(rs);
             report.DataSources.Add(new ReportDataSource("gradesheetdataset", grades));
