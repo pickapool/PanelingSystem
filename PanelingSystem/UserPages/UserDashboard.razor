@@ -302,30 +302,29 @@
             DefenseVerdicts = task.Result;
             double t1 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Rejected && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
             double t2 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Completed && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
-            //double t3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
-            //double t4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
+            double t3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
+            double t4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
             double t5= DefenseVerdicts.Where( e => e.Status == Enums.Status.Approved && (e.Chapter == Enums.Chapter.Title1 || e.Chapter == Enums.Chapter.Title2 || e.Chapter == Enums.Chapter.Title3)).ToList().Count;
 
             double c1 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Rejected && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
             double c2 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Completed && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
-            //double c3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
-            //double c4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
+            double c3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
+            double c4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
             double c5= DefenseVerdicts.Where( e => e.Status == Enums.Status.Approved && (e.Chapter == Enums.Chapter.Chapter1 || e.Chapter == Enums.Chapter.Chapter2 || e.Chapter == Enums.Chapter.Chapter3)).ToList().Count;
 
             double f1 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Rejected && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
             double f2 = DefenseVerdicts.Where( e => e.Status == Enums.Status.Completed && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
-            //double f3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
-            //double f4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
+            double f3= DefenseVerdicts.Where( e => e.Status == Enums.Status.Redefend && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
+            double f4= DefenseVerdicts.Where( e => e.Status == Enums.Status.AcceptedWithRevisions && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
             double f5= DefenseVerdicts.Where( e => e.Status == Enums.Status.Approved && (e.Chapter == Enums.Chapter.Chapter4 || e.Chapter == Enums.Chapter.Chapter5)).ToList().Count;
 
-            data = new double[] { t1, t2 ,t5};
-            data1 = new double[] { c1, c2, c5};
-            data2 = new double[] { f1, f2, f5};
+            data = new double[] { t1, t3, t4, t5};
+            data1 = new double[] { c3, c4, c5};
+            data2 = new double[] { f3, f4, f2};
 
-            labels = new string[] { "Rejected- " +t1, "Completed- " + t2, "Approved -" +t5};
-            labels1 = new string[] { "Rejected- " + c1, "Completed- " + c2, "Approved -" +c5};
-            labels2 = new string[] { "Rejected- " + f1, "Completed- " + f2, "Approved -" +f5};
-
+            labels = new string[] { "Rejected- " +t1, "Redefend- " + t3, "Approved With Revisions -" + t4,"Approved -" +t5  };
+            labels1 = new string[] { "Redefend- " + c3, "Approved With Revisions -" +c4 ,"Approved -" +c5};
+            labels2 = new string[] { "Redefend- " + f3, "Approved With Revisions -" + f4 ,"Completed- " + f2 };
             await GetMyGroups();
         }
     }
