@@ -125,10 +125,7 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.97917in</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>1.75in</Width>
+                  <Width>4.35417in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.75in</Width>
@@ -147,6 +144,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
+                                  <Value>Year: </Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
                                   <Value>=Fields!Year.Value</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
@@ -159,7 +162,7 @@
                           <rd:DefaultName>Year</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                               <Width>0.5pt</Width>
                             </Border>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -179,6 +182,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
+                                  <Value>Program: </Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
                                   <Value>=Fields!Program.Value</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
@@ -191,37 +200,7 @@
                           <rd:DefaultName>Program</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
-                              <Width>0.5pt</Width>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox25">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox25</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                               <Width>0.5pt</Width>
                             </Border>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -246,6 +225,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
+                                  <Value>Section: </Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
                                   <Value>=Fields!Section.Value</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
@@ -253,14 +238,14 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Section</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                               <Width>0.5pt</Width>
                             </Border>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -269,10 +254,9 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>3</ColSpan>
+                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
-                    <TablixCell />
                     <TablixCell />
                   </TablixCells>
                 </TablixRow>
@@ -326,7 +310,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox37</rd:DefaultName>
@@ -341,10 +327,8 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
-                    <TablixCell />
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -378,7 +362,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -394,40 +377,12 @@
                                   <Style />
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Grade</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>None</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox8">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -447,7 +402,6 @@
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
-                <TablixMember />
                 <TablixMember />
                 <TablixMember />
               </TablixMembers>
@@ -499,7 +453,7 @@
             <Top>0.92583in</Top>
             <Left>1.03in</Left>
             <Height>1in</Height>
-            <Width>6.47917in</Width>
+            <Width>6.10417in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
